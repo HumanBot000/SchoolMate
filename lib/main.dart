@@ -1,12 +1,23 @@
 import 'package:app/pages/userAuth/userAuthentication.dart';
+import 'package:app/setup/supabase.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-void main() {
+late final Supabase supabaseClient;
+final logger = Logger();
+late final SharedPreferences prefs;
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await initializeSupabase();
+  prefs = await SharedPreferences.getInstance();
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -26,8 +37,8 @@ class MyApp extends StatelessWidget {
         ),
         appBarTheme: const AppBarTheme(
           backgroundColor: Color(0xFF2B2B2B),
-          iconTheme: IconThemeData(color: Colors.white),
-          titleTextStyle: TextStyle(color: Colors.white, fontSize: 20),
+          iconTheme: IconThemeData(color: Color(0xFF3A7BD5)),
+          titleTextStyle: TextStyle(color: Color(0xFF3A7BD5), fontSize: 20),
           centerTitle: true,
         ),
       ),
