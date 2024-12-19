@@ -1,11 +1,11 @@
 import 'dart:async';
 
+import 'package:app/pages/settings/setup.dart';
 import 'package:app/pages/userAuth/EmailVerification.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 
 import '../../main.dart';
-import '../home/HomePage.dart';
 
 void _errorHandler(Object response, BuildContext context) {
   if (response is AuthException && response.statusCode.toString() == "422") {
@@ -73,7 +73,7 @@ Future<void> _signInHandler(Object response, BuildContext context) async {
   if (response is AuthResponse) {
     logger.i("Signed in user");
     Navigator.of(context).pushReplacement(MaterialPageRoute(
-      builder: (context) => const HomePage(),
+      builder: (context) => const SetupPage(),
     ));
   } else {
     logger.e(response);

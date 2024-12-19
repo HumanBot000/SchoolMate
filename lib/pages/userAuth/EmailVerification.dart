@@ -1,4 +1,4 @@
-import 'package:app/pages/home/HomePage.dart';
+import 'package:app/pages/settings/setup.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
@@ -70,7 +70,7 @@ class _EmailVerificationState extends State<EmailVerification>
     ));
     logger.i("Set display name to $username");
     Navigator.of(context).pushReplacement(MaterialPageRoute(
-      builder: (context) => const HomePage(),
+      builder: (context) => const SetupPage(),
     ));
   }
 

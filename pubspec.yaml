@@ -42,6 +42,7 @@ dependencies:
   pin_code_fields: ^8.0.1
   lottie: ^2.4.0
   shared_preferences: ^2.0.18
+  flutter_svg: ^2.0.16
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -68,6 +69,22 @@ flutter:
     - assets/animations/email_verification_animation.json
     - assets/animations/email_verification_animation_foreground.json
     - assets/animations/email_verified.json
+    - assets/images/svg/flags/de/Baden-Württemberg.svg
+    - assets/images/svg/flags/de/Bavaria.svg
+    - assets/images/svg/flags/de/Berlin.svg
+    - assets/images/svg/flags/de/Brandenburg.svg
+    - assets/images/svg/flags/de/Bremen.svg
+    - assets/images/svg/flags/de/Hamburg.svg
+    - assets/images/svg/flags/de/Hesse.svg
+    - assets/images/svg/flags/de/Mecklenburg-Western-Pomerania.svg
+    - assets/images/svg/flags/de/Lower-Saxony.svg
+    - assets/images/svg/flags/de/North-Rhine-Westphalia.svg
+    - assets/images/svg/flags/de/Rhineland-Palatinate.svg
+    - assets/images/svg/flags/de/Saarland.svg
+    - assets/images/svg/flags/de/Saxony.svg
+    - assets/images/svg/flags/de/Saxony-Anhalt.svg
+    - assets/images/svg/flags/de/Schleswig-Holstein.svg
+    - assets/images/svg/flags/de/Thuringia.svg
   # For details regarding adding assets from package dependencies, see
   # https://flutter.dev/assets-and-images/#from-packages
 

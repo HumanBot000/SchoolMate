@@ -1,7 +1,7 @@
+import 'package:app/pages/settings/setup.dart';
 import 'package:flutter/material.dart';
 
 import '../../main.dart';
-import '../home/HomePage.dart';
 import 'authenticate.dart' as auth_ui;
 
 class AuthenticationPage extends StatefulWidget {
@@ -15,6 +15,6 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
   Widget build(BuildContext context) {
     return supabaseClient.client.auth.currentSession == null
         ? auth_ui.build(context)
-        : const HomePage();
+        : const SetupPage();
   }
 }
