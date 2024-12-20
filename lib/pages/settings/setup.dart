@@ -1,5 +1,6 @@
 import 'package:app/pages/settings/grades.dart';
 import 'package:app/pages/settings/residence.dart';
+import 'package:app/supabase/userSettings.dart' as supabase_settings;
 import 'package:app/util/userData.dart';
 import 'package:flutter/material.dart';
 
@@ -12,15 +13,15 @@ class SetupPage extends StatefulWidget {
 
 class _SetupPageState extends State<SetupPage> {
   var _selectedResidence;
-  var _gradingSystem;
   void changeResidence(residence) {
     setState(() {
       _selectedResidence = residence;
     });
   }
 
-  void changeGradingSystem(gradingSystem) {
-    _gradingSystem = gradingSystem;
+  Future<void> changeGradingSystem(gradingSystem) async {
+    await supabase_settings.updateUserSettings(
+        _selectedResidence, gradingSystem);
   }
 
   @override

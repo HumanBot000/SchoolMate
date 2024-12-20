@@ -43,7 +43,7 @@ class ResidenceSelector extends StatelessWidget {
             SizedBox(
               height: 400,
               child: CarouselView.weighted(
-                onTap: (index) => onChange(index),
+                onTap: (index) => onChange(states.keys.toList()[index]),
                 scrollDirection: Axis.vertical,
                 flexWeights: const [1, 2, 1],
                 children: getGermanStatesWidgets(context),
