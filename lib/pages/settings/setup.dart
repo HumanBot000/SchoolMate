@@ -1,3 +1,4 @@
+import 'package:app/pages/settings/grades.dart';
 import 'package:app/pages/settings/residence.dart';
 import 'package:app/util/userData.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,18 @@ class SetupPage extends StatefulWidget {
 }
 
 class _SetupPageState extends State<SetupPage> {
+  var _selectedResidence;
+  var _gradingSystem;
+  void changeResidence(residence) {
+    setState(() {
+      _selectedResidence = residence;
+    });
+  }
+
+  void changeGradingSystem(gradingSystem) {
+    _gradingSystem = gradingSystem;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,7 +32,7 @@ class _SetupPageState extends State<SetupPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 16.0),
-        child: Column(
+        child: ListView(
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -38,7 +51,13 @@ class _SetupPageState extends State<SetupPage> {
                 )
               ],
             ),
-            ResidenceSelector(),
+            ResidenceSelector(
+              onChange: changeResidence,
+            ),
+            if (_selectedResidence != null)
+              GradingSystemSettings(
+                onChange: changeGradingSystem,
+              )
           ],
         ),
       ),
