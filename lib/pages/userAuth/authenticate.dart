@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:app/pages/settings/setup.dart';
-import 'package:app/pages/userAuth/EmailVerification.dart';
+import 'package:app/pages/home/start.dart';
+import 'package:app/pages/userAuth/emailVerification.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 
@@ -53,9 +53,8 @@ void _errorHandler(Object response, BuildContext context) {
 
 Future<void> _signUpHandler(Object response, BuildContext context) async {
   ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      content: const Text("Sign up successful. Please check your email."),
-      backgroundColor: Theme.of(context).colorScheme.primary,
+    const SnackBar(
+      content: Text("Sign up successful. Please check your email."),
     ),
   );
   if (response is AuthResponse) {
@@ -73,7 +72,7 @@ Future<void> _signInHandler(Object response, BuildContext context) async {
   if (response is AuthResponse) {
     logger.i("Signed in user");
     Navigator.of(context).pushReplacement(MaterialPageRoute(
-      builder: (context) => const SetupPage(),
+      builder: (context) => const HomePage(),
     ));
   } else {
     logger.e(response);

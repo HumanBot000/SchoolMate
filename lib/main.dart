@@ -41,6 +41,10 @@ class MyApp extends StatelessWidget {
           titleTextStyle: TextStyle(color: Color(0xFF3A7BD5), fontSize: 30),
           centerTitle: true,
         ),
+        progressIndicatorTheme: const ProgressIndicatorThemeData(
+          color: Color(0xFF3A7BD5),
+        ),
+        scaffoldBackgroundColor: const Color(0xFF2B2B2B),
       ),
       home: const AuthenticationPage(),
     );
