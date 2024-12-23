@@ -1,35 +1,20 @@
 import 'package:app/main.dart';
 import 'package:app/supabase/userData.dart';
 
-Future<void> updateUserSettings(dynamic residence, String gradingSystem) async {
-  Map<String, String> shortStateNames = {
-    "Baden-Württemberg": "BW",
-    "Bavaria": "BY",
-    "Berlin": "BE",
-    "Brandenburg": "BB",
-    "Bremen": "HB",
-    "Hamburg": "HH",
-    "Hesse": "HE",
-    "Mecklenburg-Western-Pomerania": "MV",
-    "Lower-Saxony": "NI",
-    "North-Rhine-Westphalia": "NW",
-    "Rhineland-Palatinate": "RP",
-    "Saarland": "SL",
-    "Saxony": "SN",
-    "Saxony-Anhalt": "ST",
-    "Schleswig-Holstein": "SH",
-    "Thuringia": "TH",
-  };
-  dynamic residenceCounty;
-  if (residence != false) {
-    residenceCounty = "de";
+import '../Classes/geoPolitics/Country.dart';
+
+Future<void> updateUserSettings(
+    Country residenceCountry, String? residence, String gradingSystem) async {
+  // residence is already the code -> makes it easier to work with
+  if (residence == "unset") {
+    residence = null; //convert back for DB integrity
   }
   try {
     //Insert or Update
     await supabaseClient.client.from("user_settings").upsert({
       "user_id": await getUserID(),
-      "residence": shortStateNames[residence],
-      "residence_country": residenceCounty,
+      "residence": residence,
+      "residence_country": residenceCountry.code,
       "grading_system": gradingSystem
     });
   } on Exception catch (e) {

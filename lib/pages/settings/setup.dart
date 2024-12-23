@@ -1,9 +1,12 @@
+import 'package:app/Classes/geoPolitics/Country.dart';
 import 'package:app/Widgets/settings/GradingSystemChooser.dart';
-import 'package:app/Widgets/settings/ResidenceChooser.dart';
 import 'package:app/pages/home/start.dart';
 import 'package:app/supabase/userData.dart';
 import 'package:app/supabase/userSettings.dart' as supabase_settings;
 import 'package:flutter/material.dart';
+
+import '../../Widgets/settings/ResidenceSelector/CountrySelector.dart';
+import '../../Widgets/settings/ResidenceSelector/StateSelector.dart';
 
 class SetupPage extends StatefulWidget {
   const SetupPage({super.key});
@@ -13,8 +16,21 @@ class SetupPage extends StatefulWidget {
 }
 
 class _SetupPageState extends State<SetupPage> {
+  var _exactSelectedResidence;
   var _selectedResidence;
-  void changeResidence(residence) {
+
+  void changeExactResidence(String? residence) {
+    if (residence == null) {
+      setState(() {
+        _selectedResidence = null;
+      });
+    }
+    setState(() {
+      _exactSelectedResidence = residence;
+    });
+  }
+
+  void changeResidence(Country residence) {
     setState(() {
       _selectedResidence = residence;
     });
@@ -22,7 +38,7 @@ class _SetupPageState extends State<SetupPage> {
 
   Future<void> changeGradingSystem(gradingSystem) async {
     await supabase_settings.updateUserSettings(
-        _selectedResidence, gradingSystem);
+        _selectedResidence, _exactSelectedResidence, gradingSystem);
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
       return const HomePage();
     }));
@@ -58,8 +74,16 @@ class _SetupPageState extends State<SetupPage> {
             ),
             ResidenceSelector(
               onChange: changeResidence,
+              selected: _selectedResidence,
             ),
             if (_selectedResidence != null)
+              LocalResidenceSelector(
+                onChange: changeExactResidence,
+                selectedCountry: _selectedResidence!.code,
+                selectedCountryString: _selectedResidence!.name,
+                selectedExactResidence: _exactSelectedResidence,
+              ),
+            if (_exactSelectedResidence != null)
               GradingSystemSettings(
                 onChange: changeGradingSystem,
               )

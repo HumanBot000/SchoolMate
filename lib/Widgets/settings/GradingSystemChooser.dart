@@ -1,4 +1,4 @@
-import 'package:app/Widgets/GradientButton.dart';
+import 'package:app/Widgets/public/GradientButton.dart';
 import 'package:flutter/material.dart';
 
 class GradingSystemSettings extends StatelessWidget {

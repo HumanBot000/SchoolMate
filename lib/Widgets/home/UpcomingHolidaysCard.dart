@@ -16,8 +16,8 @@ Widget _upcomingHolidaysTextData(
       if (snapshot.connectionState == ConnectionState.waiting) {
         return const CircularProgressIndicator();
       } else if (snapshot.hasError) {
-        logger.e(snapshot.error);
-        return Text('Error: ${snapshot.error}');
+        logger.i(snapshot.error);
+        return const Text('No upcoming holidays found for your location.');
       } else if (snapshot.hasData) {
         final holiday = snapshot.data!;
         return Row(children: [
