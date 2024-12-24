@@ -1,9 +1,9 @@
+import 'package:app/API/externalAPIClients/OpenHolidaysAPI.dart' as holiday_api;
+import 'package:app/API/supabase/userSettings.dart' as settings;
 import 'package:app/Classes/SchoolHoliday.dart';
-import 'package:app/externalAPIClients/OpenHolidaysAPI.dart' as holiday_api;
-import 'package:app/supabase/userSettings.dart' as settings;
 import 'package:flutter/material.dart';
 
-import '../../main.dart';
+import '../../../main.dart';
 
 Widget _upcomingHolidaysTextData(
     String residenceCountry, String localResidenceCode,

@@ -1,6 +1,6 @@
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 
-import '../main.dart';
+import '../../main.dart';
 
 Future<void> initializeSupabase() async {
   supabaseClient = await Supabase.initialize(

@@ -1,7 +1,7 @@
+import 'package:app/API/supabase/userData.dart';
 import 'package:app/main.dart';
-import 'package:app/supabase/userData.dart';
 
-import '../Classes/geoPolitics/Country.dart';
+import '../../Classes/geoPolitics/Country.dart';
 
 Future<void> updateUserSettings(
     Country residenceCountry, String? residence, String gradingSystem) async {

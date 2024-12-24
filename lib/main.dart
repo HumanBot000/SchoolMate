@@ -1,5 +1,5 @@
+import 'package:app/API/supabase/setup.dart';
 import 'package:app/pages/userAuth/userAuthentication.dart';
-import 'package:app/supabase/setup.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';

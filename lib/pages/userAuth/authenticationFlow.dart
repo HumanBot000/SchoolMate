@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:app/pages/home/start.dart';
+import 'package:app/pages/home/home/start.dart';
 import 'package:app/pages/userAuth/emailVerification.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
@@ -63,7 +63,7 @@ Future<void> _signUpHandler(Object response, BuildContext context) async {
     await prefs.setString('pending_username',
         username.toString()); //Can only update after email verification
     Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) {
-      return EmailVerification(email: response.user!.email!);
+      return EmailVerificationPage(email: response.user!.email!);
     }));
   }
 }

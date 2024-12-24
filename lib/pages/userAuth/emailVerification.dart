@@ -6,16 +6,16 @@ import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 
 import '../../main.dart';
 
-class EmailVerification extends StatefulWidget {
+class EmailVerificationPage extends StatefulWidget {
   final String email;
 
-  const EmailVerification({super.key, required this.email});
+  const EmailVerificationPage({super.key, required this.email});
 
   @override
-  State<EmailVerification> createState() => _EmailVerificationState();
+  State<EmailVerificationPage> createState() => _EmailVerificationPageState();
 }
 
-class _EmailVerificationState extends State<EmailVerification>
+class _EmailVerificationPageState extends State<EmailVerificationPage>
     with SingleTickerProviderStateMixin {
   late AnimationController _pinAnimationController;
   bool _isCodeValid = false;

@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-import '../Classes/geoPolitics/Country.dart';
-import '../Classes/geoPolitics/SubCountryState.dart';
-import '../main.dart';
+import '../../Classes/geoPolitics/Country.dart';
+import '../../Classes/geoPolitics/SubCountryState.dart';
+import '../../main.dart';
 
 Future<List<Country>> getCountries() async {
   final response = await http.get(

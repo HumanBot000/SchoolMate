@@ -1,5 +1,5 @@
 // this file ended up a bit messy, but I just couldn't find a ISO 3166-2 to SVG Flag API (waisted hours looking for it) So I had two cases for germany and every other state
-import 'package:app/externalAPIClients/geoAPIs.dart' as geo_api;
+import 'package:app/API/externalAPIClients/geoAPIs.dart' as geo_api;
 import 'package:app/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';

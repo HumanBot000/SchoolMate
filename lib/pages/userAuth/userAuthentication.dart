@@ -1,10 +1,10 @@
-import 'package:app/pages/home/start.dart';
+import 'package:app/API/supabase/userSettings.dart' as settings;
+import 'package:app/pages/home/home/start.dart';
 import 'package:app/pages/settings/setup.dart';
-import 'package:app/supabase/userSettings.dart' as settings;
 import 'package:flutter/material.dart';
 
 import '../../main.dart';
-import 'authenticate.dart' as auth_ui;
+import 'authenticationFlow.dart' as auth_ui;
 
 class AuthenticationPage extends StatelessWidget {
   const AuthenticationPage({super.key});

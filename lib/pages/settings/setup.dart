@@ -1,12 +1,12 @@
+import 'package:app/API/supabase/userData.dart';
+import 'package:app/API/supabase/userSettings.dart' as supabase_settings;
 import 'package:app/Classes/geoPolitics/Country.dart';
-import 'package:app/Widgets/settings/GradingSystemChooser.dart';
-import 'package:app/pages/home/start.dart';
-import 'package:app/supabase/userData.dart';
-import 'package:app/supabase/userSettings.dart' as supabase_settings;
+import 'package:app/pages/home/home/start.dart';
 import 'package:flutter/material.dart';
 
-import '../../Widgets/settings/ResidenceSelector/CountrySelector.dart';
-import '../../Widgets/settings/ResidenceSelector/StateSelector.dart';
+import 'Widgets/settings/GradingSystemChooser.dart';
+import 'Widgets/settings/ResidenceSelector/CountrySelector.dart';
+import 'Widgets/settings/ResidenceSelector/StateSelector.dart';
 
 class SetupPage extends StatefulWidget {
   const SetupPage({super.key});

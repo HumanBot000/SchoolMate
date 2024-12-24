@@ -1,5 +1,5 @@
+import 'package:app/API/externalAPIClients/geoAPIs.dart' as geo_api;
 import 'package:app/Classes/geoPolitics/Country.dart';
-import 'package:app/externalAPIClients/geoAPIs.dart' as geo_api;
 import 'package:app/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
