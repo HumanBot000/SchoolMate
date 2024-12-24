@@ -6,10 +6,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class ResidenceSelector extends StatefulWidget {
   final Function onChange;
-  final Country? selected;
+  final Country? preSelectedCountry;
 
   const ResidenceSelector(
-      {super.key, required this.onChange, required this.selected});
+      {super.key, required this.onChange, required this.preSelectedCountry});
 
   @override
   State<ResidenceSelector> createState() => _ResidenceSelectorState();
@@ -17,6 +17,7 @@ class ResidenceSelector extends StatefulWidget {
 
 class _ResidenceSelectorState extends State<ResidenceSelector> {
   final CarouselController _controller = CarouselController();
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -25,34 +26,40 @@ class _ResidenceSelectorState extends State<ResidenceSelector> {
   }
 
   @override
-  //I have no idea what this does
   void didUpdateWidget(covariant ResidenceSelector oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.selected != oldWidget.selected) {
+    if (widget.preSelectedCountry != oldWidget.preSelectedCountry) {
       _scrollToSelectedCountry();
     }
   }
 
-  Future<void> _scrollToSelectedCountry() async {
-    //todo
-    if (widget.selected != null) {
-      int index = await geo_api
-          .getCountries()
-          .then((countries) => countries.indexOf(widget.selected!));
-      if (index != -1) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          try {
-            _controller.jumpTo(index.toDouble());
-            _controller.animateTo(index.toDouble(),
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeInOut);
-            logger.i("Scrolled to ${index.toDouble()}");
-          } catch (e) {
-            logger.e(e);
-          }
-        });
-      }
+  Future<void> _scrollToSelectedCountry({int retries = 0}) async {
+    if (retries > 5) {
+      return;
     }
+    if (widget.preSelectedCountry == null) {
+      return;
+    }
+    int index = await geo_api
+        .getCountries()
+        .then((countries) => countries.indexOf(widget.preSelectedCountry!));
+    if (index == -1) {
+      return;
+    }
+    index *=
+        100; // This value is derived from the height of each CarouselView element - some calculated padding (IDK if 100 is the correct value but it seems fine for most screen resolutions)
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      try {
+        _controller.jumpTo(index.toDouble());
+        await _controller.animateTo(index.toDouble(),
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut);
+        logger.i("Scrolled to ${index.toDouble()}");
+      } catch (e) {
+        logger.e(e);
+        await _scrollToSelectedCountry(retries: retries + 1);
+      }
+    });
   }
 
   @override
@@ -85,7 +92,7 @@ class _ResidenceSelectorState extends State<ResidenceSelector> {
                     return Center(child: Text('Error: ${snapshot.error}'));
                   } else if (snapshot.hasData) {
                     return Scrollbar(
-                      controller: _controller,
+                      controller: _scrollController,
                       child: CarouselView.weighted(
                         controller: _controller,
                         onTap: (index) {
@@ -93,11 +100,8 @@ class _ResidenceSelectorState extends State<ResidenceSelector> {
                           _controller.jumpTo(index.toDouble());
                         },
                         scrollDirection: Axis.vertical,
-                        flexWeights: const [
-                          1,
-                          2,
-                          1
-                        ], // Main Object is twice as big as previous and next
+                        flexWeights: const [1, 2, 1],
+                        // Main Object is twice as big as previous and next
                         children: getCountryWidgets(context, snapshot.data!),
                       ),
                     );

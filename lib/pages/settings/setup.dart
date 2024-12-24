@@ -74,7 +74,7 @@ class _SetupPageState extends State<SetupPage> {
             ),
             ResidenceSelector(
               onChange: changeResidence,
-              selected: _selectedResidence,
+              preSelectedCountry: _selectedResidence,
             ),
             if (_selectedResidence != null)
               LocalResidenceSelector(
