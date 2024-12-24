@@ -61,13 +61,15 @@ class UpcomingHolidaysCard extends StatelessWidget {
           final residenceCountry = userSettings['residence_country'];
           final localResidenceCode = userSettings['residence'];
           return Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
+            decoration: const BoxDecoration(
+              shape: BoxShape.rectangle,
             ),
             height: MediaQuery.of(context).size.height * 0.2,
             width: MediaQuery.of(context).size.width,
-            padding: const EdgeInsets.all(8.0),
             child: Card(
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+              ),
               elevation: 4.0,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),

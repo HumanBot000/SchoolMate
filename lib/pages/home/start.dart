@@ -18,7 +18,7 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: const Color(0x003a7bff),
       ),
       body: const Stack(children: [
-        UpcomingHolidaysCard(),
+        Align(alignment: Alignment.bottomCenter, child: UpcomingHolidaysCard()),
       ]),
     );
   }

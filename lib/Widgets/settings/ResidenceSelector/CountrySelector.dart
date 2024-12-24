@@ -41,13 +41,14 @@ class _ResidenceSelectorState extends State<ResidenceSelector> {
           .then((countries) => countries.indexOf(widget.selected!));
       if (index != -1) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (mounted && _controller.hasClients) {
-            try {
-              _controller.jumpTo(index.toDouble());
-              logger.i("Scrolled to ${index.toDouble()}");
-            } catch (e) {
-              logger.e(e);
-            }
+          try {
+            _controller.jumpTo(index.toDouble());
+            _controller.animateTo(index.toDouble(),
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut);
+            logger.i("Scrolled to ${index.toDouble()}");
+          } catch (e) {
+            logger.e(e);
           }
         });
       }
@@ -92,7 +93,11 @@ class _ResidenceSelectorState extends State<ResidenceSelector> {
                           _controller.jumpTo(index.toDouble());
                         },
                         scrollDirection: Axis.vertical,
-                        flexWeights: const [1, 2, 1],
+                        flexWeights: const [
+                          1,
+                          2,
+                          1
+                        ], // Main Object is twice as big as previous and next
                         children: getCountryWidgets(context, snapshot.data!),
                       ),
                     );
