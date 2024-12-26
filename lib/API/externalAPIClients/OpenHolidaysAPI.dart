@@ -13,13 +13,12 @@ Future<SchoolHoliday> getUpcomingHolidays(
   final validTo = DateFormat('yyyy-MM-dd')
       .format(DateTime(now.year + 1, now.month, now.day));
 
-  final url = Uri.parse("https://openholidaysapi.org/Holidays/SchoolHolidays"
+  final url = Uri.parse("https://openholidaysapi.org/SchoolHolidays"
       "?countryIsoCode=${residenceCountry.toUpperCase()}"
       "&validFrom=$validFrom"
       "&validTo=$validTo"
       "&languageIsoCode=${language.toUpperCase()}"
       "&subdivisionCode=${residenceCountry.toUpperCase()}-${localResidenceCode.toUpperCase()}");
-
   final response = await http.get(url);
   if (response.statusCode != 200) {
     throw Exception('Failed to fetch holidays: ${response.statusCode}');

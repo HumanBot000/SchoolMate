@@ -29,8 +29,19 @@ class _ScheduleSetupPageState extends State<ScheduleSetupPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "Before you can start using the schedule, we need to know some last details about your day.",
+                        "Schedule Setup",
                         style: Theme.of(context).textTheme.headlineMedium,
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          "Before you can start using the schedule, we need to know some last details about your day.",
+                          style: Theme.of(context).textTheme.headlineSmall,
+                        ),
                       ),
                     ],
                   )
