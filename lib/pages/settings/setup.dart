@@ -1,5 +1,5 @@
-import 'package:app/API/supabase/userData.dart';
-import 'package:app/API/supabase/userSettings.dart' as supabase_settings;
+import 'package:app/API/supabase/auth/userData.dart';
+import 'package:app/API/supabase/auth/userSettings.dart' as supabase_settings;
 import 'package:app/Classes/geoPolitics/Country.dart';
 import 'package:app/pages/home/home/start.dart';
 import 'package:flutter/material.dart';

@@ -1,4 +1,4 @@
-import 'package:app/API/supabase/userSettings.dart' as settings;
+import 'package:app/API/supabase/auth/userSettings.dart' as settings;
 import 'package:app/pages/home/home/start.dart';
 import 'package:app/pages/settings/setup.dart';
 import 'package:flutter/material.dart';
