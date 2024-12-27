@@ -19,9 +19,12 @@ FutureBuilder scheduleExistsNavigation(BuildContext context) => FutureBuilder(
         return const Center(child: CircularProgressIndicator());
       } else if (snapshot.hasData) {
         if (snapshot.data!.isEmpty) {
-          Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (context) => const schedule_setup.ScheduleSetupPage(),
-          ));
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            // Wait for the build to finish
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (context) => const schedule_setup.ScheduleSetupPage(),
+            ));
+          });
         }
       } else if (snapshot.hasError) {
         WidgetsBinding.instance.addPostFrameCallback((_) =>

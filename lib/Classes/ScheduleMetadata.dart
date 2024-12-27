@@ -1,3 +1,5 @@
+import 'package:app/config/generic.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class Schedule {
@@ -8,10 +10,10 @@ class Schedule {
 
 class ScheduleMetadata {
   final DateTime creationDate; // localized time
+
   // localization not required because it's a time not a date
-  // Also DateTime is not really true, it will contain a fake date
-  final DateTime firstLessonTime;
-  final DateTime lastLessonTime;
+  final TimeOfDay firstLessonTime;
+  final TimeOfDay lastLessonTime;
   final int numberOfAlternateWeeks;
   final String currentAlternatedWeek;
   final List<int> workdays;
@@ -22,17 +24,17 @@ class ScheduleMetadata {
   factory ScheduleMetadata.fromSupabaseDBResponse(Map<String, dynamic> json) {
     final creationDate =
         DateFormat('yyyy-MM-dd').parse(json['created_at']).toLocal();
-    final firstLessonTime = DateFormat('HH:mm').parse(json['first_lesson']);
-    final lastLessonTime = DateFormat('HH:mm').parse(json['last_lesson']);
+    final firstLessonTime =
+        TimeOfDay.fromDateTime(DateFormat('HH:mm').parse(json['first_lesson']));
+    final lastLessonTime =
+        TimeOfDay.fromDateTime(DateFormat('HH:mm').parse(json['last_lesson']));
     final numberOfAlternateWeeks = int.parse(json['alternate_weeks']);
     final currentAlternatedWeek =
         json['current_week']; //todo rename in DB to current_alternated_week
     List<int> weekdays = [];
     for (int i = 0; i < 7; i++) {
-      // 1. Maybe it would be better to store an array of ints instead of strings in the DB
-      // 2. PascalCase looks better in the code
-      final dayOfWeek =
-          ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"][i].toLowerCase();
+      // Maybe it would be better to store an array of ints instead of strings in the DB
+      final dayOfWeek = weekdaysAbbreviations[i].toLowerCase();
       if (json['workdays'].contains(dayOfWeek)) {
         weekdays.add(i);
       }

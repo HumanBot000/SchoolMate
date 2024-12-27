@@ -30,8 +30,7 @@ class MyApp extends StatelessWidget {
           seedColor: const Color(0xFF3A7BD5),
           brightness: Brightness.dark,
         ).copyWith(
-          surface: const Color(0xFF2B2B2B),
-        ),
+            surface: const Color(0xFF2B2B2B), secondary: Colors.greenAccent),
         textTheme: const TextTheme(
           headlineLarge: TextStyle(color: Colors.white, fontSize: 30),
         ),
