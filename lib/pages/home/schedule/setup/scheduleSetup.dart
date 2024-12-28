@@ -1,4 +1,5 @@
 import 'package:app/pages/home/schedule/setup/Widgets/AlternatingWeeksSelector.dart';
+import 'package:app/pages/home/schedule/setup/Widgets/IndividualLessonDurationSelector.dart';
 import 'package:app/pages/home/schedule/setup/Widgets/LessonsTimeFrame.dart';
 import 'package:app/pages/home/schedule/setup/Widgets/WorkdaySelector.dart';
 import 'package:flutter/material.dart';
@@ -15,12 +16,14 @@ class ScheduleSetupPage extends StatefulWidget {
 class _ScheduleSetupPageState extends State<ScheduleSetupPage> {
   TimeOfDay? _startTime;
   TimeOfDay? _endTime;
-  List<bool> _selectedWorkadys = List.generate(7, (index) => index < 5);
+  final List<bool> _selectedWorkdays = List.generate(7, (index) => index < 5);
   int _activePage = 0;
   int _alternatingWeeksCount = 0;
   int _currentAlternatingWeek = 0;
-
-  void _setLessonTimeFrame(TimeOfDay? startTime, TimeOfDay? endTime) {
+  int _lessonLength = 45;
+  int _customLessonLength =
+      90; //Don't use this value. It's for an UI build. Use _lessonLength instead
+  void _setLessonsTimeFrame(TimeOfDay? startTime, TimeOfDay? endTime) {
     setState(() {
       _startTime = startTime;
       _endTime = endTime;
@@ -36,7 +39,7 @@ class _ScheduleSetupPageState extends State<ScheduleSetupPage> {
 
   void _updateWorkday(int index, bool value) {
     setState(() {
-      _selectedWorkadys[index] = value;
+      _selectedWorkdays[index] = value;
     });
   }
 
@@ -60,6 +63,18 @@ class _ScheduleSetupPageState extends State<ScheduleSetupPage> {
     setState(() {
       _alternatingWeeksCount = numberOfWeeks;
       _currentAlternatingWeek = currentWeek;
+    });
+  }
+
+  void _updateLessonLength(int value) {
+    setState(() {
+      _lessonLength = value;
+    });
+  }
+
+  void _updateCustomLessonLength(int value) {
+    setState(() {
+      _customLessonLength = value;
     });
   }
 
@@ -108,7 +123,7 @@ class _ScheduleSetupPageState extends State<ScheduleSetupPage> {
                     LessonsTimeFrameSelector(
                         startTime: _startTime,
                         endTime: _endTime,
-                        onTimeChanged: _setLessonTimeFrame),
+                        onTimeChanged: _setLessonsTimeFrame),
                     Divider(
                       color: Theme.of(context).colorScheme.primary,
                       thickness: 1.5,
@@ -118,7 +133,7 @@ class _ScheduleSetupPageState extends State<ScheduleSetupPage> {
                       "Please select the days you have lessons.",
                     ),
                     WorkDaysSelector(
-                        workdays: _selectedWorkadys,
+                        workdays: _selectedWorkdays,
                         onWorkdayChange: _updateWorkday,
                         onActivePageChange: _onPageChanged,
                         activePage: _activePage),
@@ -135,7 +150,23 @@ class _ScheduleSetupPageState extends State<ScheduleSetupPage> {
                         activePage: _activePage,
                         onActivePageChange: _onPageChanged,
                         selectedAlternatingWeek: _currentAlternatingWeek,
-                        onWeekChange: _updateAlternatingWeeks)
+                        onWeekChange: _updateAlternatingWeeks),
+                    Divider(
+                      color: Theme.of(context).colorScheme.primary,
+                      thickness: 1.5,
+                    ),
+                    const SizedBox(height: 16),
+                    const Text(
+                      "How long are your lessons?",
+                    ),
+                    IndividualLessonDurationSelector(
+                      activePage: _activePage,
+                      onActivePageChange: _onPageChanged,
+                      lessonDuration: _lessonLength,
+                      onLessonDurationChange: _updateLessonLength,
+                      onCustomLessonDurationChange: _updateCustomLessonLength,
+                      selectedCustomLessonDuration: _customLessonLength,
+                    )
                   ],
                 ),
               ),

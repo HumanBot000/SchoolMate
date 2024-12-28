@@ -237,7 +237,9 @@ class _AlternatingWeeksSelectorState extends State<AlternatingWeeksSelector> {
                   "C"
                 ][_getWeekType(DateTime.now(), widget.selectedAlternatingWeek, widget.alternatingWeeksCount, DateTime.now().add(Duration(days: (index - 1) * 7)))]}",
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: Colors.white, fontWeight: FontWeight.bold),
+                    color:
+                        index == 1 ? Colors.greenAccent.shade100 : Colors.white,
+                    fontWeight: FontWeight.bold),
               );
             },
             itemCount: 3,

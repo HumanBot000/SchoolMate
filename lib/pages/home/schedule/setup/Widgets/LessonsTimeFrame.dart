@@ -33,7 +33,7 @@ class _LessonsTimeFrameSelectorState extends State<LessonsTimeFrameSelector> {
         child: Column(
           children: [
             InkWell(
-              onTap: () async {
+              onTap: () {
                 showAdaptiveDialog(
                   context: context,
                   builder: (context) => CustomTimePicker(
@@ -92,8 +92,8 @@ class _LessonsTimeFrameSelectorState extends State<LessonsTimeFrameSelector> {
             ),
             const SizedBox(height: 16),
             InkWell(
-              onTap: () async {
-                showDialog(
+              onTap: () {
+                showAdaptiveDialog(
                   context: context,
                   builder: (context) => CustomTimePicker(
                     initialTime: widget.endTime ?? TimeOfDay.now(),
