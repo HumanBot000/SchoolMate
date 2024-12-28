@@ -1,3 +1,4 @@
+import 'package:app/pages/home/schedule/setup/Widgets/AlternatingWeeksSelector.dart';
 import 'package:app/pages/home/schedule/setup/Widgets/LessonsTimeFrame.dart';
 import 'package:app/pages/home/schedule/setup/Widgets/WorkdaySelector.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +16,9 @@ class _ScheduleSetupPageState extends State<ScheduleSetupPage> {
   TimeOfDay? _startTime;
   TimeOfDay? _endTime;
   List<bool> _selectedWorkadys = List.generate(7, (index) => index < 5);
-  int _selectedPage = 0;
+  int _activePage = 0;
+  int _alternatingWeeksCount = 0;
+  int _currentAlternatingWeek = 0;
 
   void _setLessonTimeFrame(TimeOfDay? startTime, TimeOfDay? endTime) {
     setState(() {
@@ -25,15 +28,38 @@ class _ScheduleSetupPageState extends State<ScheduleSetupPage> {
   }
 
   void _onPageChanged(int index) {
-    if (_selectedPage == index) return;
+    if (_activePage == index) return;
     setState(() {
-      _selectedPage = index;
+      _activePage = index;
     });
   }
 
   void _updateWorkday(int index, bool value) {
     setState(() {
       _selectedWorkadys[index] = value;
+    });
+  }
+
+  void _updateAlternatingWeeks(int numberOfWeeks, int currentWeek) {
+    if (currentWeek > numberOfWeeks) {
+      // This case should be made impossible via the ui, this is just a fallback
+      WidgetsBinding.instance.addPostFrameCallback(
+          (_) => ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: const Text(
+                      "The current week type must be included in the number of weeks"),
+                  backgroundColor: Theme.of(context).colorScheme.error,
+                ),
+              ));
+      setState(() {
+        _alternatingWeeksCount = numberOfWeeks;
+        _currentAlternatingWeek = 0;
+      });
+      return;
+    }
+    setState(() {
+      _alternatingWeeksCount = numberOfWeeks;
+      _currentAlternatingWeek = currentWeek;
     });
   }
 
@@ -95,7 +121,21 @@ class _ScheduleSetupPageState extends State<ScheduleSetupPage> {
                         workdays: _selectedWorkadys,
                         onWorkdayChange: _updateWorkday,
                         onActivePageChange: _onPageChanged,
-                        activePage: _selectedPage)
+                        activePage: _activePage),
+                    Divider(
+                      color: Theme.of(context).colorScheme.primary,
+                      thickness: 1.5,
+                    ),
+                    const SizedBox(height: 16),
+                    const Text(
+                      "Does your schedule change every x weeks?",
+                    ),
+                    AlternatingWeeksSelector(
+                        alternatingWeeksCount: _alternatingWeeksCount,
+                        activePage: _activePage,
+                        onActivePageChange: _onPageChanged,
+                        selectedAlternatingWeek: _currentAlternatingWeek,
+                        onWeekChange: _updateAlternatingWeeks)
                   ],
                 ),
               ),

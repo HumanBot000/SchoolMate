@@ -22,6 +22,81 @@ class WorkDaysSelector extends StatefulWidget {
 }
 
 class _WorkDaysSelectorState extends State<WorkDaysSelector> {
+  Widget _activatedPage() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: List.generate(7, (index) {
+        return Expanded(
+          child: Column(
+            children: [
+              Text(
+                weekdaysAbbreviations[index],
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium
+                    ?.copyWith(fontWeight: FontWeight.bold),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: Transform.rotate(
+                  angle: math.pi / 2, // 180 degrees
+                  child: Switch(
+                    value: widget.workdays[index],
+                    onChanged: (value) {
+                      widget.onWorkdayChange(index, value);
+                    },
+                  ),
+                ),
+              ),
+              Icon(
+                widget.workdays[index] ? Icons.work : Icons.work_off,
+                color: widget.workdays[index] ? Colors.green : Colors.red,
+              ),
+            ],
+          ),
+        );
+      }),
+    );
+  }
+
+  List<Row> _deactivatedPage() {
+    return List.generate(7, (index) {
+      if (widget.workdays[index]) {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Text(
+                weekdaysAbbreviations[index],
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium
+                    ?.copyWith(fontWeight: FontWeight.bold),
+              ),
+            ),
+            const Icon(Icons.work, color: Colors.green),
+          ],
+        );
+      } else {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Text(
+                weekdaysAbbreviations[index],
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium
+                    ?.copyWith(fontWeight: FontWeight.bold),
+              ),
+            ),
+            const Icon(Icons.work_off, color: Colors.red),
+          ],
+        );
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -38,84 +113,9 @@ class _WorkDaysSelectorState extends State<WorkDaysSelector> {
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
-            children: widget.activePage == 1
-                ? [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: List.generate(7, (index) {
-                        return Expanded(
-                          child: Column(
-                            children: [
-                              Text(
-                                weekdaysAbbreviations[index],
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium
-                                    ?.copyWith(fontWeight: FontWeight.bold),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 8),
-                                child: Transform.rotate(
-                                  angle: math.pi / 2, // 180 degrees
-                                  child: Switch(
-                                    value: widget.workdays[index],
-                                    onChanged: (value) {
-                                      widget.onWorkdayChange(index, value);
-                                    },
-                                  ),
-                                ),
-                              ),
-                              Icon(
-                                widget.workdays[index]
-                                    ? Icons.work
-                                    : Icons.work_off,
-                                color: widget.workdays[index]
-                                    ? Colors.green
-                                    : Colors.red,
-                              ),
-                            ],
-                          ),
-                        );
-                      }),
-                    ),
-                  ]
-                : List.generate(7, (index) {
-                    if (widget.workdays[index]) {
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Expanded(
-                            child: Text(
-                              weekdaysAbbreviations[index],
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium
-                                  ?.copyWith(fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          const Icon(Icons.work, color: Colors.green),
-                        ],
-                      );
-                    } else {
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Expanded(
-                            child: Text(
-                              weekdaysAbbreviations[index],
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium
-                                  ?.copyWith(fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          const Icon(Icons.work_off, color: Colors.red),
-                        ],
-                      );
-                    }
-                  }),
-          ),
+              children: widget.activePage == 1
+                  ? [_activatedPage()]
+                  : _deactivatedPage()),
         ),
       ),
     );
