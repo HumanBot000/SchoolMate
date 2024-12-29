@@ -1,4 +1,4 @@
-import '../../../main.dart';
+import 'package:app/main.dart';
 
 String getUserName() =>
     supabaseClient.client.auth.currentUser!.userMetadata!['username'] as String;

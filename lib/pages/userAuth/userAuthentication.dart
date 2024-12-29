@@ -1,9 +1,9 @@
 import 'package:app/API/supabase/auth/userSettings.dart' as settings;
+import 'package:app/main.dart';
 import 'package:app/pages/home/home/start.dart';
 import 'package:app/pages/settings/setup.dart';
 import 'package:flutter/material.dart';
 
-import '../../main.dart';
 import 'authenticationFlow.dart' as auth_ui;
 
 class AuthenticationPage extends StatelessWidget {

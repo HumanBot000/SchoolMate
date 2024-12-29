@@ -1,4 +1,4 @@
-import 'package:app/config/generic.dart';
+import 'package:app/util/dates.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 

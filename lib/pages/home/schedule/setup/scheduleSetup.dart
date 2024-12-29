@@ -1,10 +1,9 @@
+import 'package:app/pages/home/Widgets/BottomNavBar.dart';
 import 'package:app/pages/home/schedule/setup/Widgets/AlternatingWeeksSelector.dart';
 import 'package:app/pages/home/schedule/setup/Widgets/IndividualLessonDurationSelector.dart';
 import 'package:app/pages/home/schedule/setup/Widgets/LessonsTimeFrame.dart';
 import 'package:app/pages/home/schedule/setup/Widgets/WorkdaySelector.dart';
 import 'package:flutter/material.dart';
-
-import '../../Widgets/BottomNavBar.dart';
 
 class ScheduleSetupPage extends StatefulWidget {
   const ScheduleSetupPage({super.key});
@@ -14,6 +13,7 @@ class ScheduleSetupPage extends StatefulWidget {
 }
 
 class _ScheduleSetupPageState extends State<ScheduleSetupPage> {
+  // Don't make these vars public and manipulate in child widgets because of single source of truth -> easier debugging
   TimeOfDay? _startTime;
   TimeOfDay? _endTime;
   final List<bool> _selectedWorkdays = List.generate(7, (index) => index < 5);

@@ -1,6 +1,6 @@
+import 'package:app/pages/home/Widgets/BottomNavBar.dart';
 import 'package:flutter/material.dart';
 
-import '../Widgets/BottomNavBar.dart';
 import 'Widgets/UpcomingHolidaysCard.dart';
 
 class HomePage extends StatefulWidget {

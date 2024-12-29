@@ -1,9 +1,8 @@
+import 'package:app/API/supabase/schedule/fetchSchedule.dart';
+import 'package:app/pages/home/Widgets/BottomNavBar.dart';
 import 'package:app/pages/home/schedule/setup/scheduleSetup.dart'
     as schedule_setup;
 import 'package:flutter/material.dart';
-
-import '../../../API/supabase/schedule/fetchSchedule.dart';
-import '../Widgets/BottomNavBar.dart';
 
 class SchedulePage extends StatefulWidget {
   const SchedulePage({super.key});

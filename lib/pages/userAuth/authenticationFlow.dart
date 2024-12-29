@@ -1,11 +1,10 @@
 import 'dart:async';
 
+import 'package:app/main.dart';
 import 'package:app/pages/home/home/start.dart';
 import 'package:app/pages/userAuth/emailVerification.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
-
-import '../../main.dart';
 
 void _errorHandler(Object response, BuildContext context) {
   if (response is AuthException && response.statusCode.toString() == "422") {

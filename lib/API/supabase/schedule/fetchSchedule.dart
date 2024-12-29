@@ -1,7 +1,6 @@
+import 'package:app/API/supabase/auth/userData.dart';
 import 'package:app/Classes/ScheduleMetadata.dart';
-
-import '../../../main.dart';
-import '../auth/userData.dart';
+import 'package:app/main.dart';
 
 Future<dynamic> fetchSchedule() async {
   final response = await supabaseClient.client

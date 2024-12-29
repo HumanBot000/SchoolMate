@@ -1,10 +1,9 @@
+import 'package:app/main.dart';
 import 'package:app/pages/settings/setup.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
-
-import '../../main.dart';
 
 class EmailVerificationPage extends StatefulWidget {
   final String email;
