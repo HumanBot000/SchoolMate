@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 
-import 'package:app/Widgets/public/GradientButton.dart';
 import 'package:flutter/material.dart';
+import 'package:school_mate/Widgets/public/GradientButton.dart';
 
 class IndividualLessonDurationSelector extends StatefulWidget {
   final int activePage;

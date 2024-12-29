@@ -1,6 +1,6 @@
-import 'package:app/pages/home/home/start.dart';
-import 'package:app/pages/home/schedule/start.dart';
 import 'package:flutter/material.dart';
+import 'package:school_mate/pages/home/home/start.dart';
+import 'package:school_mate/pages/home/schedule/start.dart';
 
 class HomeNavBar extends StatefulWidget {
   final int currentIndex;

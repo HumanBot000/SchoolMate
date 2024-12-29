@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 
-import 'package:app/util/dates.dart';
 import 'package:flutter/material.dart';
+import 'package:school_mate/util/dates.dart';
 
 class WorkDaysSelector extends StatefulWidget {
   final List<bool> workdays;

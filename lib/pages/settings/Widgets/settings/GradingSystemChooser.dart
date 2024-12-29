@@ -1,8 +1,9 @@
-import 'package:app/Widgets/public/GradientButton.dart';
 import 'package:flutter/material.dart';
+import 'package:school_mate/Widgets/public/GradientButton.dart';
 
 class GradingSystemSettings extends StatelessWidget {
   final Function onChange;
+
   const GradingSystemSettings({super.key, required this.onChange});
 
   @override

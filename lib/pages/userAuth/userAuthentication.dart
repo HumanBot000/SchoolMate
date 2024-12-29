@@ -1,8 +1,8 @@
-import 'package:app/API/supabase/auth/userSettings.dart' as settings;
-import 'package:app/main.dart';
-import 'package:app/pages/home/home/start.dart';
-import 'package:app/pages/settings/setup.dart';
 import 'package:flutter/material.dart';
+import 'package:school_mate/API/supabase/auth/userSettings.dart' as settings;
+import 'package:school_mate/main.dart';
+import 'package:school_mate/pages/home/home/start.dart';
+import 'package:school_mate/pages/settings/setup.dart';
 
 import 'authenticationFlow.dart' as auth_ui;
 

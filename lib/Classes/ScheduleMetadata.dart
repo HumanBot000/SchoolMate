@@ -1,6 +1,6 @@
-import 'package:app/util/dates.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:school_mate/util/dates.dart';
 
 class Schedule {
   final ScheduleMetadata metadata;

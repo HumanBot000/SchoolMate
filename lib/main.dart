@@ -1,13 +1,14 @@
-import 'package:app/API/supabase/setup.dart';
-import 'package:app/pages/userAuth/userAuthentication.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:school_mate/API/supabase/setup.dart';
+import 'package:school_mate/pages/userAuth/userAuthentication.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 late final Supabase supabaseClient;
 final logger = Logger();
 late final SharedPreferences prefs;
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeSupabase();

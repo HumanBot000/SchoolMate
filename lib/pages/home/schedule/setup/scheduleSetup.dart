@@ -1,9 +1,9 @@
-import 'package:app/pages/home/Widgets/BottomNavBar.dart';
-import 'package:app/pages/home/schedule/setup/Widgets/AlternatingWeeksSelector.dart';
-import 'package:app/pages/home/schedule/setup/Widgets/IndividualLessonDurationSelector.dart';
-import 'package:app/pages/home/schedule/setup/Widgets/LessonsTimeFrame.dart';
-import 'package:app/pages/home/schedule/setup/Widgets/WorkdaySelector.dart';
 import 'package:flutter/material.dart';
+import 'package:school_mate/pages/home/Widgets/BottomNavBar.dart';
+import 'package:school_mate/pages/home/schedule/setup/Widgets/AlternatingWeeksSelector.dart';
+import 'package:school_mate/pages/home/schedule/setup/Widgets/IndividualLessonDurationSelector.dart';
+import 'package:school_mate/pages/home/schedule/setup/Widgets/LessonsTimeFrame.dart';
+import 'package:school_mate/pages/home/schedule/setup/Widgets/WorkdaySelector.dart';
 
 class ScheduleSetupPage extends StatefulWidget {
   const ScheduleSetupPage({super.key});

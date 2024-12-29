@@ -1,10 +1,10 @@
 import 'dart:convert';
 
-import 'package:app/API/supabase/auth/userData.dart';
-import 'package:app/main.dart';
-import 'package:app/util/dates.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:school_mate/API/supabase/auth/userData.dart';
+import 'package:school_mate/main.dart';
+import 'package:school_mate/util/dates.dart';
 
 Future<void> insertScheduleMetadata(
     TimeOfDay startOfDay,

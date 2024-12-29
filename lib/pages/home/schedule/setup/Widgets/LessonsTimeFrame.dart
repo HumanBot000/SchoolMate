@@ -1,6 +1,6 @@
-import 'package:app/Widgets/public/TimePicker.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' as intl;
+import 'package:school_mate/Widgets/public/TimePicker.dart';
 
 class LessonsTimeFrameSelector extends StatefulWidget {
   final TimeOfDay? startTime, endTime;

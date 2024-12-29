@@ -1,6 +1,6 @@
-import 'package:app/Widgets/public/GradientButton.dart';
-import 'package:app/util/dates.dart';
 import 'package:flutter/material.dart';
+import 'package:school_mate/Widgets/public/GradientButton.dart';
+import 'package:school_mate/util/dates.dart';
 
 class AlternatingWeeksSelector extends StatefulWidget {
   final int alternatingWeeksCount;

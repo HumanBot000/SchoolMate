@@ -1,6 +1,7 @@
 class SubCountryState {
   final String name;
   final String code;
+
   SubCountryState(this.name, this.code);
 
   factory SubCountryState.fromJson(Map<String, dynamic> json) {

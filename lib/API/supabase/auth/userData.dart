@@ -1,4 +1,4 @@
-import 'package:app/main.dart';
+import 'package:school_mate/main.dart';
 
 String getUserName() =>
     supabaseClient.client.auth.currentUser!.userMetadata!['username'] as String;

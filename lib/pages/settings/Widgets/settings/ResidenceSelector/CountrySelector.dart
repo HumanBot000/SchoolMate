@@ -1,8 +1,8 @@
-import 'package:app/API/externalAPIClients/geoAPIs.dart' as geo_api;
-import 'package:app/Classes/geoPolitics/Country.dart';
-import 'package:app/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:school_mate/API/externalAPIClients/geoAPIs.dart' as geo_api;
+import 'package:school_mate/Classes/geoPolitics/Country.dart';
+import 'package:school_mate/main.dart';
 
 class ResidenceSelector extends StatefulWidget {
   final Function onChange;

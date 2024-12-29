@@ -3,6 +3,7 @@ class SchoolHoliday {
   late DateTime startDate;
   late DateTime endDate;
   late int daysLeft = startDate.difference(DateTime.now()).inDays;
+
   SchoolHoliday(
       {required this.name, required this.startDate, required this.endDate});
 
