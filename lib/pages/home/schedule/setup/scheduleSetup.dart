@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:school_mate/API/supabase/schedule/insertMetadata.dart'
+    as metadata;
+import 'package:school_mate/Widgets/public/GradientButton.dart';
 import 'package:school_mate/pages/home/Widgets/BottomNavBar.dart';
+import 'package:school_mate/pages/home/schedule/page/Schedule.dart';
 import 'package:school_mate/pages/home/schedule/setup/Widgets/AlternatingWeeksSelector.dart';
 import 'package:school_mate/pages/home/schedule/setup/Widgets/IndividualLessonDurationSelector.dart';
 import 'package:school_mate/pages/home/schedule/setup/Widgets/LessonsTimeFrame.dart';
@@ -14,15 +18,16 @@ class ScheduleSetupPage extends StatefulWidget {
 
 class _ScheduleSetupPageState extends State<ScheduleSetupPage> {
   // Don't make these vars public and manipulate in child widgets because of single source of truth -> easier debugging
+  int _activePage = 0;
   TimeOfDay? _startTime;
   TimeOfDay? _endTime;
-  final List<bool> _selectedWorkdays = List.generate(7, (index) => index < 5);
-  int _activePage = 0;
+  final List<bool> _workdays = List.generate(7, (index) => index < 5);
   int _alternatingWeeksCount = 0;
   int _currentAlternatingWeek = 0;
   int _lessonLength = 45;
   int _customLessonLength =
       90; //Don't use this value. It's for an UI build. Use _lessonLength instead
+
   void _setLessonsTimeFrame(TimeOfDay? startTime, TimeOfDay? endTime) {
     setState(() {
       _startTime = startTime;
@@ -39,7 +44,7 @@ class _ScheduleSetupPageState extends State<ScheduleSetupPage> {
 
   void _updateWorkday(int index, bool value) {
     setState(() {
-      _selectedWorkdays[index] = value;
+      _workdays[index] = value;
     });
   }
 
@@ -117,8 +122,23 @@ class _ScheduleSetupPageState extends State<ScheduleSetupPage> {
                       thickness: 1.5,
                     ),
                     const SizedBox(height: 16),
-                    const Text(
-                      "Please enter the maximum start and end times. You can change this later for each individual day.",
+                    Wrap(
+                      children: [
+                        RichText(
+                          text: const TextSpan(
+                            // Ensures that the * is always at the end of the last line of the text and not in a separate line
+                            text:
+                                "Please enter the maximum start and end times.\n You can change this later for each individual day. ",
+                            children: [
+                              TextSpan(
+                                text: "*",
+                                style:
+                                    TextStyle(color: Colors.red, fontSize: 32),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                     LessonsTimeFrameSelector(
                         startTime: _startTime,
@@ -133,7 +153,7 @@ class _ScheduleSetupPageState extends State<ScheduleSetupPage> {
                       "Please select the days you have lessons.",
                     ),
                     WorkDaysSelector(
-                        workdays: _selectedWorkdays,
+                        workdays: _workdays,
                         onWorkdayChange: _updateWorkday,
                         onActivePageChange: _onPageChanged,
                         activePage: _activePage),
@@ -166,7 +186,78 @@ class _ScheduleSetupPageState extends State<ScheduleSetupPage> {
                       onLessonDurationChange: _updateLessonLength,
                       onCustomLessonDurationChange: _updateCustomLessonLength,
                       selectedCustomLessonDuration: _customLessonLength,
-                    )
+                    ),
+                    Divider(
+                      color: Theme.of(context).colorScheme.primary,
+                      thickness: 1.5,
+                    ),
+                    const SizedBox(height: 16),
+                    Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ElevatedGradientButton(
+                            borderRadius: BorderRadius.circular(12),
+                            onPressed: () async {
+                              if (_startTime == null || _endTime == null) {
+                                WidgetsBinding.instance.addPostFrameCallback(
+                                    (_) => ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            backgroundColor: Theme.of(context)
+                                                .colorScheme
+                                                .error,
+                                            content: const Text(
+                                                "Please fill in all required fields"),
+                                          ),
+                                        ));
+                                return;
+                              }
+                              try {
+                                await metadata.insertScheduleMetadata(
+                                    _startTime!,
+                                    _endTime!,
+                                    _workdays,
+                                    _alternatingWeeksCount,
+                                    _currentAlternatingWeek,
+                                    _lessonLength);
+                              } catch (e) {
+                                WidgetsBinding.instance.addPostFrameCallback(
+                                    (_) => ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            backgroundColor: Theme.of(context)
+                                                .colorScheme
+                                                .error,
+                                            content: Text(e.toString()),
+                                          ),
+                                        ));
+                                return;
+                              }
+                              Navigator.of(context)
+                                  .pushReplacement(MaterialPageRoute(
+                                builder: (context) => const SchedulePage(),
+                              ));
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text("Confirm",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyLarge
+                                        ?.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white)),
+                              ],
+                            ))),
+                    const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "* Required fields",
+                          style: TextStyle(color: Colors.red),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),

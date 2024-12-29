@@ -38,7 +38,7 @@ class _HomeNavBarState extends State<HomeNavBar> {
 
   final List<Widget> navigationBarDestinations = [
     const HomePage(),
-    const SchedulePage(),
+    const ScheduleNavigationIntersection(),
   ];
 
   List<NavigationDestination> navigationBarItems(BuildContext context) => [

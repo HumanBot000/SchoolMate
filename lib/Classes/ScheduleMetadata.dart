@@ -28,7 +28,7 @@ class ScheduleMetadata {
         TimeOfDay.fromDateTime(DateFormat('HH:mm').parse(json['first_lesson']));
     final lastLessonTime =
         TimeOfDay.fromDateTime(DateFormat('HH:mm').parse(json['last_lesson']));
-    final numberOfAlternateWeeks = int.parse(json['alternate_weeks']);
+    final numberOfAlternateWeeks = json['alternate_weeks'];
     final currentAlternatedWeek =
         json['current_week']; //todo rename in DB to current_alternated_week
     List<int> weekdays = [];
