@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'package:school_mate/Classes/SchoolHoliday.dart';
+import 'package:school_mate/Classes/schedule/SchoolHoliday.dart';
 
 Future<SchoolHoliday> getUpcomingHolidays(
     String residenceCountry, String localResidenceCode,

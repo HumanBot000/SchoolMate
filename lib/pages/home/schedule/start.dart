@@ -29,7 +29,9 @@ FutureBuilder scheduleExistsNavigation(BuildContext context) => FutureBuilder(
         } else {
           WidgetsBinding.instance.addPostFrameCallback(
               (_) => Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    builder: (context) => const SchedulePage(),
+                    builder: (context) => SchedulePage(
+                      schedule: snapshot.data,
+                    ),
                   )));
         }
       } else if (snapshot.hasError) {

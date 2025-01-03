@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:school_mate/API/supabase/schedule/fetchSchedule.dart'
+    as fetch_schedule;
 import 'package:school_mate/API/supabase/schedule/insertMetadata.dart'
     as metadata;
 import 'package:school_mate/Widgets/public/GradientButton.dart';
+import 'package:school_mate/main.dart';
 import 'package:school_mate/pages/home/Widgets/BottomNavBar.dart';
 import 'package:school_mate/pages/home/schedule/page/Schedule.dart';
 import 'package:school_mate/pages/home/schedule/setup/Widgets/AlternatingWeeksSelector.dart';
@@ -234,7 +237,25 @@ class _ScheduleSetupPageState extends State<ScheduleSetupPage> {
                               }
                               Navigator.of(context)
                                   .pushReplacement(MaterialPageRoute(
-                                builder: (context) => const SchedulePage(),
+                                builder: (context) => FutureBuilder(
+                                  future: fetch_schedule.fetchSchedule(),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return const CircularProgressIndicator();
+                                    } else if (snapshot.hasError) {
+                                      logger.e(snapshot.error);
+                                      return Text('Error: ${snapshot.error}');
+                                    } else if (snapshot.hasData) {
+                                      return SchedulePage(
+                                          schedule: snapshot.data!);
+                                    } else {
+                                      logger.w(
+                                          "Couldn't find a schedule after creating it.");
+                                      return const Text('No data available.');
+                                    }
+                                  },
+                                ),
                               ));
                             },
                             child: Row(

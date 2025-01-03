@@ -2,12 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:school_mate/util/dates.dart';
 
-class Schedule {
-  final ScheduleMetadata metadata;
-
-  Schedule(this.metadata);
-}
-
 class ScheduleMetadata {
   final DateTime creationDate; // localized time
 

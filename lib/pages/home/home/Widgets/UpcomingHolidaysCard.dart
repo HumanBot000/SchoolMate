@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:school_mate/API/externalAPIClients/OpenHolidaysAPI.dart'
     as holiday_api;
 import 'package:school_mate/API/supabase/auth/userSettings.dart' as settings;
-import 'package:school_mate/Classes/SchoolHoliday.dart';
+import 'package:school_mate/Classes/schedule/SchoolHoliday.dart';
 import 'package:school_mate/main.dart';
 
 Widget _upcomingHolidaysTextData(
