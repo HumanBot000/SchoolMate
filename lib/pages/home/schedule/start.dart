@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:school_mate/API/supabase/schedule/fetchSchedule.dart';
+import 'package:school_mate/API/supabase/schedule/schedule.dart';
 import 'package:school_mate/pages/home/Widgets/BottomNavBar.dart';
 import 'package:school_mate/pages/home/schedule/page/Schedule.dart';
 import 'package:school_mate/pages/home/schedule/setup/scheduleSetup.dart'

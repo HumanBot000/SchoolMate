@@ -74,7 +74,6 @@ class _EmailVerificationPageState extends State<EmailVerificationPage>
   }
 
   Future<bool> _validateOTP(value) async {
-    logger.d(value);
     try {
       AuthResponse response = await supabaseClient.client.auth
           .verifyOTP(type: OtpType.email, token: value, email: widget.email);

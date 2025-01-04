@@ -121,7 +121,15 @@ class _TeacherSelectorState extends State<TeacherSelector> {
                     details.globalPosition, _teachers[index ~/ 2]);
               },
               child: ListTile(
-                title: Text(_teachers[index ~/ 2].name),
+                title: Row(
+                  children: [
+                    const Icon(Icons.person),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(_teachers[index ~/ 2].name),
+                    ),
+                  ],
+                ),
                 onTap: () {
                   widget.onSelect(_teachers[index ~/ 2]);
                 },

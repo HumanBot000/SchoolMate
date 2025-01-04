@@ -13,6 +13,17 @@ Future<List<Teacher>> fetchTeachers() async {
   return response.map((teacher) => Teacher.fromJson(teacher)).toList();
 }
 
+Future<Teacher> fetchTeacherByID(int id) async {
+  final response = await supabaseClient.client
+      .schema("schedule")
+      .from("teachers")
+      .select()
+      .eq("used_by", await getUserID())
+      .eq("id", id);
+
+  return Teacher.fromJson(response.single);
+}
+
 Future<Teacher> addTeacher(String name, Gender gender) async {
   try {
     final response = await supabaseClient.client
@@ -46,7 +57,7 @@ Future<void> deleteTeacher(Teacher teacher) async {
       .eq("id", teacher.id);
 }
 
-Future<Teacher> updateTeacher(Teacher oldTeacher, Teacher newTeacher) async {
+Future<Teacher> editTeacher(Teacher oldTeacher, Teacher newTeacher) async {
   if (oldTeacher.id < 0) {
     throw Exception(
         "The provided Teacher element wasn't created via the DB->Teacher factory and therefore hasn't an ID. It can't be updated without an ID.");

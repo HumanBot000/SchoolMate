@@ -1,4 +1,4 @@
-import 'package:school_mate/Classes/schedule/Subjects.dart';
+import 'package:school_mate/Classes/schedule/Subject.dart';
 
 import 'ScheduleMetadata.dart';
 

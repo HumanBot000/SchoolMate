@@ -5,19 +5,26 @@ import 'package:school_mate/Classes/persons/Teacher.dart';
 import 'package:school_mate/Widgets/public/PreviousPage.dart';
 import 'package:school_mate/pages/home/schedule/teachers/TeachersList.dart';
 
-class SubjectCreationPage extends StatefulWidget {
+class SubjectConfigurationPage extends StatefulWidget {
   final String? subjectName;
   final Teacher? teacher;
   final Color? color;
+  final Function(String, Teacher, Color)
+      onChange; //The Subject class should be built outside, this just returns the raw values
 
-  const SubjectCreationPage(
-      {super.key, this.subjectName, this.teacher, this.color});
+  const SubjectConfigurationPage(
+      {super.key,
+      this.subjectName,
+      this.teacher,
+      this.color,
+      required this.onChange});
 
   @override
-  State<SubjectCreationPage> createState() => _SubjectCreationPageState();
+  State<SubjectConfigurationPage> createState() =>
+      _SubjectConfigurationPageState();
 }
 
-class _SubjectCreationPageState extends State<SubjectCreationPage> {
+class _SubjectConfigurationPageState extends State<SubjectConfigurationPage> {
   Color _selectedColor = const Color(0xFF3A7BD5);
   Teacher? _selectedTeacher;
   final TextEditingController _subjectNameController = TextEditingController();
@@ -25,65 +32,58 @@ class _SubjectCreationPageState extends State<SubjectCreationPage> {
       TextEditingController(); // This is just to manipulate the content later. Don't read from this controller, the field is always disabled
   final List<List<Color>> _blockSelectColors = [
     [
-      const Color(0xFF3A7BD5),
-      const Color(0xFF689FD5),
-      const Color(0xFF96C3D5),
-      const Color(0xFFC4E7F5),
-      const Color(0xFFF2F8FF),
+      Color(0xFF3A7BD5),
+      Color(0xFF689FD5),
+      Color(0xFF96C3D5),
+      Color(0xFFC4E7F5),
+      Color(0xFFF2F8FF)
     ],
     [
-      const Color(0xFFD53A3A),
-      const Color(0xFFD56868),
-      const Color(0xFFD59696),
-      const Color(0xFFD5C4C4),
-      const Color(0xFFFFE5E5),
+      Color(0xFFD53A3A),
+      Color(0xFFD56868),
+      Color(0xFFD59696),
+      Color(0xFFD5C4C4),
+      Color(0xFFFFE5E5)
     ],
     [
-      const Color(0xFFD5B63A),
-      const Color(0xFFD5C768),
-      const Color(0xFFF5D596),
-      const Color(0xFFFFE7C4),
-      const Color(0xFFFFFBE5),
+      Color(0xFFD5B63A),
+      Color(0xFFD5C768),
+      Color(0xFFF5D596),
+      Color(0xFFFFE7C4),
+      Color(0xFFFFFBE5)
     ],
     [
-      const Color(0xFF3AD53A),
-      const Color(0xFF68D568),
-      const Color(0xFF96D596),
-      const Color(0xFFC4E7C4),
-      const Color(0xFFE5FFE5),
+      Color(0xFF3AD53A),
+      Color(0xFF68D568),
+      Color(0xFF96D596),
+      Color(0xFFC4E7C4),
+      Color(0xFFE5FFE5)
     ],
     [
-      const Color(0xFF7B3AD5),
-      const Color(0xFF9F68D5),
-      const Color(0xFFC396D5),
-      const Color(0xFFE7C4F5),
-      const Color(0xFFFBE5FF),
+      Color(0xFF7B3AD5),
+      Color(0xFF9F68D5),
+      Color(0xFFC396D5),
+      Color(0xFFE7C4F5),
+      Color(0xFFFBE5FF)
     ],
     [
-      const Color(0xFFD57B3A),
-      const Color(0xFFD59F68),
-      const Color(0xFFF5C396),
-      const Color(0xFFFFE7C4),
-      const Color(0xFFFFF2E5),
+      Color(0xFFD57B3A),
+      Color(0xFFD59F68),
+      Color(0xFFF5C396),
+      Color(0xFFFFE7C4),
+      Color(0xFFFFF2E5)
     ],
     [
-      const Color(0xFF3AD5A7),
-      const Color(0xFF68D5C3),
-      const Color(0xFF96D5E7),
-      const Color(0xFFC4F5F5),
-      const Color(0xFFE5FFFF),
+      Color(0xFF3AD5A7),
+      Color(0xFF68D5C3),
+      Color(0xFF96D5E7),
+      Color(0xFFC4F5F5),
+      Color(0x3a7bd5ff)
     ],
   ];
 
-  @override
-  void initState() {
-    /* navigatorTreeObserver.printHistory(); O my f-cking god... Spent hours just debugging the navigation...
-    This isn't reliable when building new routes on top of it, but mainly it's inconsistent, where the navigation is handled.
-    But this was so frustrating. I am not going to refactor this now
-
-     */
+  void _fetchVisualData() {
     // Ensures that the values are re-fetched if the user started a creation but then got navigated back after teacher selection.
-    super.initState();
     if (widget.subjectName != null) {
       _subjectNameController.text = widget.subjectName!;
     }
@@ -102,9 +102,147 @@ class _SubjectCreationPageState extends State<SubjectCreationPage> {
   }
 
   @override
+  void initState() {
+    /* navigatorTreeObserver.printHistory(); O my f-cking god... Spent hours just debugging the navigation...
+    This isn't reliable when building new routes on top of it, but mainly it's inconsistent, where the navigation is handled.
+    But this was so frustrating. I am not going to refactor this now
+     */
+    _fetchVisualData();
+    super.initState();
+  }
+
+  @override
   void dispose() {
     _subjectNameController.dispose();
     super.dispose();
+  }
+
+  Widget _coloredTitleContainer(Color textColor) {
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.25,
+      color: _selectedColor,
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                _subjectNameController.text.isEmpty
+                    ? "Enter Subject Name"
+                    : _subjectNameController.text,
+                style: TextStyle(
+                  color: textColor,
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Icon(
+                  Icons.menu_book,
+                  color: textColor,
+                  size: 32,
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _navigateToTeacherSelection() async {
+    final teachersList = await fetchTeachers();
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => TeacherSelector(
+          teachers: teachersList,
+          onSelect: (teacher) {
+            Navigator.of(context).pop();
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (context) => SubjectConfigurationPage(
+                subjectName: _subjectNameController.text,
+                teacher: teacher,
+                color: _selectedColor,
+                onChange: widget.onChange,
+              ),
+            ));
+          }),
+    ));
+  }
+
+  void _showColorPicker() {
+    showAdaptiveDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ColorPicker(
+              pickerColor: _selectedColor,
+              onColorChanged: (color) => setState(() => _selectedColor = color),
+            ),
+            const SizedBox(height: 16),
+            Table(
+              children: [
+                for (var row in _blockSelectColors)
+                  TableRow(
+                    children: [
+                      for (var color in row)
+                        Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _selectedColor = color;
+                              });
+                              Navigator.of(context).pop();
+                            },
+                            // Ensure that color's aren't shown in inverse because of default dark theme
+                            child: Theme(
+                              data: ThemeData.light(),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: color,
+                                ),
+                                height: 32,
+                                width: 32,
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              style: ButtonStyle(
+                backgroundColor: WidgetStateProperty.all(
+                    Theme.of(context).colorScheme.primary),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.check,
+                      color: Theme.of(context).colorScheme.onPrimary),
+                  const SizedBox(width: 8),
+                  Text(
+                    "Continue",
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        color: Theme.of(context).colorScheme.onPrimary),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
@@ -129,50 +267,19 @@ class _SubjectCreationPageState extends State<SubjectCreationPage> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          _coloredTitleContainer(textColor),
           Container(
-            height: MediaQuery.of(context).size.height * 0.25,
-            color: _selectedColor,
-            child: Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      _subjectNameController.text.isEmpty
-                          ? "Enter Subject Name"
-                          : _subjectNameController.text,
-                      style: TextStyle(
-                        color: textColor,
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: Icon(
-                        Icons.menu_book,
-                        color: textColor,
-                        size: 32,
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(height: 24),
-          Padding(
+            margin: const EdgeInsets.symmetric(vertical: 24),
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: TextFormField(
               controller: _subjectNameController,
               decoration: InputDecoration(
                 hintText: "Subject Name",
                 label: const Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Icon(Icons.menu_book),
+                    SizedBox(width: 8),
                     Text("Enter the name of the subject")
                   ],
                 ),
@@ -181,36 +288,26 @@ class _SubjectCreationPageState extends State<SubjectCreationPage> {
                   borderRadius: BorderRadius.circular(8.0),
                 ),
               ),
-              onChanged: (value) => setState(() {}),
+              onChanged: (value) =>
+                  setState(() {}), // ensures live updates to the title
             ),
           ),
-          const SizedBox(height: 24),
-          Padding(
+          Container(
+            margin: const EdgeInsets.symmetric(vertical: 24),
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: InkWell(
-              onTap: () async {
-                final teachersList = await fetchTeachers();
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => TeacherSelector(
-                      teachers: teachersList,
-                      onSelect: (teacher) {
-                        Navigator.of(context).pop();
-                        Navigator.of(context).pushReplacement(MaterialPageRoute(
-                          builder: (context) => SubjectCreationPage(
-                            subjectName: _subjectNameController.text,
-                            teacher: teacher,
-                            color: _selectedColor,
-                          ),
-                        ));
-                      }),
-                ));
-              },
+              onTap: () async => _navigateToTeacherSelection(),
               child: TextFormField(
                 enabled: false,
                 controller: _teacherNameController,
                 decoration: InputDecoration(
                   label: const Row(
-                    children: [Icon(Icons.person), Text("Teacher")],
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Icon(Icons.person),
+                      SizedBox(width: 8),
+                      Text("Teacher")
+                    ],
                   ),
                   labelStyle: const TextStyle(fontSize: 16),
                   border: OutlineInputBorder(
@@ -220,61 +317,57 @@ class _SubjectCreationPageState extends State<SubjectCreationPage> {
               ),
             ),
           ),
-          const SizedBox(height: 24),
-          ElevatedButton(
-            onPressed: () => showDialog(
-              context: context,
-              builder: (context) => AlertDialog(
-                content: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    ColorPicker(
-                      pickerColor: _selectedColor,
-                      onColorChanged: (color) =>
-                          setState(() => _selectedColor = color),
-                    ),
-                    const SizedBox(height: 16),
-                    Table(
-                      children: [
-                        for (var row in _blockSelectColors)
-                          TableRow(
-                            children: [
-                              for (var color in row)
-                                Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: GestureDetector(
-                                    onTap: () =>
-                                        setState(() => _selectedColor = color),
-                                    // Ensure that color's aren't shown in inverse because of default dark theme
-                                    child: Theme(
-                                      data: ThemeData.light(),
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: color,
-                                        ),
-                                        height: 32,
-                                        width: 32,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                            ],
-                          ),
-                      ],
-                    ),
-                  ],
+          Container(
+            margin: const EdgeInsets.symmetric(vertical: 24),
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: ElevatedButton(
+              onPressed: () => _showColorPicker(),
+              style: ButtonStyle(
+                backgroundColor: WidgetStateProperty.all(_selectedColor),
+              ),
+              child: Text("Change Color",
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        color: textColor,
+                      )),
+            ),
+          ),
+          const Spacer(),
+          Container(
+            margin: const EdgeInsets.symmetric(vertical: 24),
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: ElevatedButton(
+              onPressed: () async {
+                if (_subjectNameController.text.isEmpty ||
+                    _selectedTeacher == null) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) =>
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: const Text(
+                              "Please provide a valid name and teacher for this subject."),
+                          backgroundColor: Theme.of(context).colorScheme.error,
+                        ),
+                      ));
+                  return;
+                }
+                Navigator.of(context).pop();
+                widget.onChange.call(
+                  _subjectNameController.text,
+                  _selectedTeacher!,
+                  _selectedColor,
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.0),
                 ),
               ),
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [Icon(Icons.save), SizedBox(width: 8), Text("Save")],
+              ),
             ),
-            style: ButtonStyle(
-              backgroundColor: WidgetStateProperty.all(_selectedColor),
-            ),
-            child: Text("Change Color",
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: textColor,
-                    )),
-          )
+          ),
         ],
       ),
     );

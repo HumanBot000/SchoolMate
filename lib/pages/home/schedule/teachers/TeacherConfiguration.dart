@@ -36,6 +36,7 @@ class _TeacherConfigurationPageState extends State<TeacherConfigurationPage> {
       setState(() {});
       _teacherNameController.text = widget.currentTeacher!.name;
       _selectedGender = widget.currentTeacher!.gender;
+      _teacherAddressController.text = widget.currentTeacher!.gender.address;
     }
     super.initState();
   }
@@ -72,7 +73,7 @@ class _TeacherConfigurationPageState extends State<TeacherConfigurationPage> {
         logger.w("Should update a teacher, but no old instance is provided.");
         return;
       }
-      final newTeacher = await updateTeacher(
+      final newTeacher = await editTeacher(
         widget.currentTeacher!,
         // The ID won't change between creation and update
         Teacher(_teacherNameController.text, _selectedGender,
@@ -190,7 +191,7 @@ class _TeacherConfigurationPageState extends State<TeacherConfigurationPage> {
     return Expanded(
       child: ElevatedButton(
         onPressed: () => setState(() {
-          _selectedGender = Gender.fromLetter(genderLetter);
+          _selectedGender = Gender.fromLetter(genderLetter); //todo
           _teacherAddressController.text = _selectedGender.address;
         }),
         style: ElevatedButton.styleFrom(

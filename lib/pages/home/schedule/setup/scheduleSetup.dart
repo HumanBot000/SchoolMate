@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:school_mate/API/supabase/schedule/fetchSchedule.dart'
-    as fetch_schedule;
 import 'package:school_mate/API/supabase/schedule/insertMetadata.dart'
     as metadata;
+import 'package:school_mate/API/supabase/schedule/schedule.dart'
+    as fetch_schedule;
 import 'package:school_mate/Widgets/public/GradientButton.dart';
 import 'package:school_mate/main.dart';
 import 'package:school_mate/pages/home/Widgets/BottomNavBar.dart';

@@ -6,12 +6,12 @@ class Gender {
 
   Gender(this.genderLetter, this.address);
 
-  factory Gender.male() {
-    return Gender("M", "Mr.");
+  factory Gender.male({String address = "Mr."}) {
+    return Gender("M", address);
   }
 
-  factory Gender.female() {
-    return Gender("F", "Ms.");
+  factory Gender.female({String address = "Ms."}) {
+    return Gender("F", address);
   }
 
   factory Gender.diverse(String address) {
@@ -19,11 +19,18 @@ class Gender {
   }
 
   factory Gender.fromLetter(String letter, {String address = ""}) {
+    if (address.isEmpty) {
+      address = letter == "M"
+          ? "Mr."
+          : letter == "F"
+              ? "Ms."
+              : "";
+    }
     switch (letter) {
       case "M":
-        return Gender.male();
+        return Gender.male(address: address);
       case "F":
-        return Gender.female();
+        return Gender.female(address: address);
       case "D":
         return Gender.diverse(address);
       default:
