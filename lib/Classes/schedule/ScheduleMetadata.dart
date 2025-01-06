@@ -15,6 +15,74 @@ class ScheduleMetadata {
   ScheduleMetadata(this.creationDate, this.firstLessonTime, this.lastLessonTime,
       this.numberOfAlternateWeeks, this.currentAlternatedWeek, this.workdays);
 
+  String alternatedWeekForDate(DateTime newDate) {
+    // The preferred method is to use the view from the  postgresql function
+    int dayDifference = newDate.difference(DateTime.now()).inDays;
+    int weekDifference = (dayDifference / 7).floor();
+    int newWeekType = ([
+              "A",
+              "B",
+              "C",
+              "D",
+              "E",
+              "F",
+              "G",
+              "H",
+              "I",
+              "J",
+              "K",
+              "L",
+              "M",
+              "N",
+              "O",
+              "P",
+              "Q",
+              "R",
+              "S",
+              "T",
+              "U",
+              "V",
+              "W",
+              "X",
+              "Y",
+              "Z"
+            ].indexOf(currentAlternatedWeek) +
+            weekDifference) %
+        numberOfAlternateWeeks;
+    if (newWeekType < 0) {
+      newWeekType =
+          (newWeekType + numberOfAlternateWeeks) % numberOfAlternateWeeks;
+    }
+    return [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H",
+      "I",
+      "J",
+      "K",
+      "L",
+      "M",
+      "N",
+      "O",
+      "P",
+      "Q",
+      "R",
+      "S",
+      "T",
+      "U",
+      "V",
+      "W",
+      "X",
+      "Y",
+      "Z"
+    ][newWeekType];
+  }
+
   factory ScheduleMetadata.fromSupabaseDBResponse(Map<String, dynamic> json) {
     final creationDate =
         DateFormat('yyyy-MM-dd').parse(json['created_at']).toLocal();

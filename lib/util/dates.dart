@@ -21,3 +21,7 @@ int getIsoWeekNumber(DateTime date) {
   int weekNumber = ((date.dayOfYear - date.weekday + 10) / 7).floor();
   return weekNumber;
 }
+
+DateTime getStartOfWeek(DateTime currentDay) {
+  return currentDay.subtract(Duration(days: currentDay.weekday - 1));
+}

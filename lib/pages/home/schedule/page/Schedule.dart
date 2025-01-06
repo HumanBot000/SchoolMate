@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:school_mate/Classes/schedule/Schedule.dart';
 import 'package:school_mate/pages/home/Widgets/BottomNavBar.dart';
+import 'package:school_mate/pages/home/schedule/page/Widgets/ScheduleGridView.dart';
 import 'package:school_mate/pages/home/schedule/subjects/SubjectsList.dart';
 
 class SchedulePage extends StatefulWidget {
@@ -24,6 +25,7 @@ class _SchedulePageState extends State<SchedulePage> {
       ),
       body: Stack(
         children: [
+          ScheduleGridView(schedule: widget.schedule),
           Align(
             alignment: Alignment.bottomRight,
             child: Container(
