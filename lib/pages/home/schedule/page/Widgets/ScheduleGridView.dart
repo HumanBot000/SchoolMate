@@ -14,8 +14,8 @@ class ScheduleGridView extends StatefulWidget {
 
 class _ScheduleGridViewState extends State<ScheduleGridView> {
   // Any day of the week
-  DateTime currentFocusedWeek = DateTime.now();
-  bool isSwiping = false;
+  DateTime currentFocusedScheduleWeek = DateTime.now();
+  bool _isSwiping = false;
 
   @override
   Widget build(BuildContext context) {
@@ -27,37 +27,38 @@ class _ScheduleGridViewState extends State<ScheduleGridView> {
 
     // Contains the days of the current week, but only if they are workdays
     final List<DateTime> filteredWeekdaysAtWork = List.generate(7, (index) {
-      return getStartOfWeek(currentFocusedWeek).add(Duration(days: index));
+      return getStartOfWeek(currentFocusedScheduleWeek)
+          .add(Duration(days: index));
     }).where((date) {
       return widget.schedule.metadata.workdays.contains(date.weekday - 1);
     }).toList();
 
     return GestureDetector(
       onPanUpdate: (details) {
-        if (isSwiping) {
+        if (_isSwiping) {
           return; // ensures the user can only swipe one time and after that he must lift his finger first
         }
         // Swiping in right direction (previous week)
         if (details.delta.dx > 0) {
           setState(() {
-            currentFocusedWeek =
-                currentFocusedWeek.subtract(const Duration(days: 7));
-            isSwiping = true;
+            currentFocusedScheduleWeek =
+                currentFocusedScheduleWeek.subtract(const Duration(days: 7));
+            _isSwiping = true;
           });
         }
 
         // Swiping in left direction (next week)
         if (details.delta.dx < 0) {
           setState(() {
-            currentFocusedWeek =
-                currentFocusedWeek.add(const Duration(days: 7));
-            isSwiping = true;
+            currentFocusedScheduleWeek =
+                currentFocusedScheduleWeek.add(const Duration(days: 7));
+            _isSwiping = true;
           });
         }
       },
       onPanEnd: (details) {
         setState(() {
-          isSwiping = false;
+          _isSwiping = false;
         });
       },
       child: SingleChildScrollView(
@@ -83,7 +84,8 @@ class _ScheduleGridViewState extends State<ScheduleGridView> {
                         children: [
                           Text(
                             widget.schedule.metadata
-                                .alternatedWeekForDate(currentFocusedWeek)
+                                .alternatedWeekForDate(
+                                    currentFocusedScheduleWeek)
                                 .toString(),
                             textAlign: TextAlign.center,
                             style: Theme.of(context)
@@ -95,7 +97,7 @@ class _ScheduleGridViewState extends State<ScheduleGridView> {
                           FittedBox(
                             fit: BoxFit.scaleDown,
                             child: Text(
-                              "CW ${getIsoWeekNumber(currentFocusedWeek)}",
+                              "CW ${getIsoWeekNumber(currentFocusedScheduleWeek)}",
                               textAlign: TextAlign.center,
                               style: const TextStyle(
                                   color: Colors.white, fontSize: 12),
@@ -116,7 +118,8 @@ class _ScheduleGridViewState extends State<ScheduleGridView> {
                           margin: const EdgeInsets.all(8.0),
                           padding: const EdgeInsets.all(4.0),
                           decoration: BoxDecoration(
-                            color: currentIterationDay == currentFocusedWeek
+                            color: currentIterationDay ==
+                                    currentFocusedScheduleWeek
                                 ? Colors.green
                                 : Colors.blueGrey,
                             borderRadius: BorderRadius.circular(2.0),
@@ -151,7 +154,6 @@ class _ScheduleGridViewState extends State<ScheduleGridView> {
               widget.schedule.metadata.workdays.length,
               (rowIndex) => TableRow(
                 children: [
-                  // First column with an "X"
                   TableCell(
                     child: Container(
                       alignment: Alignment.center,
@@ -170,7 +172,7 @@ class _ScheduleGridViewState extends State<ScheduleGridView> {
                         padding: const EdgeInsets.all(8.0),
                       ),
                     );
-                  }).toList(),
+                  }),
                 ],
               ),
             ),

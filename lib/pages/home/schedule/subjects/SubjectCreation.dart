@@ -32,53 +32,53 @@ class _SubjectConfigurationPageState extends State<SubjectConfigurationPage> {
       TextEditingController(); // This is just to manipulate the content later. Don't read from this controller, the field is always disabled
   final List<List<Color>> _blockSelectColors = [
     [
-      Color(0xFF3A7BD5),
-      Color(0xFF689FD5),
-      Color(0xFF96C3D5),
-      Color(0xFFC4E7F5),
-      Color(0xFFF2F8FF)
+      const Color(0xFF3A7BD5),
+      const Color(0xFF689FD5),
+      const Color(0xFF96C3D5),
+      const Color(0xFFC4E7F5),
+      const Color(0xFFF2F8FF)
     ],
     [
-      Color(0xFFD53A3A),
-      Color(0xFFD56868),
-      Color(0xFFD59696),
-      Color(0xFFD5C4C4),
-      Color(0xFFFFE5E5)
+      const Color(0xFFD53A3A),
+      const Color(0xFFD56868),
+      const Color(0xFFD59696),
+      const Color(0xFFD5C4C4),
+      const Color(0xFFFFE5E5)
     ],
     [
-      Color(0xFFD5B63A),
-      Color(0xFFD5C768),
-      Color(0xFFF5D596),
-      Color(0xFFFFE7C4),
-      Color(0xFFFFFBE5)
+      const Color(0xFFD5B63A),
+      const Color(0xFFD5C768),
+      const Color(0xFFF5D596),
+      const Color(0xFFFFE7C4),
+      const Color(0xFFFFFBE5)
     ],
     [
-      Color(0xFF3AD53A),
-      Color(0xFF68D568),
-      Color(0xFF96D596),
-      Color(0xFFC4E7C4),
-      Color(0xFFE5FFE5)
+      const Color(0xFF3AD53A),
+      const Color(0xFF68D568),
+      const Color(0xFF96D596),
+      const Color(0xFFC4E7C4),
+      const Color(0xFFE5FFE5)
     ],
     [
-      Color(0xFF7B3AD5),
-      Color(0xFF9F68D5),
-      Color(0xFFC396D5),
-      Color(0xFFE7C4F5),
-      Color(0xFFFBE5FF)
+      const Color(0xFF7B3AD5),
+      const Color(0xFF9F68D5),
+      const Color(0xFFC396D5),
+      const Color(0xFFE7C4F5),
+      const Color(0xFFFBE5FF)
     ],
     [
-      Color(0xFFD57B3A),
-      Color(0xFFD59F68),
-      Color(0xFFF5C396),
-      Color(0xFFFFE7C4),
-      Color(0xFFFFF2E5)
+      const Color(0xFFD57B3A),
+      const Color(0xFFD59F68),
+      const Color(0xFFF5C396),
+      const Color(0xFFFFE7C4),
+      const Color(0xFFFFF2E5)
     ],
     [
-      Color(0xFF3AD5A7),
-      Color(0xFF68D5C3),
-      Color(0xFF96D5E7),
-      Color(0xFFC4F5F5),
-      Color(0x3a7bd5ff)
+      const Color(0xFF3AD5A7),
+      const Color(0xFF68D5C3),
+      const Color(0xFF96D5E7),
+      const Color(0xFFC4F5F5),
+      const Color(0x3a7bd5ff)
     ],
   ];
 

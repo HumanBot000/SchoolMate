@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:school_mate/Widgets/public/TimePicker.dart';
+import 'package:school_mate/util/extensions/dates.dart';
 
 class LessonsTimeFrameSelector extends StatefulWidget {
-  final TimeOfDay? startTime, endTime;
-  final Function(TimeOfDay?, TimeOfDay?) onTimeChanged;
+  final TimeOfDay startTime;
+  final TimeOfDay? endTime;
+  final Function(TimeOfDay, TimeOfDay?) onTimeChanged;
 
   const LessonsTimeFrameSelector(
       {super.key,
@@ -37,7 +39,7 @@ class _LessonsTimeFrameSelectorState extends State<LessonsTimeFrameSelector> {
                 showAdaptiveDialog(
                   context: context,
                   builder: (context) => CustomTimePicker(
-                    initialTime: widget.startTime ?? TimeOfDay.now(),
+                    initialTime: widget.startTime,
                     headline: "When does your first lesson start?",
                     onTimeSelected: (time) {
                       widget.onTimeChanged(time, widget.endTime);
@@ -69,18 +71,13 @@ class _LessonsTimeFrameSelectorState extends State<LessonsTimeFrameSelector> {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     decoration: BoxDecoration(
-                      color: widget.startTime != null
-                          ? Theme.of(context).colorScheme.primary.withAlpha(80)
-                          : Colors.red.withAlpha(80),
+                      color:
+                          Theme.of(context).colorScheme.primary.withAlpha(80),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
-                      widget.startTime != null
-                          ? intl.DateFormat('hh:mm a').format(
-                              DateTime(0, 0, 0, widget.startTime!.hour,
-                                  widget.startTime!.minute),
-                            )
-                          : "Set",
+                      intl.DateFormat('HH:mm')
+                          .format(widget.startTime.toDateTime()),
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             fontWeight: FontWeight.bold,
                             color: Theme.of(context).colorScheme.primary,
@@ -138,7 +135,7 @@ class _LessonsTimeFrameSelectorState extends State<LessonsTimeFrameSelector> {
                     ),
                     child: Text(
                       widget.endTime != null
-                          ? intl.DateFormat('hh:mm a').format(
+                          ? intl.DateFormat('HH:mm').format(
                               DateTime(
                                   0,
                                   0,

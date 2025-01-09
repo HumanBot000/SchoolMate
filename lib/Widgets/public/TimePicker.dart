@@ -1,6 +1,7 @@
 // I had no clue in what direction I want to go, so I used AI for the first layout iteration
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:school_mate/util/extensions/dates.dart';
 
 class CustomTimePicker extends StatelessWidget {
   final TimeOfDay initialTime;
@@ -113,8 +114,7 @@ class _TimePickerDialState extends State<_TimePickerDial> {
               BoxDecoration(shape: BoxShape.circle, gradient: widget.gradient),
           child: Center(
             child: Text(
-              DateFormat('hh:mm a').format(
-                  DateTime(0, 0, 0, _selectedTime.hour, _selectedTime.minute)),
+              DateFormat('HH:mm').format(_selectedTime.toDateTime()),
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),

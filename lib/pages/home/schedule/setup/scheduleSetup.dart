@@ -11,6 +11,8 @@ import 'package:school_mate/pages/home/schedule/setup/Widgets/AlternatingWeeksSe
 import 'package:school_mate/pages/home/schedule/setup/Widgets/IndividualLessonDurationSelector.dart';
 import 'package:school_mate/pages/home/schedule/setup/Widgets/LessonsTimeFrame.dart';
 import 'package:school_mate/pages/home/schedule/setup/Widgets/WorkdaySelector.dart';
+import 'package:school_mate/util/dates.dart';
+import 'package:school_mate/util/extensions/dates.dart';
 
 class ScheduleSetupPage extends StatefulWidget {
   const ScheduleSetupPage({super.key});
@@ -22,7 +24,7 @@ class ScheduleSetupPage extends StatefulWidget {
 class _ScheduleSetupPageState extends State<ScheduleSetupPage> {
   // Don't make these vars public and manipulate in child widgets because of single source of truth -> easier debugging
   int _activePage = 0;
-  TimeOfDay? _startTime;
+  TimeOfDay _startTime = const TimeOfDay(hour: 08, minute: 00);
   TimeOfDay? _endTime;
   final List<bool> _workdays = List.generate(7, (index) => index < 5);
   int _alternatingWeeksCount = 0;
@@ -30,11 +32,37 @@ class _ScheduleSetupPageState extends State<ScheduleSetupPage> {
   int _lessonLength = 45;
   int _customLessonLength =
       90; //Don't use this value. It's for an UI build. Use _lessonLength instead
+  late List<List<TimeOfDay>> _visualLessonTimes;
 
-  void _setLessonsTimeFrame(TimeOfDay? startTime, TimeOfDay? endTime) {
+  @override
+  void initState() {
+    super.initState();
+    _visualLessonTimes = [
+      [
+        TimeOfDay(hour: _startTime.hour, minute: _startTime.minute),
+        TimeOfDay(
+            hour: _startTime
+                .toDateTime()
+                .add(Duration(minutes: _lessonLength))
+                .hour,
+            minute: _startTime
+                .toDateTime()
+                .add(Duration(minutes: _lessonLength))
+                .minute)
+      ]
+    ];
+  }
+
+  void _setLessonsTimeFrame(TimeOfDay startTime, TimeOfDay? endTime) {
     setState(() {
       _startTime = startTime;
       _endTime = endTime;
+    });
+  }
+
+  void _updateLessonTimes(List<List<TimeOfDay>> times) {
+    setState(() {
+      _visualLessonTimes = times;
     });
   }
 
@@ -84,6 +112,60 @@ class _ScheduleSetupPageState extends State<ScheduleSetupPage> {
     setState(() {
       _customLessonLength = value;
     });
+  }
+
+  Future<void> _onSave() async {
+    if (_endTime == null) {
+      WidgetsBinding.instance.addPostFrameCallback(
+          (_) => ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  backgroundColor: Theme.of(context).colorScheme.error,
+                  content: const Text("Please fill in all required fields"),
+                ),
+              ));
+      return;
+    }
+    if (timeOfDaysOverlap(_visualLessonTimes)) {
+      WidgetsBinding.instance.addPostFrameCallback(
+          (_) => ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  backgroundColor: Theme.of(context).colorScheme.error,
+                  content: const Text(
+                      "The provided lesson times may not overlap each other"),
+                ),
+              ));
+    }
+    try {
+      await metadata.insertScheduleMetadata(_startTime, _endTime!, _workdays,
+          _alternatingWeeksCount, _currentAlternatingWeek, _lessonLength);
+    } catch (e) {
+      WidgetsBinding.instance.addPostFrameCallback(
+          (_) => ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  backgroundColor: Theme.of(context).colorScheme.error,
+                  content: Text(e.toString()),
+                ),
+              ));
+      return;
+    }
+    Navigator.of(context).pushReplacement(MaterialPageRoute(
+      builder: (context) => FutureBuilder(
+        future: fetch_schedule.fetchSchedule(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const CircularProgressIndicator();
+          } else if (snapshot.hasError) {
+            logger.e(snapshot.error);
+            return Text('Error: ${snapshot.error}');
+          } else if (snapshot.hasData) {
+            return SchedulePage(schedule: snapshot.data!);
+          } else {
+            logger.w("Couldn't find a schedule after creating it.");
+            return const Text('No data available.');
+          }
+        },
+      ),
+    ));
   }
 
   @override
@@ -189,6 +271,9 @@ class _ScheduleSetupPageState extends State<ScheduleSetupPage> {
                       onLessonDurationChange: _updateLessonLength,
                       onCustomLessonDurationChange: _updateCustomLessonLength,
                       selectedCustomLessonDuration: _customLessonLength,
+                      starOfDay: _startTime,
+                      visualLessonTimes: _visualLessonTimes,
+                      onVisualLessonTimesChange: _updateLessonTimes,
                     ),
                     Divider(
                       color: Theme.of(context).colorScheme.primary,
@@ -200,63 +285,7 @@ class _ScheduleSetupPageState extends State<ScheduleSetupPage> {
                         child: ElevatedGradientButton(
                             borderRadius: BorderRadius.circular(12),
                             onPressed: () async {
-                              if (_startTime == null || _endTime == null) {
-                                WidgetsBinding.instance.addPostFrameCallback(
-                                    (_) => ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          SnackBar(
-                                            backgroundColor: Theme.of(context)
-                                                .colorScheme
-                                                .error,
-                                            content: const Text(
-                                                "Please fill in all required fields"),
-                                          ),
-                                        ));
-                                return;
-                              }
-                              try {
-                                await metadata.insertScheduleMetadata(
-                                    _startTime!,
-                                    _endTime!,
-                                    _workdays,
-                                    _alternatingWeeksCount,
-                                    _currentAlternatingWeek,
-                                    _lessonLength);
-                              } catch (e) {
-                                WidgetsBinding.instance.addPostFrameCallback(
-                                    (_) => ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          SnackBar(
-                                            backgroundColor: Theme.of(context)
-                                                .colorScheme
-                                                .error,
-                                            content: Text(e.toString()),
-                                          ),
-                                        ));
-                                return;
-                              }
-                              Navigator.of(context)
-                                  .pushReplacement(MaterialPageRoute(
-                                builder: (context) => FutureBuilder(
-                                  future: fetch_schedule.fetchSchedule(),
-                                  builder: (context, snapshot) {
-                                    if (snapshot.connectionState ==
-                                        ConnectionState.waiting) {
-                                      return const CircularProgressIndicator();
-                                    } else if (snapshot.hasError) {
-                                      logger.e(snapshot.error);
-                                      return Text('Error: ${snapshot.error}');
-                                    } else if (snapshot.hasData) {
-                                      return SchedulePage(
-                                          schedule: snapshot.data!);
-                                    } else {
-                                      logger.w(
-                                          "Couldn't find a schedule after creating it.");
-                                      return const Text('No data available.');
-                                    }
-                                  },
-                                ),
-                              ));
+                              await _onSave();
                             },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,

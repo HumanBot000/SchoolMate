@@ -65,8 +65,6 @@ class _SubjectListState extends State<SubjectList> {
                     TextButton.icon(
                       onPressed: () {
                         Navigator.of(context).pop();
-                        logger.d(
-                            "Set color to ${subject.color.r * 255} ${subject.color.g * 255} ${subject.color.b * 255} ${subject.color.a * 255}");
                         // After success it gets popped
                         Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => SubjectConfigurationPage(

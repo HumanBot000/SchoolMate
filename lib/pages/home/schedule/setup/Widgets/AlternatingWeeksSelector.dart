@@ -38,6 +38,7 @@ class _AlternatingWeeksSelectorState extends State<AlternatingWeeksSelector> {
             child: InkWell(
           onTap: () => widget.onWeekChange(0, 0),
           child: Container(
+            width: MediaQuery.of(context).size.width * 0.3,
             margin: const EdgeInsets.all(8),
             height: 20,
             decoration: BoxDecoration(
@@ -49,7 +50,7 @@ class _AlternatingWeeksSelectorState extends State<AlternatingWeeksSelector> {
             child: const Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("A Weeks"),
+                FittedBox(fit: BoxFit.scaleDown, child: Text("A Weeks")),
               ],
             ),
           ),
@@ -59,6 +60,7 @@ class _AlternatingWeeksSelectorState extends State<AlternatingWeeksSelector> {
           onTap: () => widget.onWeekChange(1, widget.selectedAlternatingWeek),
           child: Container(
             margin: const EdgeInsets.all(8),
+            width: MediaQuery.of(context).size.width * 0.3,
             height: 20,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8.0),
@@ -66,18 +68,16 @@ class _AlternatingWeeksSelectorState extends State<AlternatingWeeksSelector> {
                 color: widget.alternatingWeeksCount == 1
                     ? Colors.yellow
                     : Colors.grey),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "A/B Weeks",
-                  style: widget.alternatingWeeksCount == 1
-                      ? Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Colors
-                              .black) // White text on yellow base isn't readable
-                      : null,
-                ),
-              ],
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                "A/B Weeks",
+                style: widget.alternatingWeeksCount == 1
+                    ? Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Colors
+                            .black) // White text on yellow base isn't readable
+                    : null,
+              ),
             ),
           ),
         )),
@@ -85,6 +85,7 @@ class _AlternatingWeeksSelectorState extends State<AlternatingWeeksSelector> {
             child: InkWell(
           onTap: () => widget.onWeekChange(2, widget.selectedAlternatingWeek),
           child: Container(
+            width: MediaQuery.of(context).size.width * 0.3,
             margin: const EdgeInsets.all(8),
             height: 20,
             decoration: BoxDecoration(
@@ -93,12 +94,13 @@ class _AlternatingWeeksSelectorState extends State<AlternatingWeeksSelector> {
                 color: widget.alternatingWeeksCount == 2
                     ? Colors.red
                     : Colors.grey),
-            child: const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text("A/B/C Weeks"),
-              ],
-            ),
+            child: FittedBox(
+                alignment: Alignment.center,
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  "A/B/C Weeks",
+                  style: Theme.of(context).textTheme.bodyMedium,
+                )),
           ),
         )),
       ],
@@ -225,25 +227,23 @@ class _AlternatingWeeksSelectorState extends State<AlternatingWeeksSelector> {
                 ],
               )),
         ),
-        SizedBox(
-          height: MediaQuery.of(context).size.height * 0.08,
-          child: ListView.builder(
-            itemBuilder: (context, index) {
-              // Return the visual data for the last,current and next week
-              return Text(
-                "CW: ${getIsoWeekNumber(DateTime.now().add(Duration(days: (index - 1) * 7)))} ${[
-                  "A",
-                  "B",
-                  "C"
-                ][_getWeekType(DateTime.now(), widget.selectedAlternatingWeek, widget.alternatingWeeksCount, DateTime.now().add(Duration(days: (index - 1) * 7)))]}",
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color:
-                        index == 1 ? Colors.greenAccent.shade100 : Colors.white,
-                    fontWeight: FontWeight.bold),
-              );
-            },
-            itemCount: 3,
-          ),
+        ListView.builder(
+          shrinkWrap: true,
+          itemBuilder: (context, index) {
+            // Return the visual data for the last,current and next week
+            return Text(
+              "CW: ${getIsoWeekNumber(DateTime.now().add(Duration(days: (index - 1) * 7)))} ${[
+                "A",
+                "B",
+                "C"
+              ][_getWeekType(DateTime.now(), widget.selectedAlternatingWeek, widget.alternatingWeeksCount, DateTime.now().add(Duration(days: (index - 1) * 7)))]}",
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                  color:
+                      index == 1 ? Colors.greenAccent.shade100 : Colors.white,
+                  fontWeight: FontWeight.bold),
+            );
+          },
+          itemCount: 3,
         )
       ],
     );

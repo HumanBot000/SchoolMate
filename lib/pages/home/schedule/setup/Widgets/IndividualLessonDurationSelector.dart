@@ -1,17 +1,23 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:school_mate/Widgets/public/GradientButton.dart';
+import 'package:school_mate/Widgets/public/TimePicker.dart';
+import 'package:school_mate/util/extensions/dates.dart';
 
 class IndividualLessonDurationSelector extends StatefulWidget {
   final int activePage;
   final Function(int) onActivePageChange;
   final Function(int) onLessonDurationChange;
   final Function(int) onCustomLessonDurationChange;
+  final Function(List<List<TimeOfDay>>) onVisualLessonTimesChange;
 
   // In Minutes (Maybe Duration would be better? But I think int is okay)
   final int selectedCustomLessonDuration;
   final int lessonDuration;
+  final List<List<TimeOfDay>> visualLessonTimes;
+  final TimeOfDay starOfDay;
 
   const IndividualLessonDurationSelector({
     super.key,
@@ -21,6 +27,9 @@ class IndividualLessonDurationSelector extends StatefulWidget {
     required this.lessonDuration,
     required this.onLessonDurationChange,
     required this.onCustomLessonDurationChange,
+    this.visualLessonTimes = const [],
+    required this.starOfDay,
+    required this.onVisualLessonTimesChange,
   });
 
   @override
@@ -46,6 +55,198 @@ class _IndividualLessonDurationSelectorState
             margin: const EdgeInsets.all(8),
             child:
                 Text("Each lesson is ${widget.lessonDuration} minutes long")),
+      ],
+    );
+  }
+
+  Widget _visualIndividualLessonTimeSelector() {
+    return Column(
+      children: [
+        ListView.builder(
+            shrinkWrap: true,
+            itemCount: widget.visualLessonTimes.length,
+            itemBuilder: (context, index) {
+              if (index == widget.visualLessonTimes.length) {
+                return Container(
+                  padding: const EdgeInsets.all(8.0),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: Colors.grey,
+                      )),
+                );
+              }
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        padding: const EdgeInsets.all(12.0),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.grey,
+                            width: 1.0,
+                          ),
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Icon(
+                              Icons.access_time_filled,
+                              color: index == 0
+                                  ? Colors.green
+                                  : index == widget.visualLessonTimes.length - 1
+                                      ? Colors.red
+                                      : Colors.grey,
+                            ),
+                            const SizedBox(width: 8),
+                            InkWell(
+                              onTap: () {
+                                showAdaptiveDialog(
+                                  context: context,
+                                  builder: (context) => CustomTimePicker(
+                                    initialTime: widget.visualLessonTimes[index]
+                                        [0],
+                                    onTimeSelected: (time) {
+                                      List<List<TimeOfDay>> updatedLessonTimes =
+                                          widget.visualLessonTimes;
+                                      updatedLessonTimes[index][0] = time;
+                                      // Set the default lesson end
+                                      updatedLessonTimes[index][1] = TimeOfDay(
+                                        hour: updatedLessonTimes[index][0]
+                                            .toDateTime()
+                                            .add(Duration(
+                                                minutes: widget.lessonDuration))
+                                            .hour,
+                                        minute: updatedLessonTimes[index][0]
+                                            .toDateTime()
+                                            .add(Duration(
+                                                minutes: widget.lessonDuration))
+                                            .minute,
+                                      );
+                                      widget.onVisualLessonTimesChange(
+                                          updatedLessonTimes);
+                                    },
+                                    headline: "When does this lesson start?",
+                                  ),
+                                );
+                              },
+                              child: Text(
+                                DateFormat("HH:mm").format(DateTime(
+                                  0,
+                                  0,
+                                  0,
+                                  widget.visualLessonTimes[index][0].hour,
+                                  widget.visualLessonTimes[index][0].minute,
+                                )),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge
+                                    ?.copyWith(color: Colors.white),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            const Text("-"),
+                            const SizedBox(width: 8),
+                            InkWell(
+                              onTap: () {
+                                showAdaptiveDialog(
+                                  context: context,
+                                  builder: (context) => CustomTimePicker(
+                                    initialTime: widget.visualLessonTimes[index]
+                                        [1],
+                                    onTimeSelected: (time) {
+                                      List<List<TimeOfDay>> updatedLessonTimes =
+                                          widget.visualLessonTimes;
+                                      updatedLessonTimes[index][1] = time;
+                                      widget.onVisualLessonTimesChange(
+                                          updatedLessonTimes);
+                                    },
+                                    headline: "When does this lesson end?",
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        Colors.red.shade300,
+                                        Colors.orange.shade300,
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Text(
+                                DateFormat("HH:mm").format(DateTime(
+                                  0,
+                                  0,
+                                  0,
+                                  widget.visualLessonTimes[index][1].hour,
+                                  widget.visualLessonTimes[index][1].minute,
+                                )),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge
+                                    ?.copyWith(color: Colors.white),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    if (index == widget.visualLessonTimes.length - 1 &&
+                        index != 0) //last lesson
+                      IconButton(
+                        icon: const Icon(Icons.remove_circle),
+                        color: Colors.redAccent,
+                        onPressed: () {
+                          widget.onVisualLessonTimesChange(
+                            widget.visualLessonTimes
+                                .sublist(0, index), // remove last lesson
+                          );
+                        },
+                        tooltip: "Delete this lesson",
+                      ),
+                  ],
+                ),
+              );
+            }),
+        const SizedBox(height: 16),
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(12.0),
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.grey,
+              width: 1.0,
+            ),
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          child: InkWell(
+            onTap: () {
+              showAdaptiveDialog(
+                context: context,
+                builder: (context) => CustomTimePicker(
+                  initialTime: widget.visualLessonTimes[
+                          widget.visualLessonTimes.length - 1]
+                      [1], // Default to end of last lesson
+                  onTimeSelected: (time) {
+                    List<List<TimeOfDay>> updatedLessonTimes =
+                        widget.visualLessonTimes;
+                    updatedLessonTimes.add([
+                      time,
+                      time.add(Duration(minutes: widget.lessonDuration))
+                    ]);
+                    widget.onVisualLessonTimesChange(updatedLessonTimes);
+                  },
+                  headline: "When does this lesson start?",
+                ),
+              );
+            },
+            child: Text(
+              "Add a new lesson",
+              style: TextStyle(color: Colors.grey),
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -139,7 +340,9 @@ class _IndividualLessonDurationSelectorState
               )
             ],
           ),
-        )
+        ),
+        const SizedBox(height: 16),
+        _visualIndividualLessonTimeSelector()
       ],
     );
   }
@@ -268,6 +471,7 @@ class _IndividualLessonDurationSelectorState
     return InkWell(
         onTap:
             widget.activePage == 3 ? null : () => widget.onActivePageChange(3),
+
         // don't pass clicks of the individual sliders of to the cell selection
         child: Container(
           margin: const EdgeInsets.all(16),
