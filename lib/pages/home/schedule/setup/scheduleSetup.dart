@@ -13,6 +13,7 @@ import 'package:school_mate/pages/home/schedule/setup/Widgets/LessonsTimeFrame.d
 import 'package:school_mate/pages/home/schedule/setup/Widgets/WorkdaySelector.dart';
 import 'package:school_mate/util/dates.dart';
 import 'package:school_mate/util/extensions/dates.dart';
+import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 
 class ScheduleSetupPage extends StatefulWidget {
   const ScheduleSetupPage({super.key});
@@ -136,18 +137,35 @@ class _ScheduleSetupPageState extends State<ScheduleSetupPage> {
               ));
     }
     try {
-      await metadata.insertScheduleMetadata(_startTime, _endTime!, _workdays,
-          _alternatingWeeksCount, _currentAlternatingWeek, _lessonLength);
+      await metadata.insertScheduleMetadata(
+          _startTime,
+          _endTime!,
+          _workdays,
+          _alternatingWeeksCount,
+          _currentAlternatingWeek,
+          _lessonLength,
+          _visualLessonTimes);
     } catch (e) {
+      String errorMessage; // Declare text here
+
+      if (e is PostgrestException &&
+          e.message == "last_lesson must be after first_lesson") {
+        errorMessage =
+            "Your last lesson must end after your first lesson starts.";
+      } else {
+        errorMessage = e.toString();
+      }
+
       WidgetsBinding.instance.addPostFrameCallback(
           (_) => ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   backgroundColor: Theme.of(context).colorScheme.error,
-                  content: Text(e.toString()),
+                  content: Text(errorMessage),
                 ),
               ));
       return;
     }
+
     Navigator.of(context).pushReplacement(MaterialPageRoute(
       builder: (context) => FutureBuilder(
         future: fetch_schedule.fetchSchedule(),

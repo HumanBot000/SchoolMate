@@ -89,11 +89,27 @@ class _TimePickerDial extends StatefulWidget {
 
 class _TimePickerDialState extends State<_TimePickerDial> {
   late TimeOfDay _selectedTime;
+  FixedExtentScrollController _minuteScrollController =
+      FixedExtentScrollController();
+  FixedExtentScrollController _hourScrollController =
+      FixedExtentScrollController();
 
   @override
   void initState() {
     super.initState();
     _selectedTime = widget.initialTime;
+    WidgetsBinding.instance.addPostFrameCallback((_) => _jumpToInitialTime());
+  }
+
+  void _jumpToInitialTime() {
+    // 40 is the item extent
+    _minuteScrollController.jumpTo(
+      _minuteScrollController.position.minScrollExtent +
+          _selectedTime.minute * 40,
+    );
+    _hourScrollController.jumpTo(
+      _hourScrollController.position.minScrollExtent + _selectedTime.hour * 40,
+    );
   }
 
   void _updateTime(int hour, int minute) {
@@ -134,6 +150,7 @@ class _TimePickerDialState extends State<_TimePickerDial> {
                   SizedBox(
                     height: 120,
                     child: ListWheelScrollView.useDelegate(
+                      controller: _hourScrollController,
                       itemExtent: 40,
                       onSelectedItemChanged: (index) {
                         _updateTime(index, _selectedTime.minute);
@@ -150,6 +167,7 @@ class _TimePickerDialState extends State<_TimePickerDial> {
                             ),
                           );
                         },
+
                         childCount: 24, // Hours 0-23
                       ),
                     ),
@@ -166,6 +184,7 @@ class _TimePickerDialState extends State<_TimePickerDial> {
                   SizedBox(
                     height: 120,
                     child: ListWheelScrollView.useDelegate(
+                      controller: _minuteScrollController,
                       itemExtent: 40,
                       onSelectedItemChanged: (index) {
                         _updateTime(_selectedTime.hour, index);

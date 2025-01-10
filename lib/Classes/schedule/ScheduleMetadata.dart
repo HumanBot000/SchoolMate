@@ -11,9 +11,16 @@ class ScheduleMetadata {
   final int numberOfAlternateWeeks;
   final String currentAlternatedWeek;
   final List<int> workdays;
+  final List<List<TimeOfDay>> visualLessonTimes;
 
-  ScheduleMetadata(this.creationDate, this.firstLessonTime, this.lastLessonTime,
-      this.numberOfAlternateWeeks, this.currentAlternatedWeek, this.workdays);
+  ScheduleMetadata(
+      this.creationDate,
+      this.firstLessonTime,
+      this.lastLessonTime,
+      this.numberOfAlternateWeeks,
+      this.currentAlternatedWeek,
+      this.workdays,
+      this.visualLessonTimes);
 
   String alternatedWeekForDate(DateTime newDate) {
     // The preferred method is to use the view from the  postgresql function
@@ -83,6 +90,24 @@ class ScheduleMetadata {
     ][newWeekType];
   }
 
+  static List<List<TimeOfDay>> parseVisualLessonTimesJson(List<dynamic> json) {
+    List<List<TimeOfDay>> visualLessonTimes = [];
+
+    for (int i = 0; i < json.length; i++) {
+      List<TimeOfDay> times = [];
+      if (json[i].length != 2) {
+        throw ArgumentError(
+            "Each entry must have exactly two times: start and end.");
+      }
+      for (int j = 0; j < json[i].length; j++) {
+        times
+            .add(TimeOfDay.fromDateTime(DateFormat('HH:mm').parse(json[i][j])));
+      }
+      visualLessonTimes.add(times);
+    }
+    return visualLessonTimes;
+  }
+
   factory ScheduleMetadata.fromSupabaseDBResponse(Map<String, dynamic> json) {
     final creationDate =
         DateFormat('yyyy-MM-dd').parse(json['created_at']).toLocal();
@@ -101,7 +126,16 @@ class ScheduleMetadata {
         weekdays.add(i);
       }
     }
-    return ScheduleMetadata(creationDate, firstLessonTime, lastLessonTime,
-        numberOfAlternateWeeks, currentAlternatedWeek, weekdays);
+    final visualLessonTimes =
+        parseVisualLessonTimesJson(json['visual_daily_lessons_timeframe']);
+
+    return ScheduleMetadata(
+        creationDate,
+        firstLessonTime,
+        lastLessonTime,
+        numberOfAlternateWeeks,
+        currentAlternatedWeek,
+        weekdays,
+        visualLessonTimes);
   }
 }

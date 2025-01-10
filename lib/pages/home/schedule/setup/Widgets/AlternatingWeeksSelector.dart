@@ -36,7 +36,12 @@ class _AlternatingWeeksSelectorState extends State<AlternatingWeeksSelector> {
       children: [
         Flexible(
             child: InkWell(
-          onTap: () => widget.onWeekChange(0, 0),
+          onTap: () => widget.activePage == 2
+              ? widget.onWeekChange(0, widget.selectedAlternatingWeek)
+              : {
+                  widget.onWeekChange(0, widget.selectedAlternatingWeek),
+                  widget.onActivePageChange(2)
+                },
           child: Container(
             width: MediaQuery.of(context).size.width * 0.3,
             margin: const EdgeInsets.all(8),
@@ -57,7 +62,12 @@ class _AlternatingWeeksSelectorState extends State<AlternatingWeeksSelector> {
         )),
         Flexible(
             child: InkWell(
-          onTap: () => widget.onWeekChange(1, widget.selectedAlternatingWeek),
+          onTap: () => widget.activePage == 2
+              ? widget.onWeekChange(1, widget.selectedAlternatingWeek)
+              : {
+                  widget.onWeekChange(1, widget.selectedAlternatingWeek),
+                  widget.onActivePageChange(2)
+                },
           child: Container(
             margin: const EdgeInsets.all(8),
             width: MediaQuery.of(context).size.width * 0.3,
@@ -83,7 +93,12 @@ class _AlternatingWeeksSelectorState extends State<AlternatingWeeksSelector> {
         )),
         Flexible(
             child: InkWell(
-          onTap: () => widget.onWeekChange(2, widget.selectedAlternatingWeek),
+          onTap: () => widget.activePage == 2
+              ? widget.onWeekChange(2, widget.selectedAlternatingWeek)
+              : {
+                  widget.onWeekChange(2, widget.selectedAlternatingWeek),
+                  widget.onActivePageChange(2)
+                },
           child: Container(
             width: MediaQuery.of(context).size.width * 0.3,
             margin: const EdgeInsets.all(8),
