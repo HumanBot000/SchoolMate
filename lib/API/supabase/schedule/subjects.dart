@@ -30,7 +30,7 @@ Future<Subject> createSubject(Subject subject) async {
 }
 
 Future<void> deleteSubject(Subject subject) async {
-  if (subject.id < 0) {
+  if (subject.subject_id < 0) {
     throw Exception(
         "The provided Subject element wasn't created via the DB->Subject factory and therefore hasn't an ID. It can't be deleted without an ID.");
   }
@@ -39,11 +39,11 @@ Future<void> deleteSubject(Subject subject) async {
       .from("subjects")
       .delete()
       .eq("user_id", await getUserID())
-      .eq("subject_id", subject.id);
+      .eq("subject_id", subject.subject_id);
 }
 
 Future<Subject> editSubject(Subject oldSubject, Subject newSubject) async {
-  if (oldSubject.id < 0) {
+  if (oldSubject.subject_id < 0) {
     throw Exception(
         "The provided Subject element wasn't created via the DB->Subject factory and therefore hasn't an ID. It can't be updated without an ID.");
   }
@@ -61,7 +61,7 @@ Future<Subject> editSubject(Subject oldSubject, Subject newSubject) async {
         "teacher": newSubject.teacher.id
       })
       .eq("user_id", await getUserID())
-      .eq("subject_id", oldSubject.id)
+      .eq("subject_id", oldSubject.subject_id)
       .select()
       .single();
   return Subject.fromJson(response);

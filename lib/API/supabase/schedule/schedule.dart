@@ -1,4 +1,5 @@
 import 'package:school_mate/API/supabase/auth/userData.dart';
+import 'package:school_mate/Classes/schedule/Lesson.dart';
 import 'package:school_mate/Classes/schedule/Schedule.dart';
 import 'package:school_mate/Classes/schedule/ScheduleMetadata.dart';
 import 'package:school_mate/Classes/schedule/Subject.dart';
@@ -23,6 +24,18 @@ Future<dynamic> fetchSchedule() async {
   for (var subject in subjects) {
     subjectList.add(await Subject.fromJson(subject));
   }
-  return Schedule(
-      ScheduleMetadata.fromSupabaseDBResponse(metadata.single), subjectList);
+
+  final lessons = await supabaseClient.client
+      .schema("schedule")
+      .from("lessons")
+      .select()
+      .eq("user_id", await getUserID());
+
+  List<Lesson> lessonList = [];
+  for (var lesson in lessons) {
+    lessonList.add(Lesson.fromJson(lesson, subjectList));
+  }
+
+  return Schedule(ScheduleMetadata.fromSupabaseDBResponse(metadata.single),
+      subjectList, lessonList);
 }

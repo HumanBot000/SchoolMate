@@ -135,15 +135,8 @@ class _LessonsTimeFrameSelectorState extends State<LessonsTimeFrameSelector> {
                     ),
                     child: Text(
                       widget.endTime != null
-                          ? intl.DateFormat('HH:mm').format(
-                              DateTime(
-                                  0,
-                                  0,
-                                  0,
-                                  widget.endTime!.hour,
-                                  widget.endTime!
-                                      .minute), //Just something because intl can't handle TimeOfDay
-                            )
+                          ? intl.DateFormat('HH:mm')
+                              .format(widget.endTime!.toDateTime())
                           : "Set",
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             fontWeight: FontWeight.bold,

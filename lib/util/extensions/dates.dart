@@ -21,4 +21,9 @@ extension TimeOfDayExtension on TimeOfDay {
   TimeOfDay add(Duration duration) {
     return toDateTime().add(duration).toTimeOfDay();
   }
+
+  Duration difference(TimeOfDay startTime) {
+    return Duration(
+        hours: hour - startTime.hour, minutes: minute - startTime.minute);
+  }
 }

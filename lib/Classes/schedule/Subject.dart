@@ -9,13 +9,13 @@ class Subject {
   final String name;
   final Teacher teacher;
   final Color color;
-  final int id;
+  final int subject_id;
 
   Subject(
       {required this.name,
       required this.teacher,
       required this.color,
-      this.id = -1});
+      this.subject_id = -1});
 
   static Future<Subject> fromJson(Map<String, dynamic> json) async {
     // no factory because of async
@@ -24,7 +24,7 @@ class Subject {
         name: json["name"],
         teacher: await fetchTeacherByID(json["teacher"]),
         color: Color(int.parse("0x${json["color"]}")),
-        id: json["subject_id"],
+        subject_id: json["subject_id"],
       );
     } catch (e) {
       logger.e(e);
