@@ -1,13 +1,13 @@
+// This file ended up a bit long, but splitting it up is hard, because of cross references, private vars and setState()
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:school_mate/Classes/schedule/Lesson.dart';
 import 'package:school_mate/Classes/schedule/Schedule.dart';
 import 'package:school_mate/Classes/schedule/ScheduleMetadata.dart';
+import 'package:school_mate/pages/home/Widgets/BottomNavBar.dart';
 import 'package:school_mate/pages/home/schedule/page/Widgets/LessonBox.dart';
 import 'package:school_mate/util/dates.dart';
 import 'package:school_mate/util/extensions/dates.dart';
-
-import '../../../../../../main.dart';
 
 class ScheduleGridView extends StatefulWidget {
   final Schedule schedule;
@@ -100,14 +100,19 @@ class _ScheduleGridViewState extends State<ScheduleGridView> {
 
   /// Calculates pixel height per minute
   void _calculatePixelHeight() {
-    final height = _buildAreaKey.currentContext?.size?.height;
-    logger.d("Height: $height");
-    logger.d("PixelsPerMin: ${height! / _dailyWorkdayMinutes}");
-    logger.d(
-        "Converted: ${(height / _dailyWorkdayMinutes) * _dailyWorkdayMinutes}");
+    // It took me 5+ Hours to figure out that the BottomNavBar is laid over the Scaffold via a stack and I need to subtract its height
+    int? height = _buildAreaKey.currentContext?.size?.height.toInt();
+    if (height != null &&
+        bottomNavBarKey.currentContext?.size?.height != null) {
+      height -= bottomNavBarKey.currentContext!.size!.height.floor();
+      height -= 16; // Bottom margin
+    } else {
+      height = null;
+    }
+
     if (height != null) {
       setState(() {
-        _pixelHeightPerMinute = height / _dailyWorkdayMinutes.toDouble();
+        _pixelHeightPerMinute = height! / _dailyWorkdayMinutes.toDouble();
         _tableHeaderRowRenderBox =
             _tableHeaderRowKey.currentContext?.findRenderObject() as RenderBox;
       });
@@ -129,9 +134,76 @@ class _ScheduleGridViewState extends State<ScheduleGridView> {
     });
   }
 
+  List<Widget> _buildTimeIndicators() {
+    return List.generate(widget.schedule.metadata.visualLessonTimes.length,
+        (index) {
+      double topPosition = _tableHeaderRowRenderBox == null ||
+              !_tableHeaderRowRenderBox!.attached
+          ? 0
+          : (_tableHeaderRowRenderBox!.localToGlobal(Offset.zero).dy +
+              widget.schedule.metadata.visualLessonTimes[index][0]
+                      .difference(widget.schedule.metadata.firstLessonTime)
+                      .inMinutes *
+                  _pixelHeightPerMinute);
+
+      double visualHeight = (widget
+              .schedule.metadata.visualLessonTimes[index][1]
+              .difference(widget.schedule.metadata.visualLessonTimes[index][0])
+              .inMinutes *
+          _pixelHeightPerMinute);
+
+      return Positioned(
+        top: topPosition,
+        left: 16, // Default margin
+        child: LessonBox(
+          title: (index + 1).toString(),
+          color: Colors.grey,
+          height: visualHeight,
+          width: _widthPerDay,
+          startTime: widget.schedule.metadata.visualLessonTimes[index][0],
+          endTime: widget.schedule.metadata.visualLessonTimes[index][1],
+        ),
+      );
+    });
+  }
+
+  List<Widget> _buildLessonBoxes() {
+    if (_lessonsByDay.isEmpty) return [];
+
+    return [
+      for (var dayIndex = 0;
+          dayIndex < widget.schedule.metadata.workdays.length;
+          dayIndex++)
+        ..._lessonsByDay[widget.schedule.metadata.workdays[dayIndex]]
+            .map((lesson) {
+          final startTimeOffset = lesson.temporalData.startTime
+                  .difference(widget.schedule.metadata.firstLessonTime)
+                  .inMinutes *
+              _pixelHeightPerMinute;
+
+          return Positioned(
+            top: _tableHeaderRowRenderBox == null
+                ? 0
+                : _tableHeaderRowRenderBox!.localToGlobal(Offset.zero).dy +
+                    startTimeOffset,
+            left: ((16 + _widthPerDay) * (dayIndex + 1)) + 16,
+            child: LessonBox(
+              title: lesson.name,
+              color: lesson.color,
+              height: (lesson.temporalData.endTime
+                          .difference(lesson.temporalData.startTime)
+                          .inMinutes *
+                      _pixelHeightPerMinute)
+                  .toDouble(),
+              width: _widthPerDay + 16,
+            ),
+          );
+        }),
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
-    //debugPaintSizeEnabled = true;
     return SizedBox.expand(
       key: _buildAreaKey,
       child: GestureDetector(
@@ -145,81 +217,8 @@ class _ScheduleGridViewState extends State<ScheduleGridView> {
         },
         child: Stack(
           children: [
-            // Left Visual Lesson Time Indicators
-            ...List.generate(widget.schedule.metadata.visualLessonTimes.length,
-                (index) {
-              // Base calculation for top
-              double topPosition = _tableHeaderRowRenderBox == null ||
-                      !_tableHeaderRowRenderBox!.attached
-                  ? 0
-                  : (_tableHeaderRowRenderBox!.localToGlobal(Offset.zero).dy +
-                      widget.schedule.metadata.visualLessonTimes[index][0]
-                              .difference(
-                                  widget.schedule.metadata.firstLessonTime)
-                              .inMinutes *
-                          _pixelHeightPerMinute);
-
-              // Adjust the height calculation
-              double visualHeight = (widget
-                      .schedule.metadata.visualLessonTimes[index][1]
-                      .difference(
-                          widget.schedule.metadata.visualLessonTimes[index][0])
-                      .inMinutes *
-                  _pixelHeightPerMinute);
-
-              // Clamp the top and height for the last indicator
-
-              // Debug logging
-              logger.d(
-                  "Indicator $index: Top = $topPosition, Height = $visualHeight");
-
-              return Positioned(
-                top: topPosition,
-                left: 16, // Default margin
-                child: LessonBox(
-                  title: (index + 1).toString(),
-                  color: Colors.grey,
-                  height: visualHeight,
-                  width: _widthPerDay,
-                  startTime: widget.schedule.metadata.visualLessonTimes[index]
-                      [0],
-                  endTime: widget.schedule.metadata.visualLessonTimes[index][1],
-                ),
-              );
-            }),
-
-            // Lesson Widgets
-            if (_lessonsByDay.isNotEmpty)
-              for (var dayIndex = 0;
-                  dayIndex < widget.schedule.metadata.workdays.length;
-                  dayIndex++)
-                ..._lessonsByDay[widget.schedule.metadata.workdays[dayIndex]]
-                    .map((lesson) {
-                  final startTimeOffset = lesson.temporalData.startTime
-                          .difference(widget.schedule.metadata.firstLessonTime)
-                          .inMinutes *
-                      _pixelHeightPerMinute;
-
-                  return Positioned(
-                    top: _tableHeaderRowRenderBox == null
-                        ? 0
-                        : _tableHeaderRowRenderBox!
-                                .localToGlobal(Offset.zero)
-                                .dy +
-                            startTimeOffset,
-                    left: ((16 + _widthPerDay) * (dayIndex + 1)) + 16,
-                    child: LessonBox(
-                      title: lesson.name,
-                      color: lesson.color,
-                      height: (lesson.temporalData.endTime
-                                  .difference(lesson.temporalData.startTime)
-                                  .inMinutes *
-                              _pixelHeightPerMinute)
-                          .toDouble(),
-                      width: _widthPerDay + 16,
-                    ),
-                  );
-                }),
+            ..._buildTimeIndicators(),
+            if (_lessonsByDay.isNotEmpty) ..._buildLessonBoxes(),
             _buildScheduleTable(),
           ],
         ),

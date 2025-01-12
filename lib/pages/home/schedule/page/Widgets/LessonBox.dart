@@ -40,25 +40,31 @@ class LessonBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: height.toDouble(),
-      width: width.toDouble(),
-      decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.2),
-          border: Border.all(color: color, width: 3)),
-      child: FittedBox(
-        fit: BoxFit.scaleDown,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            startTime != null || temporalData != null
-                ? Text(DateFormat("HH:mm").format(_startTime()))
-                : const Text(""),
-            Text(title),
-            startTime != null || temporalData != null
-                ? Text(DateFormat("HH:mm").format(_endTime()))
-                : const Text(""),
-          ],
+    return Material(
+      color: color.withValues(alpha: 0.1),
+      child: Container(
+        padding: const EdgeInsets.all(2.0),
+        height: height.toDouble(),
+        width: width.toDouble(),
+        decoration: BoxDecoration(border: Border.all(color: color, width: 3)),
+        child: FittedBox(
+          alignment: startTime != null || temporalData != null
+              ? Alignment.center
+              : Alignment.topCenter,
+          fit: BoxFit.scaleDown,
+          child: Column(
+            children: [
+              if (startTime != null || temporalData != null)
+                Text(DateFormat("HH:mm").format(_startTime())),
+              Text(title,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: color,
+                      )),
+              if (startTime != null || temporalData != null)
+                Text(DateFormat("HH:mm").format(_endTime())),
+            ],
+          ),
         ),
       ),
     );
