@@ -12,7 +12,7 @@ const List<String> weekdaysAbbreviations = [
 ];
 
 int getIsoWeekNumber(DateTime date) {
-  // Returns the current Calendar week number of the year
+  /// Returns the current Calendar week number of the year
   int weekNumber = ((date.dayOfYear - date.weekday + 10) / 7).floor();
   return weekNumber;
 }
@@ -33,7 +33,7 @@ bool timeOfDaysOverlap(List<List<TimeOfDay>> times) {
 
   bool _timesOverlap(
       TimeOfDay start1, TimeOfDay end1, TimeOfDay start2, TimeOfDay end2) {
-    // Two time ranges [start1, end1] and [start2, end2] overlap if:
+    /// Two time ranges [start1, end1] and [start2, end2] overlap if:
     // start1 < end2 AND start2 < end1
     return _isBefore(start1, end2) && _isBefore(start2, end1);
   }
@@ -47,15 +47,17 @@ bool timeOfDaysOverlap(List<List<TimeOfDay>> times) {
 
     TimeOfDay start1 = times[i][0];
     TimeOfDay end1 = times[i][1];
-    // Check if the ranges are globally sorted
+
+    /// Check if the ranges are globally sorted
     for (int i = 0; i < times.length - 1; i++) {
       if (!_isOrdered(times[i][0], times[i + 1][0])) {
-        return true; // Return true because ranges are not in chronological order
+        return true;
       }
     }
-    // Ensure that start and end times are in order
+
+    /// Ensure that start and end times are in order
     if (!_isOrdered(start1, end1)) {
-      return true; // Overlapping because start time is after end time
+      return true;
     }
 
     for (int j = i + 1; j < times.length; j++) {
@@ -63,7 +65,7 @@ bool timeOfDaysOverlap(List<List<TimeOfDay>> times) {
       TimeOfDay end2 = times[j][1];
 
       if (!_isOrdered(start2, end2)) {
-        return true; // Overlapping because start time is after end time
+        return true;
       }
 
       // Check overlap between [start1, end1] and [start2, end2]

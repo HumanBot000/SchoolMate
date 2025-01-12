@@ -4,7 +4,7 @@ import 'package:school_mate/main.dart';
 
 Future<void> updateUserSettings(
     Country residenceCountry, String? residence, String gradingSystem) async {
-  // residence is already the code -> makes it easier to work with
+  // residence is already the code -> makes it easier to work with it
   if (residence == "unset") {
     residence = null; //convert back for DB integrity
   }

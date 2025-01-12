@@ -8,16 +8,35 @@ class LessonBox extends StatelessWidget {
   final Color color;
   final double height;
   final double width;
-  final LessonTemporalData
+  final LessonTemporalData?
       temporalData; // Just optical, need to handle width and height outside
+  final TimeOfDay? startTime;
+  final TimeOfDay? endTime;
 
-  const LessonBox(
-      {super.key,
-      required this.title,
-      required this.color,
-      required this.height,
-      required this.width,
-      required this.temporalData});
+  const LessonBox({
+    super.key,
+    required this.title,
+    required this.color,
+    required this.height,
+    required this.width,
+    this.temporalData,
+    this.startTime,
+    this.endTime,
+  });
+
+  DateTime _startTime() {
+    if (temporalData != null) {
+      return temporalData!.startTime.toDateTime();
+    }
+    return startTime!.toDateTime();
+  }
+
+  DateTime _endTime() {
+    if (temporalData != null) {
+      return temporalData!.endTime.toDateTime();
+    }
+    return endTime!.toDateTime();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,15 +44,22 @@ class LessonBox extends StatelessWidget {
       height: height.toDouble(),
       width: width.toDouble(),
       decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.8),
+          color: color.withValues(alpha: 0.2),
           border: Border.all(color: color, width: 3)),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Text(DateFormat("HH:mm").format(temporalData.startTime.toDateTime())),
-          Text(title),
-          Text(DateFormat("HH:mm").format(temporalData.endTime.toDateTime())),
-        ],
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            startTime != null || temporalData != null
+                ? Text(DateFormat("HH:mm").format(_startTime()))
+                : const Text(""),
+            Text(title),
+            startTime != null || temporalData != null
+                ? Text(DateFormat("HH:mm").format(_endTime()))
+                : const Text(""),
+          ],
+        ),
       ),
     );
   }

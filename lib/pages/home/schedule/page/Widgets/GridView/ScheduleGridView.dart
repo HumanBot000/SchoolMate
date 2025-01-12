@@ -7,6 +7,8 @@ import 'package:school_mate/pages/home/schedule/page/Widgets/LessonBox.dart';
 import 'package:school_mate/util/dates.dart';
 import 'package:school_mate/util/extensions/dates.dart';
 
+import '../../../../../../main.dart';
+
 class ScheduleGridView extends StatefulWidget {
   final Schedule schedule;
 
@@ -24,10 +26,10 @@ class _ScheduleGridViewState extends State<ScheduleGridView> {
   RenderBox? _tableHeaderRowRenderBox;
 
   late double _widthPerDay = 1;
-  late int _dailyWorkdayLength;
+  late int _dailyWorkdayMinutes;
   late List<int> _workdays;
   late List<List<Lesson>> _lessonsByDay = [];
-  late int _pixelHeightPerMinute = 1;
+  late double _pixelHeightPerMinute = 1; // precision needed
   late List<DateTime> _filteredWeekdaysAtWork = [];
 
   @override
@@ -44,7 +46,7 @@ class _ScheduleGridViewState extends State<ScheduleGridView> {
     final schedule = widget.schedule.metadata;
     setState(() {
       _workdays = schedule.workdays;
-      _dailyWorkdayLength = _calculateDailyWorkdayLength(schedule);
+      _dailyWorkdayMinutes = _calculateDailyWorkdayLength(schedule);
       _filteredWeekdaysAtWork = _calculateFilteredWeekdays();
       _widthPerDay = (MediaQuery.of(context).size.width - 7 * 16) /
           7; // The default left margin for this screen is 16
@@ -69,12 +71,20 @@ class _ScheduleGridViewState extends State<ScheduleGridView> {
             .toString(),
       );
     }).toList();
+    _lessonsByDay = List.generate(7, (index) {
+      return allLessonsThisWeek
+          .where((lesson) => lesson.temporalData.weekday - 1 == index)
+          .toList();
+    });
+
+    // Only use days that are workdays
+    for (var day = 0; day < 7; day++) {
+      if (!_workdays.contains(day)) {
+        _lessonsByDay.removeAt(day - 1);
+      }
+    }
     setState(() {
-      _lessonsByDay = List.generate(7, (index) {
-        return allLessonsThisWeek
-            .where((lesson) => lesson.temporalData.weekday == index)
-            .toList();
-      });
+      _lessonsByDay = _lessonsByDay;
     });
   }
 
@@ -91,9 +101,13 @@ class _ScheduleGridViewState extends State<ScheduleGridView> {
   /// Calculates pixel height per minute
   void _calculatePixelHeight() {
     final height = _buildAreaKey.currentContext?.size?.height;
+    logger.d("Height: $height");
+    logger.d("PixelsPerMin: ${height! / _dailyWorkdayMinutes}");
+    logger.d(
+        "Converted: ${(height / _dailyWorkdayMinutes) * _dailyWorkdayMinutes}");
     if (height != null) {
       setState(() {
-        _pixelHeightPerMinute = height ~/ _dailyWorkdayLength;
+        _pixelHeightPerMinute = height / _dailyWorkdayMinutes.toDouble();
         _tableHeaderRowRenderBox =
             _tableHeaderRowKey.currentContext?.findRenderObject() as RenderBox;
       });
@@ -117,6 +131,7 @@ class _ScheduleGridViewState extends State<ScheduleGridView> {
 
   @override
   Widget build(BuildContext context) {
+    //debugPaintSizeEnabled = true;
     return SizedBox.expand(
       key: _buildAreaKey,
       child: GestureDetector(
@@ -130,29 +145,81 @@ class _ScheduleGridViewState extends State<ScheduleGridView> {
         },
         child: Stack(
           children: [
-            Positioned(
-              top: _tableHeaderRowRenderBox == null
+            // Left Visual Lesson Time Indicators
+            ...List.generate(widget.schedule.metadata.visualLessonTimes.length,
+                (index) {
+              // Base calculation for top
+              double topPosition = _tableHeaderRowRenderBox == null ||
+                      !_tableHeaderRowRenderBox!.attached
                   ? 0
-                  : _tableHeaderRowRenderBox!.localToGlobal(Offset.zero).dy +
-                      widget.schedule.metadata.visualLessonTimes[1][0]
+                  : (_tableHeaderRowRenderBox!.localToGlobal(Offset.zero).dy +
+                      widget.schedule.metadata.visualLessonTimes[index][0]
                               .difference(
                                   widget.schedule.metadata.firstLessonTime)
                               .inMinutes *
-                          _pixelHeightPerMinute,
-              left: 16, // The default left margin for this screen
-              child: LessonBox(
-                title: "1",
-                color: Colors.grey,
-                height: (widget.schedule.metadata.visualLessonTimes[1][1]
-                            .difference(widget
-                                .schedule.metadata.visualLessonTimes[1][0])
-                            .inMinutes *
-                        _pixelHeightPerMinute)
-                    .toDouble(),
-                width: _widthPerDay,
-                temporalData: widget.schedule.lessons[0].temporalData,
-              ),
-            ),
+                          _pixelHeightPerMinute);
+
+              // Adjust the height calculation
+              double visualHeight = (widget
+                      .schedule.metadata.visualLessonTimes[index][1]
+                      .difference(
+                          widget.schedule.metadata.visualLessonTimes[index][0])
+                      .inMinutes *
+                  _pixelHeightPerMinute);
+
+              // Clamp the top and height for the last indicator
+
+              // Debug logging
+              logger.d(
+                  "Indicator $index: Top = $topPosition, Height = $visualHeight");
+
+              return Positioned(
+                top: topPosition,
+                left: 16, // Default margin
+                child: LessonBox(
+                  title: (index + 1).toString(),
+                  color: Colors.grey,
+                  height: visualHeight,
+                  width: _widthPerDay,
+                  startTime: widget.schedule.metadata.visualLessonTimes[index]
+                      [0],
+                  endTime: widget.schedule.metadata.visualLessonTimes[index][1],
+                ),
+              );
+            }),
+
+            // Lesson Widgets
+            if (_lessonsByDay.isNotEmpty)
+              for (var dayIndex = 0;
+                  dayIndex < widget.schedule.metadata.workdays.length;
+                  dayIndex++)
+                ..._lessonsByDay[widget.schedule.metadata.workdays[dayIndex]]
+                    .map((lesson) {
+                  final startTimeOffset = lesson.temporalData.startTime
+                          .difference(widget.schedule.metadata.firstLessonTime)
+                          .inMinutes *
+                      _pixelHeightPerMinute;
+
+                  return Positioned(
+                    top: _tableHeaderRowRenderBox == null
+                        ? 0
+                        : _tableHeaderRowRenderBox!
+                                .localToGlobal(Offset.zero)
+                                .dy +
+                            startTimeOffset,
+                    left: ((16 + _widthPerDay) * (dayIndex + 1)) + 16,
+                    child: LessonBox(
+                      title: lesson.name,
+                      color: lesson.color,
+                      height: (lesson.temporalData.endTime
+                                  .difference(lesson.temporalData.startTime)
+                                  .inMinutes *
+                              _pixelHeightPerMinute)
+                          .toDouble(),
+                      width: _widthPerDay + 16,
+                    ),
+                  );
+                }),
             _buildScheduleTable(),
           ],
         ),
@@ -174,9 +241,7 @@ class _ScheduleGridViewState extends State<ScheduleGridView> {
         TableRow(
           children: [
             _buildHeaderCell(),
-            ..._filteredWeekdaysAtWork
-                .map((day) => _buildDayCell(day))
-                .toList(),
+            ..._filteredWeekdaysAtWork.map((day) => _buildDayCell(day)),
           ],
         ),
       ],
