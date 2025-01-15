@@ -270,14 +270,15 @@ class _ScheduleGridViewState extends State<ScheduleGridView> {
                                 .inMinutes *
                             _pixelHeightPerMinute)) +
                     8,
-            left: ((32 + _widthPerDay) * (day + 1)),
+            left: ((32 + _widthPerDay) * (day + 1)) -
+                (day == widget.schedule.metadata.workdays.last ? 16 : 0),
             child: DottedBorder(
               borderType: BorderType.RRect,
               color: isEven ? Colors.blueAccent : Colors.greenAccent,
               dashPattern: [10, 10],
               child: Container(
                 color: Colors.blueGrey.shade900,
-                width: _widthPerDay + 16,
+                width: _widthPerDay,
                 height: (lessonBreak[1].difference(lessonBreak[0]).inMinutes *
                         _pixelHeightPerMinute) -
                     16.toDouble(),
