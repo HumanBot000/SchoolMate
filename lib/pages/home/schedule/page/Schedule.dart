@@ -25,7 +25,10 @@ class _SchedulePageState extends State<SchedulePage> {
       ),
       body: Stack(
         children: [
-          ScheduleGridView(schedule: widget.schedule),
+          ScheduleGridView(
+            schedule: widget.schedule,
+            showBreaks: true,
+          ),
           Align(
             alignment: Alignment.bottomRight,
             child: Container(

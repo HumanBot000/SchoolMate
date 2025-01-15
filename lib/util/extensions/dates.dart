@@ -18,8 +18,15 @@ extension TimeOfDayExtension on TimeOfDay {
     return DateTime(1, 1, 1, this.hour, this.minute);
   }
 
+  bool isBetween(TimeOfDay start, TimeOfDay end) =>
+      this.hour >= start.hour && this.hour <= end.hour;
+
   TimeOfDay add(Duration duration) {
     return toDateTime().add(duration).toTimeOfDay();
+  }
+
+  TimeOfDay subtract(Duration duration) {
+    return toDateTime().subtract(duration).toTimeOfDay();
   }
 
   Duration difference(TimeOfDay startTime) {

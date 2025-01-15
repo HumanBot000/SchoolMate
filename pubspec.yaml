@@ -46,6 +46,7 @@ dependencies:
   http: ^1.0.0
   intl: ^0.20.1
   flutter_colorpicker: ^1.1.0
+  dotted_border: ^2.1.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

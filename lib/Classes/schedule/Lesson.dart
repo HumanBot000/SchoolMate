@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:school_mate/Classes/persons/Teacher.dart';
 import 'package:school_mate/Classes/schedule/Subject.dart';
 import 'package:school_mate/util/extensions/dates.dart';
 
@@ -17,35 +16,21 @@ class LessonTemporalData {
 }
 
 class Lesson extends Subject {
-  final int lesson_id;
-  @override
-  final int subject_id;
-  @override
-  final String name;
-  @override
-  final Teacher teacher;
-  @override
-  final Color color;
+  final int lessonID;
+  final Subject subject;
   final LessonTemporalData temporalData;
 
-  Lesson(this.lesson_id, this.subject_id, this.name, this.teacher, this.color,
-      this.temporalData)
+  Lesson(this.lessonID, this.subject, this.temporalData)
       : super(
-            name: name, teacher: teacher, color: color, subject_id: subject_id);
+            name: subject.name,
+            teacher: subject.teacher,
+            color: subject.color,
+            id: subject.id);
 
   factory Lesson.fromJson(Map<String, dynamic> json, List<Subject> subjects) =>
       Lesson(
         json["lesson_id"],
-        json["subject_id"],
-        subjects
-            .firstWhere((subject) => subject.subject_id == json["subject_id"])
-            .name,
-        subjects
-            .firstWhere((subject) => subject.subject_id == json["subject_id"])
-            .teacher,
-        subjects
-            .firstWhere((subject) => subject.subject_id == json["subject_id"])
-            .color,
+        subjects.firstWhere((subject) => subject.id == json["subject_id"]),
         LessonTemporalData(
             json["weekday"],
             (json["alternating_weeks"] as List<dynamic>).cast<String>(),

@@ -12,6 +12,7 @@ class ScheduleMetadata {
   final String currentAlternatedWeek;
   final List<int> workdays;
   final List<List<TimeOfDay>> visualLessonTimes;
+  final int defaultLessonLength;
 
   ScheduleMetadata(
       this.creationDate,
@@ -20,7 +21,8 @@ class ScheduleMetadata {
       this.numberOfAlternateWeeks,
       this.currentAlternatedWeek,
       this.workdays,
-      this.visualLessonTimes);
+      this.visualLessonTimes,
+      this.defaultLessonLength);
 
   String alternatedWeekForDate(DateTime newDate) {
     // The preferred method is to use the view from the  postgresql function
@@ -136,6 +138,7 @@ class ScheduleMetadata {
         numberOfAlternateWeeks,
         currentAlternatedWeek,
         weekdays,
-        visualLessonTimes);
+        visualLessonTimes,
+        json["lesson_default_length"]);
   }
 }

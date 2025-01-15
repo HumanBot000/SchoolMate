@@ -1,4 +1,5 @@
 // This file ended up a bit long, but splitting it up is hard, because of cross references, private vars and setState()
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:school_mate/Classes/schedule/Lesson.dart';
@@ -11,8 +12,10 @@ import 'package:school_mate/util/extensions/dates.dart';
 
 class ScheduleGridView extends StatefulWidget {
   final Schedule schedule;
+  final bool showBreaks;
 
-  const ScheduleGridView({super.key, required this.schedule});
+  const ScheduleGridView(
+      {super.key, required this.schedule, this.showBreaks = false});
 
   @override
   State<ScheduleGridView> createState() => _ScheduleGridViewState();
@@ -31,6 +34,7 @@ class _ScheduleGridViewState extends State<ScheduleGridView> {
   late List<List<Lesson>> _lessonsByDay = [];
   late double _pixelHeightPerMinute = 1; // precision needed
   late List<DateTime> _filteredWeekdaysAtWork = [];
+  late List<List<List<TimeOfDay>>> _breaksByDay = [];
 
   @override
   void initState() {
@@ -61,30 +65,113 @@ class _ScheduleGridViewState extends State<ScheduleGridView> {
     return (end.hour * 60 + end.minute) - (start.hour * 60 + start.minute);
   }
 
+  /// Calculates breaks
+  List<List<List<TimeOfDay>>> _constructBreaks(
+      List<List<Lesson>> lessonsByDay) {
+    //AI generated
+    final defaultLessonLength = widget.schedule.metadata.defaultLessonLength;
+    // Initialize breaksByDay with empty lists
+    final breaksByDay = List.generate(7, (index) => <List<TimeOfDay>>[]);
+
+    // Calculate breaks for each workday
+    for (var day = 0; day < 7; day++) {
+      if (!_workdays.contains(day)) {
+        lessonsByDay[day] = [];
+        continue;
+      }
+
+      final lessonsForDay = lessonsByDay[day];
+      final breaksForDay = <List<TimeOfDay>>[];
+
+      // Function to split a break into chunks of defaultLessonLength
+      void addBreaksInChunks(TimeOfDay start, TimeOfDay end) {
+        int startInMinutes = start.hour * 60 + start.minute;
+        int endInMinutes = end.hour * 60 + end.minute;
+
+        while (endInMinutes - startInMinutes > defaultLessonLength) {
+          final chunkEndInMinutes = startInMinutes + defaultLessonLength;
+          breaksForDay.add([
+            TimeOfDay(hour: startInMinutes ~/ 60, minute: startInMinutes % 60),
+            TimeOfDay(
+                hour: chunkEndInMinutes ~/ 60, minute: chunkEndInMinutes % 60),
+          ]);
+          startInMinutes = chunkEndInMinutes;
+        }
+
+        breaksForDay.add([
+          TimeOfDay(hour: startInMinutes ~/ 60, minute: startInMinutes % 60),
+          TimeOfDay(hour: endInMinutes ~/ 60, minute: endInMinutes % 60),
+        ]);
+      }
+
+      // If there are no lessons, the whole workday is a break
+      if (lessonsForDay.isEmpty) {
+        addBreaksInChunks(
+          widget.schedule.metadata.firstLessonTime,
+          widget.schedule.metadata.lastLessonTime,
+        );
+      } else {
+        // Add a break from the start of the workday to the first lesson
+        if (lessonsForDay.first.temporalData.startTime !=
+            widget.schedule.metadata.firstLessonTime) {
+          addBreaksInChunks(
+            widget.schedule.metadata.firstLessonTime,
+            lessonsForDay.first.temporalData.startTime,
+          );
+        }
+
+        // Add breaks between consecutive lessons
+        for (var i = 0; i < lessonsForDay.length - 1; i++) {
+          final currentLesson = lessonsForDay[i];
+          final nextLesson = lessonsForDay[i + 1];
+
+          if (currentLesson.temporalData.endTime !=
+              nextLesson.temporalData.startTime) {
+            addBreaksInChunks(
+              currentLesson.temporalData.endTime,
+              nextLesson.temporalData.startTime,
+            );
+          }
+        }
+
+        // Add a break from the last lesson to the end of the workday
+        if (lessonsForDay.last.temporalData.endTime !=
+            widget.schedule.metadata.lastLessonTime) {
+          addBreaksInChunks(
+            lessonsForDay.last.temporalData.endTime,
+            widget.schedule.metadata.lastLessonTime,
+          );
+        }
+      }
+
+      breaksByDay[day] = breaksForDay;
+    }
+    return breaksByDay;
+  }
+
   /// Updates the lessons grouped by day
   void _updateLessonsByDay() {
-    final schedule = widget.schedule;
-    final allLessonsThisWeek = schedule.lessons.where((lesson) {
+    // Filter lessons for the current focused week
+    final allLessonsThisWeek = widget.schedule.lessons.where((lesson) {
       return lesson.temporalData.alternatingWeeks.contains(
-        schedule.metadata
+        widget.schedule.metadata
             .alternatedWeekForDate(currentFocusedScheduleWeek)
             .toString(),
       );
     }).toList();
-    _lessonsByDay = List.generate(7, (index) {
+
+    // Group lessons by day of the week
+    final lessonsByDay = List.generate(7, (index) {
       return allLessonsThisWeek
           .where((lesson) => lesson.temporalData.weekday - 1 == index)
-          .toList();
+          .toList()
+        ..sort((a, b) => a.temporalData.startTime
+            .compareTo(b.temporalData.startTime)); // Sort lessons by start time
     });
 
-    // Only use days that are workdays
-    for (var day = 0; day < 7; day++) {
-      if (!_workdays.contains(day)) {
-        _lessonsByDay.removeAt(day - 1);
-      }
-    }
     setState(() {
-      _lessonsByDay = _lessonsByDay;
+      _lessonsByDay = lessonsByDay;
+      _breaksByDay = _constructBreaks(lessonsByDay);
     });
   }
 
@@ -167,6 +254,50 @@ class _ScheduleGridViewState extends State<ScheduleGridView> {
     });
   }
 
+  List<Widget> _buildBreakBoxes() {
+    if (_breaksByDay.isEmpty) return [];
+    List<Widget> breakBoxes = [];
+    for (var day = 0; day < 7; day++) {
+      bool isEven = true;
+      for (var lessonBreak in _breaksByDay[day]) {
+        breakBoxes.add(Positioned(
+            top: _tableHeaderRowRenderBox == null
+                ? 0
+                : (_tableHeaderRowRenderBox!.localToGlobal(Offset.zero).dy +
+                        (lessonBreak[0]
+                                .difference(
+                                    widget.schedule.metadata.firstLessonTime)
+                                .inMinutes *
+                            _pixelHeightPerMinute)) +
+                    8,
+            left: ((32 + _widthPerDay) * (day + 1)),
+            child: DottedBorder(
+              borderType: BorderType.RRect,
+              color: isEven ? Colors.blueAccent : Colors.greenAccent,
+              dashPattern: [10, 10],
+              child: Container(
+                color: Colors.blueGrey.shade900,
+                width: _widthPerDay + 16,
+                height: (lessonBreak[1].difference(lessonBreak[0]).inMinutes *
+                        _pixelHeightPerMinute) -
+                    16.toDouble(),
+                child: lessonBreak[1].difference(lessonBreak[0]).inMinutes > 30
+                    ? const FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Icon(
+                          Icons.coffee,
+                          color: Colors.blueGrey,
+                        ),
+                      )
+                    : const SizedBox.shrink(),
+              ),
+            )));
+        isEven = !isEven;
+      }
+    }
+    return breakBoxes;
+  }
+
   List<Widget> _buildLessonBoxes() {
     if (_lessonsByDay.isEmpty) return [];
 
@@ -217,6 +348,7 @@ class _ScheduleGridViewState extends State<ScheduleGridView> {
         },
         child: Stack(
           children: [
+            if (widget.showBreaks) ..._buildBreakBoxes(),
             ..._buildTimeIndicators(),
             if (_lessonsByDay.isNotEmpty) ..._buildLessonBoxes(),
             _buildScheduleTable(),
