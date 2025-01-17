@@ -7,8 +7,10 @@ import 'package:school_mate/pages/home/schedule/subjects/SubjectCreation.dart';
 
 class SubjectList extends StatefulWidget {
   final List<Subject> subjects;
+  final Function(Subject) onSubjectSelected;
 
-  const SubjectList({super.key, required this.subjects});
+  const SubjectList(
+      {super.key, required this.subjects, required this.onSubjectSelected});
 
   @override
   State<SubjectList> createState() => _SubjectListState();
@@ -131,8 +133,8 @@ class _SubjectListState extends State<SubjectList> {
                 ],
               ),
               onTap: () {
-                //todo
                 Navigator.of(context).pop();
+                widget.onSubjectSelected(_subjects[index ~/ 2]);
               },
             ),
           );

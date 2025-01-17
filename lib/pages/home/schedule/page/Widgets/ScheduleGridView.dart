@@ -11,11 +11,16 @@ import 'package:school_mate/util/dates.dart';
 import 'package:school_mate/util/extensions/dates.dart';
 
 class ScheduleGridView extends StatefulWidget {
+  // Don't Navigate to this page! Navigate to SchedulePage instead (took me way to long to figure this out)
   final Schedule schedule;
   final bool showBreaks;
+  final Function(TimeOfDay, TimeOfDay, int) onBreakSelection;
 
   const ScheduleGridView(
-      {super.key, required this.schedule, this.showBreaks = false});
+      {super.key,
+      required this.schedule,
+      this.showBreaks = false,
+      required this.onBreakSelection});
 
   @override
   State<ScheduleGridView> createState() => _ScheduleGridViewState();
@@ -260,39 +265,49 @@ class _ScheduleGridViewState extends State<ScheduleGridView> {
     for (var day = 0; day < 7; day++) {
       bool isEven = true;
       for (var lessonBreak in _breaksByDay[day]) {
-        breakBoxes.add(Positioned(
-            top: _tableHeaderRowRenderBox == null
-                ? 0
-                : (_tableHeaderRowRenderBox!.localToGlobal(Offset.zero).dy +
-                        (lessonBreak[0]
-                                .difference(
-                                    widget.schedule.metadata.firstLessonTime)
-                                .inMinutes *
-                            _pixelHeightPerMinute)) +
-                    8,
-            left: ((32 + _widthPerDay) * (day + 1)) -
-                (day == widget.schedule.metadata.workdays.last ? 16 : 0),
-            child: DottedBorder(
-              borderType: BorderType.RRect,
-              color: isEven ? Colors.blueAccent : Colors.greenAccent,
-              dashPattern: [10, 10],
-              child: Container(
-                color: Colors.blueGrey.shade900,
-                width: _widthPerDay,
-                height: (lessonBreak[1].difference(lessonBreak[0]).inMinutes *
-                        _pixelHeightPerMinute) -
-                    16.toDouble(),
-                child: lessonBreak[1].difference(lessonBreak[0]).inMinutes > 30
-                    ? const FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: Icon(
-                          Icons.coffee,
-                          color: Colors.blueGrey,
-                        ),
-                      )
-                    : const SizedBox.shrink(),
-              ),
-            )));
+        breakBoxes.add(
+          Positioned(
+              top: _tableHeaderRowRenderBox == null
+                  ? 0
+                  : (_tableHeaderRowRenderBox!.localToGlobal(Offset.zero).dy +
+                          (lessonBreak[0]
+                                  .difference(
+                                      widget.schedule.metadata.firstLessonTime)
+                                  .inMinutes *
+                              _pixelHeightPerMinute)) +
+                      8,
+              left: ((32 + _widthPerDay) * (day + 1)) -
+                  (day == widget.schedule.metadata.workdays.last ? 16 : 0),
+              child: InkWell(
+                onTap: () => widget.showBreaks
+                    ? widget.onBreakSelection(
+                        lessonBreak[0], lessonBreak[1], day)
+                    : null,
+                child: DottedBorder(
+                  borderType: BorderType.RRect,
+                  color: isEven ? Colors.blueAccent : Colors.greenAccent,
+                  dashPattern: [10, 10],
+                  child: Container(
+                    color: Colors.blueGrey.shade900,
+                    width: _widthPerDay,
+                    height:
+                        (lessonBreak[1].difference(lessonBreak[0]).inMinutes *
+                                _pixelHeightPerMinute) -
+                            16.toDouble(),
+                    child:
+                        lessonBreak[1].difference(lessonBreak[0]).inMinutes > 30
+                            ? const FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Icon(
+                                  Icons.coffee,
+                                  color: Colors.blueGrey,
+                                ),
+                              )
+                            : const SizedBox.shrink(),
+                  ),
+                ),
+              )),
+        );
         isEven = !isEven;
       }
     }

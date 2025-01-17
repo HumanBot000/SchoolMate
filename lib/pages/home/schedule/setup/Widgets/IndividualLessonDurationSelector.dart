@@ -310,8 +310,8 @@ class _IndividualLessonDurationSelectorState
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+          child: Wrap(
+            alignment: WrapAlignment.center,
             children: [
               const SizedBox(width: 10),
               Text(
