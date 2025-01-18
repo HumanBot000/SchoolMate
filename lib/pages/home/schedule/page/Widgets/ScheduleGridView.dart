@@ -461,12 +461,12 @@ class _ScheduleGridViewState extends State<ScheduleGridView> {
                 ? 0
                 : _tableHeaderRowRenderBox!.localToGlobal(Offset.zero).dy +
                     startTimeOffset,
-            left: ((32 + _widthPerDay) * (dayIndex + 1)) -
-                (dayIndex ==
+            left: ((32 + _widthPerDay) * (dayIndex + 1)) +
+                -(dayIndex ==
                         widget.schedule.metadata.workdays[
                             widget.schedule.metadata.workdays.length - 1]
-                    ? 16
-                    : 0), // Right margin for last Day
+                    ? 24
+                    : 4 * dayIndex), // Right margin for last Day
             child: GestureDetector(
               onLongPressStart: (details) {
                 if (widget.showLessonTapCallback) {

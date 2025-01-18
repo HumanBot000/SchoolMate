@@ -25,7 +25,7 @@ class SchedulePage extends StatefulWidget {
 
   // Just a static func that does nothing to pass as default for constructor
   static void _defaultBreakSelection(
-      TimeOfDay start, TimeOfDay end, int weeksday) {}
+      TimeOfDay start, TimeOfDay end, int weekdays) {}
 
   @override
   State<SchedulePage> createState() => _SchedulePageState();
@@ -36,7 +36,36 @@ class _SchedulePageState extends State<SchedulePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Schedule"),
+        title: Row(
+          children: [
+            const Expanded(
+              child: Text(
+                "Schedule",
+                textAlign: TextAlign.center,
+              ),
+            ),
+            IconButton(
+                tooltip: "Back to Present",
+                onPressed: () {
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (context) => SchedulePage(
+                        schedule: widget.schedule,
+                        showLessonTapCallback: widget.showLessonTapCallback,
+                        onBreakSelection: widget.onBreakSelection,
+                        showBreaks: widget.showBreaks),
+                  ));
+                },
+                icon: const Icon(
+                  Icons.access_time_filled,
+                ),
+                iconSize: 30,
+                style: ButtonStyle(
+                  backgroundColor: WidgetStateProperty.all(
+                      Theme.of(context).colorScheme.inversePrimary),
+                  iconColor: WidgetStateProperty.all(Colors.white),
+                )),
+          ],
+        ),
       ),
       bottomNavigationBar: const HomeNavBar(
         currentIndex: 1,

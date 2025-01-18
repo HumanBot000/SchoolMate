@@ -64,12 +64,6 @@ class _LessonConfigurationPageState extends State<LessonConfigurationPage> {
   }
 
   @override
-  void dispose() {
-    _roomNumberController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
