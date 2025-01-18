@@ -21,8 +21,9 @@ class Lesson extends Subject {
   final int lessonID;
   final Subject subject;
   final LessonTemporalData temporalData;
+  final String? location;
 
-  Lesson(this.lessonID, this.subject, this.temporalData)
+  Lesson(this.lessonID, this.subject, this.temporalData, this.location)
       : super(
             name: subject.name,
             teacher: subject.teacher,
@@ -41,5 +42,6 @@ class Lesson extends Subject {
           getIndexesInAlphabet(
               (json["alternating_weeks"] as List<dynamic>).cast<String>()),
         ),
+        json["room"],
       );
 }

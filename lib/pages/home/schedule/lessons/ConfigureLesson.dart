@@ -1,31 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:school_mate/API/supabase/schedule/lessons.dart';
-import 'package:school_mate/API/supabase/schedule/schedule.dart'
-    as fetch_schedule;
+import 'package:school_mate/Classes/schedule/Lesson.dart';
 import 'package:school_mate/Classes/schedule/Schedule.dart';
 import 'package:school_mate/Classes/schedule/Subject.dart';
 import 'package:school_mate/Widgets/public/GradientButton.dart';
 import 'package:school_mate/Widgets/public/PreviousPage.dart';
 import 'package:school_mate/Widgets/public/TimePicker.dart';
-import 'package:school_mate/main.dart';
 import 'package:school_mate/pages/home/schedule/page/Schedule.dart';
 import 'package:school_mate/util/dates.dart';
 import 'package:school_mate/util/extensions/dates.dart';
 
-class AddLesson extends StatefulWidget {
+class LessonConfigurationPage extends StatefulWidget {
   final Subject subject;
   final Schedule schedule;
+  final String? selectedRoomNumber;
+  final Lesson? existingLesson;
+  final Function(Subject, TimeOfDay, TimeOfDay, int, List<int>, String)
+      onUpdate;
 
-  const AddLesson({super.key, required this.subject, required this.schedule});
+  const LessonConfigurationPage(
+      {super.key,
+      required this.subject,
+      required this.schedule,
+      this.selectedRoomNumber,
+      required this.onUpdate,
+      this.existingLesson});
 
   @override
-  State<AddLesson> createState() => _AddLessonState();
+  State<LessonConfigurationPage> createState() =>
+      _LessonConfigurationPageState();
 }
 
-class _AddLessonState extends State<AddLesson> {
-  int _selectedWeekDay = DateTime.now().weekday - 1;
-  List<int> _selectedAlternatingWeeks = [0];
+class _LessonConfigurationPageState extends State<LessonConfigurationPage> {
+  late int _selectedWeekDay;
+  late List<int> _selectedAlternatingWeeks;
   TimeOfDay? _startTime;
   TimeOfDay? _endTime;
   final TextEditingController _roomNumberController = TextEditingController();
@@ -33,6 +41,33 @@ class _AddLessonState extends State<AddLesson> {
   bool get _isDarkText => widget.subject.color.computeLuminance() < 0.5;
 
   Color get _textColor => _isDarkText ? Colors.white : Colors.black;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.existingLesson != null) {
+      _selectedWeekDay = widget.existingLesson!.temporalData.weekday - 1;
+      _selectedAlternatingWeeks =
+          widget.existingLesson!.temporalData.numericalAlternatingWeeks;
+      _startTime = widget.existingLesson!.temporalData.startTime;
+      _endTime = widget.existingLesson!.temporalData.endTime;
+    } else {
+      if (widget.schedule.metadata.workdays
+          .contains(DateTime.now().weekday - 1)) {
+        _selectedWeekDay = DateTime.now().weekday - 1;
+      } else {
+        _selectedWeekDay = widget.schedule.metadata.workdays[0];
+      }
+      _selectedAlternatingWeeks = List.generate(
+          widget.schedule.metadata.numberOfAlternateWeeks, (index) => index);
+    }
+  }
+
+  @override
+  void dispose() {
+    _roomNumberController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +114,10 @@ class _AddLessonState extends State<AddLesson> {
                       "Start and end times must be within the school day!"),
                 if ((_startTime != null && _endTime != null) &&
                     widget.schedule.lessonOverlaps(_startTime!, _endTime!,
-                        _selectedWeekDay, _selectedAlternatingWeeks))
+                        _selectedWeekDay, _selectedAlternatingWeeks,
+                        ignoredLessons: widget.existingLesson == null
+                            ? []
+                            : [widget.existingLesson!]))
                   _buildErrorText(
                       "This lesson overlaps with another one!\nChange the length of the other lesson first!"),
                 const SizedBox(height: 16),
@@ -97,7 +135,7 @@ class _AddLessonState extends State<AddLesson> {
     );
   }
 
-  bool validateLessonCreation() {
+  bool validateLessonUpdate() {
     if (_selectedAlternatingWeeks.isEmpty) return false;
     if (_startTime == null || _endTime == null) return false;
     if (!_endTime!.isAfter(_startTime!)) return false;
@@ -108,7 +146,9 @@ class _AddLessonState extends State<AddLesson> {
       return false;
     }
     if (widget.schedule.lessonOverlaps(
-        _startTime!, _endTime!, _selectedWeekDay, _selectedAlternatingWeeks)) {
+        _startTime!, _endTime!, _selectedWeekDay, _selectedAlternatingWeeks,
+        ignoredLessons:
+            widget.existingLesson == null ? [] : [widget.existingLesson!])) {
       return false;
     }
     return true;
@@ -118,7 +158,7 @@ class _AddLessonState extends State<AddLesson> {
     return ElevatedGradientButton(
         borderRadius: BorderRadius.circular(12),
         onPressed: () async {
-          if (!validateLessonCreation()) {
+          if (!validateLessonUpdate()) {
             WidgetsBinding.instance.addPostFrameCallback(
                 (_) => ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
@@ -135,38 +175,21 @@ class _AddLessonState extends State<AddLesson> {
                     ));
             return;
           }
-          await addLesson(
+          Navigator.of(context).pop();
+          widget.onUpdate(
               widget.subject,
               _startTime!,
               _endTime!,
               _selectedWeekDay,
               _selectedAlternatingWeeks,
               _roomNumberController.text);
-          // ensure the schedule page gets reloaded
-          Navigator.of(context).pop();
-          Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (context) => FutureBuilder(
-              future: fetch_schedule.fetchSchedule(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator();
-                } else if (snapshot.hasError) {
-                  logger.e(snapshot.error);
-                  return Text('Error: ${snapshot.error}');
-                } else if (snapshot.hasData) {
-                  return SchedulePage(schedule: snapshot.data!);
-                } else {
-                  return const Text('No data available.');
-                }
-              },
-            ),
-          ));
         },
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.add, color: Colors.white),
-            Text("Add Lesson",
+            Icon(widget.existingLesson == null ? Icons.add : Icons.save,
+                color: Colors.white),
+            Text(widget.existingLesson == null ? "Add Lesson" : "Update Lesson",
                 style: Theme.of(context)
                     .textTheme
                     .bodyMedium
@@ -267,6 +290,7 @@ class _AddLessonState extends State<AddLesson> {
                       child: SchedulePage(
                         schedule: widget.schedule,
                         showBreaks: true,
+                        showLessonTapCallback: false,
                         onBreakSelection: (start, end, weekday) {
                           Navigator.of(context).pop();
                           setState(() {

@@ -2,10 +2,16 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:school_mate/API/supabase/schedule/lessons.dart';
+import 'package:school_mate/API/supabase/schedule/schedule.dart'
+    as fetch_schedule;
 import 'package:school_mate/Classes/schedule/Lesson.dart';
 import 'package:school_mate/Classes/schedule/Schedule.dart';
 import 'package:school_mate/Classes/schedule/ScheduleMetadata.dart';
+import 'package:school_mate/main.dart';
 import 'package:school_mate/pages/home/Widgets/BottomNavBar.dart';
+import 'package:school_mate/pages/home/schedule/lessons/ConfigureLesson.dart';
+import 'package:school_mate/pages/home/schedule/page/Schedule.dart';
 import 'package:school_mate/pages/home/schedule/page/Widgets/LessonBox.dart';
 import 'package:school_mate/util/dates.dart';
 import 'package:school_mate/util/extensions/dates.dart';
@@ -15,12 +21,14 @@ class ScheduleGridView extends StatefulWidget {
   final Schedule schedule;
   final bool showBreaks;
   final Function(TimeOfDay, TimeOfDay, int) onBreakSelection;
+  final bool showLessonTapCallback;
 
   const ScheduleGridView(
       {super.key,
       required this.schedule,
       this.showBreaks = false,
-      required this.onBreakSelection});
+      required this.onBreakSelection,
+      required this.showLessonTapCallback});
 
   @override
   State<ScheduleGridView> createState() => _ScheduleGridViewState();
@@ -314,6 +322,126 @@ class _ScheduleGridViewState extends State<ScheduleGridView> {
     return breakBoxes;
   }
 
+  void _editDeleteLessonDialog(Offset offset, Lesson lesson) {
+    showAdaptiveDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  lesson.subject.name,
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => LessonConfigurationPage(
+                        schedule: widget.schedule,
+                        subject: lesson.subject,
+                        existingLesson: lesson,
+                        selectedRoomNumber: lesson.location,
+                        onUpdate: (subject, startTime, endTime, weekday,
+                            alternatingWeeks, roomNumber) async {
+                          await editLesson(
+                            lesson,
+                            subject,
+                            startTime,
+                            endTime,
+                            weekday,
+                            alternatingWeeks,
+                            roomNumber,
+                          );
+                          _refreshSchedule(context);
+                        },
+                      ),
+                    ));
+                  },
+                  icon: const Icon(
+                    Icons.edit,
+                    size: 18,
+                    color: Colors.white,
+                  ),
+                  label: const Text("Edit"),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blueAccent,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                ),
+                ElevatedButton.icon(
+                  onPressed: () async {
+                    Navigator.of(context).pop();
+                    await deleteLesson(lesson);
+                    _refreshSchedule(context);
+                  },
+                  icon: const Icon(
+                    Icons.delete,
+                    size: 18,
+                    color: Colors.white,
+                  ),
+                  label: const Text("Delete"),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.redAccent,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _refreshSchedule(BuildContext context) {
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (context) => FutureBuilder(
+          future: fetch_schedule.fetchSchedule(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            } else if (snapshot.hasError) {
+              logger.e(snapshot.error);
+              return Center(
+                child: Text(
+                  'Error: ${snapshot.error}',
+                  style: TextStyle(color: Colors.red),
+                ),
+              );
+            } else if (snapshot.hasData) {
+              return SchedulePage(schedule: snapshot.data!);
+            } else {
+              return const Center(
+                child: Text('No data available.'),
+              );
+            }
+          },
+        ),
+      ),
+    );
+  }
+
   List<Widget> _buildLessonBoxes() {
     if (_lessonsByDay.isEmpty) return [];
 
@@ -333,16 +461,28 @@ class _ScheduleGridViewState extends State<ScheduleGridView> {
                 ? 0
                 : _tableHeaderRowRenderBox!.localToGlobal(Offset.zero).dy +
                     startTimeOffset,
-            left: ((16 + _widthPerDay) * (dayIndex + 1)) + 16,
-            child: LessonBox(
-              title: lesson.name,
-              color: lesson.color,
-              height: (lesson.temporalData.endTime
-                          .difference(lesson.temporalData.startTime)
-                          .inMinutes *
-                      _pixelHeightPerMinute)
-                  .toDouble(),
-              width: _widthPerDay + 16,
+            left: ((32 + _widthPerDay) * (dayIndex + 1)) -
+                (dayIndex ==
+                        widget.schedule.metadata.workdays[
+                            widget.schedule.metadata.workdays.length - 1]
+                    ? 16
+                    : 0), // Right margin for last Day
+            child: GestureDetector(
+              onLongPressStart: (details) {
+                if (widget.showLessonTapCallback) {
+                  _editDeleteLessonDialog(details.globalPosition, lesson);
+                }
+              },
+              child: LessonBox(
+                title: lesson.name,
+                color: lesson.color,
+                height: (lesson.temporalData.endTime
+                            .difference(lesson.temporalData.startTime)
+                            .inMinutes *
+                        _pixelHeightPerMinute)
+                    .toDouble(),
+                width: _widthPerDay + 16,
+              ),
             ),
           );
         }),

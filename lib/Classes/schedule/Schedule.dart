@@ -12,8 +12,13 @@ class Schedule {
   Schedule(this.metadata, this.subjects, this.lessons);
 
   bool lessonOverlaps(TimeOfDay startTime, TimeOfDay endTime, int weekday,
-      List<int> alternatingWeeks) {
+      List<int> alternatingWeeks,
+      {List<Lesson> ignoredLessons = const []}) {
     for (var lesson in lessons) {
+      if (ignoredLessons.contains(lesson)) {
+        // For example used when updating an existing lesson
+        continue;
+      }
       if (lesson.temporalData.weekday - 1 != weekday) {
         continue;
       }
