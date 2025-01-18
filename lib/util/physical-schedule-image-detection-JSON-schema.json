@@ -1,0 +1,93 @@
+{
+  "type": "object",
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "workdays": {
+          "type": "array",
+          "description": "List of workdays. Each entry must represent a day of the week where lessons can occur.",
+          "items": {
+            "type": "string",
+            "enum": [
+              "mon",
+              "tue",
+              "wed",
+              "thu",
+              "fri",
+              "sat",
+              "sun"
+            ]
+          }
+        },
+        "visual_lesson_times": {
+          "type": "array",
+          "description": "representing time intervals for every lesson.",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "format": "time",
+                "description": "Lesson timing as [start_time, end_time], formatted as HH:mm."
+              }
+            }
+          }
+        }
+      }
+    },
+    "lessons": {
+      "type": "array",
+      "description": "A schedule for lessons, organized by workdays. Each outer array represents a specific workday (indexed by `workdays`), containing lessons for that day. Typically not empty",
+      "items": {
+        "type": "array",
+        "description": "Array of lessons for a specific workday. Lookup closely, these can be easy to miss. There should be many lessons each day.",
+        "items": {
+          "type": "object",
+          "description": "An object representing details of a single lesson.",
+          "properties": {
+            "subject_name": {
+              "type": "string",
+              "description": "Name of the subject being taught."
+            },
+            "teacher": {
+              "type": "string",
+              "default": "null",
+              "description": "Name of the teacher."
+            },
+            "room": {
+              "type": "string",
+              "default": "null",
+              "description": "Room number or location of the lesson."
+            },
+            "alternating_weeks": {
+              "type": "array",
+              "default": "null",
+              "description": "An array indicating which weeks this lesson occurs (e.g., ['A']). This usually is defined before the lesson nam (e.g, A: Maths). This has to be written in one line",
+              "items": {
+                "type": "string"
+              }
+            },
+            "timing": {
+              "type": "object",
+              "description": "Start and end times for this lesson.",
+              "properties": {
+                "start": {
+                  "type": "string",
+                  "format": "time",
+                  "description": "Start time of the lesson in HH:mm format."
+                },
+                "end": {
+                  "type": "string",
+                  "format": "time",
+                  "description": "End time of the lesson in HH:mm format."
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
