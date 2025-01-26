@@ -27,7 +27,12 @@ class ScheduleMetadata {
   String alternatedWeekForDate(DateTime newDate) {
     // The preferred method is to use the view from the  postgresql function
     int dayDifference = newDate.difference(DateTime.now()).inDays;
-    int weekDifference = (dayDifference / 7).floor();
+    int weekDifference = 0;
+    if (dayDifference > 0) {
+      weekDifference = (dayDifference / 6).floor();
+    } else {
+      weekDifference = (dayDifference / 7).floor();
+    }
     int newWeekType = ([
               "A",
               "B",

@@ -16,7 +16,12 @@ import 'package:school_mate/util/extensions/dates.dart';
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 
 class ScheduleSetupPage extends StatefulWidget {
-  const ScheduleSetupPage({super.key});
+  final String headerTitle;
+
+  const ScheduleSetupPage(
+      {super.key,
+      this.headerTitle =
+          "Before you can start using the schedule, we need to know some last details about your day."});
 
   @override
   State<ScheduleSetupPage> createState() => _ScheduleSetupPageState();
@@ -215,7 +220,7 @@ class _ScheduleSetupPageState extends State<ScheduleSetupPage> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      "Before you can start using the schedule, we need to know some last details about your day.",
+                      widget.headerTitle,
                       style: Theme.of(context).textTheme.bodyMedium,
                       textAlign: TextAlign.center,
                     ),

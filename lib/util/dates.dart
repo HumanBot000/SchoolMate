@@ -21,6 +21,24 @@ DateTime getStartOfWeek(DateTime currentDay) {
   return currentDay.subtract(Duration(days: currentDay.weekday - 1));
 }
 
+List<dynamic> getVisualTimeTillDate(DateTime start, DateTime end) {
+  final difference = end.difference(start);
+  if (difference.inDays >= 365) {
+    final numOfYears = (difference.inDays ~/ 365).floor();
+    return [numOfYears, numOfYears == 1 ? "year" : "years"];
+  }
+  if (difference.inHours >= 24) {
+    final numOfDays = (difference.inHours ~/ 24).floor();
+    return [numOfDays, numOfDays == 1 ? "day" : "days"];
+  }
+  if (difference.inMinutes >= 60) {
+    final numOfHours = (difference.inMinutes ~/ 60).floor();
+    return [numOfHours, numOfHours == 1 ? "hour" : "hours"];
+  }
+  final numOfMinutes = difference.inMinutes;
+  return [numOfMinutes, numOfMinutes == 1 ? "minute" : "minutes"];
+}
+
 bool timeOfDaysOverlap(List<List<TimeOfDay>> times) {
   bool _isOrdered(TimeOfDay start, TimeOfDay end) {
     return start.hour < end.hour ||

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:school_mate/pages/home/home/start.dart';
+import 'package:school_mate/pages/home/homework/Homework.dart';
 import 'package:school_mate/pages/home/schedule/start.dart';
 
 GlobalKey bottomNavBarKey = GlobalKey();
@@ -29,8 +30,9 @@ class _HomeNavBarState extends State<HomeNavBar> {
       setState(() {
         _selectedPage = index;
       });
-
-      Navigator.pushReplacement(context, MaterialPageRoute(
+      // Clear nav history
+      Navigator.popUntil(context, (route) => route.isFirst);
+      Navigator.push(context, MaterialPageRoute(
         builder: (context) {
           return navigationBarDestinations[index];
         },
@@ -41,6 +43,7 @@ class _HomeNavBarState extends State<HomeNavBar> {
   final List<Widget> navigationBarDestinations = [
     const HomePage(),
     const ScheduleNavigationIntersection(),
+    const HomeworkPage(),
   ];
 
   List<NavigationDestination> navigationBarItems(BuildContext context) => [
@@ -55,6 +58,13 @@ class _HomeNavBarState extends State<HomeNavBar> {
           label: 'Schedule',
           icon: Icon(Icons.calendar_month,
               color: _selectedPage == 1
+                  ? Theme.of(context).colorScheme.primary
+                  : Colors.grey),
+        ),
+        NavigationDestination(
+          label: 'Homework',
+          icon: Icon(Icons.assignment,
+              color: _selectedPage == 2
                   ? Theme.of(context).colorScheme.primary
                   : Colors.grey),
         ),

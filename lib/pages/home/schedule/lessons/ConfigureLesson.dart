@@ -61,6 +61,9 @@ class _LessonConfigurationPageState extends State<LessonConfigurationPage> {
       _selectedAlternatingWeeks = List.generate(
           widget.schedule.metadata.numberOfAlternateWeeks, (index) => index);
     }
+    if (widget.selectedRoomNumber != null) {
+      _roomNumberController.text = widget.selectedRoomNumber!;
+    }
   }
 
   @override

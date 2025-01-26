@@ -66,3 +66,14 @@ Future<Subject> editSubject(Subject oldSubject, Subject newSubject) async {
       .single();
   return Subject.fromJson(response);
 }
+
+Future<Subject> fetchSubjectByID(int id) async {
+  final response = await supabaseClient.client
+      .schema("schedule")
+      .from("subjects")
+      .select()
+      .eq("user_id", await getUserID())
+      .eq("subject_id", id)
+      .single();
+  return Subject.fromJson(response);
+}

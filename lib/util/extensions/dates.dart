@@ -11,6 +11,10 @@ extension DateExtension on DateTime {
   TimeOfDay toTimeOfDay() {
     return TimeOfDay(hour: this.hour, minute: this.minute);
   }
+
+  DateTime startOfWeek() {
+    return this.subtract(Duration(days: this.weekday - 1));
+  }
 }
 
 extension TimeOfDayExtension on TimeOfDay {

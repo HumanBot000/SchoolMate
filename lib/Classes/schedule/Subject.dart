@@ -38,11 +38,16 @@ class Subject {
     return initials.substring(0, min(maxLength, initials.length));
   }
 
-  CircleAvatar avatar() {
+  CircleAvatar avatar(BuildContext context) {
     return CircleAvatar(
       // Ensures that the color is opaque
       backgroundColor: color.withValues(alpha: 1.0),
-      child: Text(_getCircleAvatarAbbreviation()),
+      child: Text(
+        _getCircleAvatarAbbreviation(),
+        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+            color:
+                color.computeLuminance() >= 0.5 ? Colors.black : Colors.white),
+      ),
     );
   }
 }

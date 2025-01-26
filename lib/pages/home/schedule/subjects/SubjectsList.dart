@@ -125,7 +125,7 @@ class _SubjectListState extends State<SubjectList> {
             child: ListTile(
               title: Row(
                 children: [
-                  Container(child: _subjects[index ~/ 2].avatar()),
+                  Container(child: _subjects[index ~/ 2].avatar(context)),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(_subjects[index ~/ 2].name),

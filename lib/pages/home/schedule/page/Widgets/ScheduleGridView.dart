@@ -13,6 +13,7 @@ import 'package:school_mate/pages/home/Widgets/BottomNavBar.dart';
 import 'package:school_mate/pages/home/schedule/lessons/ConfigureLesson.dart';
 import 'package:school_mate/pages/home/schedule/page/Schedule.dart';
 import 'package:school_mate/pages/home/schedule/page/Widgets/LessonBox.dart';
+import 'package:school_mate/pages/home/schedule/setup/scheduleSetup.dart';
 import 'package:school_mate/util/dates.dart';
 import 'package:school_mate/util/extensions/dates.dart';
 
@@ -22,13 +23,17 @@ class ScheduleGridView extends StatefulWidget {
   final bool showBreaks;
   final Function(TimeOfDay, TimeOfDay, int) onBreakSelection;
   final bool showLessonTapCallback;
+  final Function(Lesson, DateTime) onLessonSelection;
+  final bool crossOutLessonsInPast;
 
   const ScheduleGridView(
       {super.key,
       required this.schedule,
       this.showBreaks = false,
       required this.onBreakSelection,
-      required this.showLessonTapCallback});
+      required this.showLessonTapCallback,
+      required this.onLessonSelection,
+      required this.crossOutLessonsInPast});
 
   @override
   State<ScheduleGridView> createState() => _ScheduleGridViewState();
@@ -426,10 +431,13 @@ class _ScheduleGridViewState extends State<ScheduleGridView> {
               return Center(
                 child: Text(
                   'Error: ${snapshot.error}',
-                  style: TextStyle(color: Colors.red),
+                  style: const TextStyle(color: Colors.red),
                 ),
               );
             } else if (snapshot.hasData) {
+              if (snapshot.data is String && snapshot.data!.isEmpty) {
+                const ScheduleSetupPage();
+              }
               return SchedulePage(schedule: snapshot.data!);
             } else {
               return const Center(
@@ -468,12 +476,27 @@ class _ScheduleGridViewState extends State<ScheduleGridView> {
                     ? 24
                     : 4 * dayIndex), // Right margin for last Day
             child: GestureDetector(
+              onTap: () {
+                if (!widget.crossOutLessonsInPast ||
+                    !currentFocusedScheduleWeek
+                        .startOfWeek()
+                        .add(Duration(
+                            days: widget.schedule.metadata.workdays[dayIndex]))
+                        .isBefore(DateTime.now())) {
+                  widget.onLessonSelection(
+                      lesson,
+                      currentFocusedScheduleWeek.startOfWeek().add(Duration(
+                          days: widget.schedule.metadata.workdays[dayIndex])));
+                }
+              },
               onLongPressStart: (details) {
                 if (widget.showLessonTapCallback) {
                   _editDeleteLessonDialog(details.globalPosition, lesson);
                 }
               },
               child: LessonBox(
+                location: lesson.location,
+                teacherName: lesson.teacher.name,
                 title: lesson.name,
                 color: lesson.color,
                 height: (lesson.temporalData.endTime
@@ -482,6 +505,12 @@ class _ScheduleGridViewState extends State<ScheduleGridView> {
                         _pixelHeightPerMinute)
                     .toDouble(),
                 width: _widthPerDay + 16,
+                crossedOut: (widget.crossOutLessonsInPast &&
+                    currentFocusedScheduleWeek
+                        .startOfWeek()
+                        .add(Duration(
+                            days: widget.schedule.metadata.workdays[dayIndex]))
+                        .isBefore(DateTime.now())),
               ),
             ),
           );
@@ -508,9 +537,57 @@ class _ScheduleGridViewState extends State<ScheduleGridView> {
             ..._buildTimeIndicators(),
             if (_lessonsByDay.isNotEmpty) ..._buildLessonBoxes(),
             _buildScheduleTable(),
+            _buildCurrentTimeIndicator()
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildCurrentTimeIndicator() {
+    DateTime now = DateTime.now();
+    if (!widget.schedule.metadata.workdays.contains(now.weekday - 1)) {
+      return const SizedBox.shrink();
+    }
+    if (!now.toTimeOfDay().isBetween(widget.schedule.metadata.firstLessonTime,
+        widget.schedule.metadata.lastLessonTime)) {
+      return const SizedBox.shrink();
+    }
+    final startTimeOffset = now
+            .toTimeOfDay()
+            .difference(widget.schedule.metadata.firstLessonTime)
+            .inMinutes *
+        _pixelHeightPerMinute;
+
+    return Stack(
+      children: [
+        Positioned(
+          top: _tableHeaderRowRenderBox == null
+              ? 0
+              : _tableHeaderRowRenderBox!.localToGlobal(Offset.zero).dy +
+                  startTimeOffset,
+          child: Container(
+            height: 1, //stroke
+            width: MediaQuery.of(context).size.width,
+            color: Colors.red.withValues(alpha: 0.8),
+          ),
+        ),
+        Positioned(
+          top: _tableHeaderRowRenderBox == null
+              ? 0
+              : _tableHeaderRowRenderBox!.localToGlobal(Offset.zero).dy +
+                  startTimeOffset -
+                  20,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+            color: Colors.black.withValues(alpha: 0.2),
+            child: Text(
+              DateFormat("HH:mm").format(now.toLocal()),
+              style: const TextStyle(color: Colors.white, fontSize: 12),
+            ),
+          ),
+        ),
+      ],
     );
   }
 

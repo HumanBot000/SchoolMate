@@ -2,18 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:school_mate/API/supabase/schedule/lessons.dart';
 import 'package:school_mate/API/supabase/schedule/schedule.dart'
     as fetch_schedule;
+import 'package:school_mate/Classes/schedule/Lesson.dart';
 import 'package:school_mate/Classes/schedule/Schedule.dart';
 import 'package:school_mate/main.dart';
 import 'package:school_mate/pages/home/Widgets/BottomNavBar.dart';
 import 'package:school_mate/pages/home/schedule/lessons/ConfigureLesson.dart';
 import 'package:school_mate/pages/home/schedule/page/Widgets/ScheduleGridView.dart';
+import 'package:school_mate/pages/home/schedule/setup/scheduleSetup.dart';
 import 'package:school_mate/pages/home/schedule/subjects/SubjectsList.dart';
 
-class SchedulePage extends StatefulWidget {
+class SchedulePage extends StatelessWidget {
   final Schedule schedule;
   final bool showBreaks;
   final Function(TimeOfDay, TimeOfDay, int) onBreakSelection;
   final bool showLessonTapCallback;
+  final Function(Lesson, DateTime) onLessonSelection;
+  final bool crossOutPastLessons;
 
   const SchedulePage({
     super.key,
@@ -21,17 +25,16 @@ class SchedulePage extends StatefulWidget {
     this.showBreaks = false,
     this.onBreakSelection = _defaultBreakSelection,
     this.showLessonTapCallback = true,
+    this.onLessonSelection = _defaultOnLessonSelection,
+    this.crossOutPastLessons = false,
   });
 
   // Just a static func that does nothing to pass as default for constructor
   static void _defaultBreakSelection(
       TimeOfDay start, TimeOfDay end, int weekdays) {}
 
-  @override
-  State<SchedulePage> createState() => _SchedulePageState();
-}
+  static void _defaultOnLessonSelection(Lesson lesson, DateTime date) {}
 
-class _SchedulePageState extends State<SchedulePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,10 +52,10 @@ class _SchedulePageState extends State<SchedulePage> {
                 onPressed: () {
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
                     builder: (context) => SchedulePage(
-                        schedule: widget.schedule,
-                        showLessonTapCallback: widget.showLessonTapCallback,
-                        onBreakSelection: widget.onBreakSelection,
-                        showBreaks: widget.showBreaks),
+                        schedule: schedule,
+                        showLessonTapCallback: showLessonTapCallback,
+                        onBreakSelection: onBreakSelection,
+                        showBreaks: showBreaks),
                   ));
                 },
                 icon: const Icon(
@@ -73,10 +76,12 @@ class _SchedulePageState extends State<SchedulePage> {
       body: Stack(
         children: [
           ScheduleGridView(
-            schedule: widget.schedule,
-            onBreakSelection: widget.onBreakSelection,
-            showBreaks: widget.showBreaks,
-            showLessonTapCallback: widget.showLessonTapCallback,
+            schedule: schedule,
+            onBreakSelection: onBreakSelection,
+            showBreaks: showBreaks,
+            showLessonTapCallback: showLessonTapCallback,
+            onLessonSelection: onLessonSelection,
+            crossOutLessonsInPast: crossOutPastLessons,
           ),
           Align(
             alignment: Alignment.bottomRight,
@@ -87,14 +92,14 @@ class _SchedulePageState extends State<SchedulePage> {
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => SubjectList(
-                        subjects: widget.schedule.subjects,
+                        subjects: schedule.subjects,
                         onSubjectSelected: (selectedSubject) {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => LessonConfigurationPage(
                                         subject: selectedSubject,
-                                        schedule: widget.schedule,
+                                        schedule: schedule,
                                         onUpdate: (subject,
                                             startTime,
                                             endTime,
@@ -123,6 +128,10 @@ class _SchedulePageState extends State<SchedulePage> {
                                                   return Text(
                                                       'Error: ${snapshot.error}');
                                                 } else if (snapshot.hasData) {
+                                                  if (snapshot.data is String &&
+                                                      snapshot.data!.isEmpty) {
+                                                    return const ScheduleSetupPage();
+                                                  }
                                                   return SchedulePage(
                                                       schedule: snapshot.data!);
                                                 } else {

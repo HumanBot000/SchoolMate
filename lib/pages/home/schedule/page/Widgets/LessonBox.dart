@@ -8,10 +8,12 @@ class LessonBox extends StatelessWidget {
   final Color color;
   final double height;
   final double width;
-  final LessonTemporalData?
-      temporalData; // Just optical, need to handle width and height outside
+  final LessonTemporalData? temporalData;
   final TimeOfDay? startTime;
   final TimeOfDay? endTime;
+  final String? location;
+  final String? teacherName;
+  final bool crossedOut;
 
   const LessonBox({
     super.key,
@@ -22,6 +24,9 @@ class LessonBox extends StatelessWidget {
     this.temporalData,
     this.startTime,
     this.endTime,
+    this.location,
+    this.teacherName,
+    this.crossedOut = false,
   });
 
   DateTime _startTime() {
@@ -41,32 +46,93 @@ class LessonBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: color.withValues(alpha: 0.1),
-      child: Container(
-        padding: const EdgeInsets.all(2.0),
-        height: height.toDouble(),
-        width: width.toDouble(),
-        decoration: BoxDecoration(border: Border.all(color: color, width: 3)),
-        child: FittedBox(
-          alignment: startTime != null || temporalData != null
-              ? Alignment.center
-              : Alignment.topCenter,
-          fit: BoxFit.scaleDown,
-          child: Column(
-            children: [
-              if (startTime != null || temporalData != null)
-                Text(DateFormat("HH:mm").format(_startTime())),
-              Text(title,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: color,
-                      )),
-              if (startTime != null || temporalData != null)
-                Text(DateFormat("HH:mm").format(_endTime())),
-            ],
+      color: color.computeLuminance() >= 0.5
+          ? color.withOpacity(0.1)
+          : Colors.white.withOpacity(0.1),
+      child: Stack(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(2.0),
+            height: height.toDouble(),
+            width: width.toDouble(),
+            decoration: BoxDecoration(
+              border: Border.all(color: color, width: 3),
+            ),
+            child: FittedBox(
+              alignment: startTime != null || temporalData != null
+                  ? Alignment.center
+                  : Alignment.topCenter,
+              fit: BoxFit.scaleDown,
+              child: Column(
+                children: [
+                  if (startTime != null || temporalData != null)
+                    Text(DateFormat("HH:mm").format(_startTime())),
+                  Text(
+                    title,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: color.computeLuminance() >= 0.5
+                              ? color
+                              : Colors.white,
+                        ),
+                  ),
+                  if (startTime != null || temporalData != null)
+                    Text(DateFormat("HH:mm").format(_endTime())),
+                  if (location != null)
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        location!,
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 20,
+                              color: color.computeLuminance() >= 0.5
+                                  ? color
+                                  : Colors.white,
+                            ),
+                      ),
+                    ),
+                  if (teacherName != null)
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        teacherName!,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              fontSize: 10,
+                              color: color.computeLuminance() >= 0.5
+                                  ? color
+                                  : Colors.white,
+                            ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
           ),
-        ),
+          if (crossedOut)
+            Positioned.fill(
+              child: CustomPaint(
+                painter: CrossOutPainter(),
+              ),
+            ),
+        ],
       ),
     );
   }
+}
+
+class CrossOutPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = Colors.red
+      ..strokeWidth = 2.0
+      ..style = PaintingStyle.stroke;
+    canvas.drawLine(Offset(0, 0), Offset(size.width, size.height), paint);
+    canvas.drawLine(Offset(size.width, 0), Offset(0, size.height), paint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
