@@ -214,6 +214,7 @@ class _HomeworkPageState extends State<HomeworkPage>
       length: 2,
       child: Scaffold(
           appBar: AppBar(
+            automaticallyImplyLeading: false,
             title: const Text("Homework"),
             bottom: TabBar(
               controller: _tabController,

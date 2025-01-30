@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:school_mate/pages/home/Widgets/BottomNavBar.dart';
+import 'package:school_mate/pages/home/home/Widgets/HomeDrawer.dart';
 
 import 'Widgets/UpcomingHolidaysCard.dart';
 
@@ -14,6 +15,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: const HomeDrawer(),
       bottomNavigationBar: const HomeNavBar(
         currentIndex: 0,
       ),
