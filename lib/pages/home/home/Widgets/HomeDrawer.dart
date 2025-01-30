@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:school_mate/pages/settings/SettingsPage.dart';
 
 class HomeDrawer extends StatefulWidget {
   const HomeDrawer({super.key});
@@ -50,7 +51,11 @@ class _HomeDrawerState extends State<HomeDrawer> {
         ListTile(
           title: const Text('Settings'),
           leading: const Icon(Icons.settings),
-          onTap: () {},
+          onTap: () {
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => const SettingsPage(),
+            ));
+          },
         ),
       ]),
     );

@@ -1,8 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:school_mate/API/supabase/auth/userSettings.dart';
 import 'package:school_mate/main.dart';
 import 'package:school_mate/pages/home/home/start.dart';
+import 'package:school_mate/pages/settings/setup.dart';
 import 'package:school_mate/pages/userAuth/emailVerification.dart';
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 
@@ -70,6 +72,12 @@ Future<void> _signUpHandler(Object response, BuildContext context) async {
 Future<void> _signInHandler(Object response, BuildContext context) async {
   if (response is AuthResponse) {
     logger.i("Signed in user");
+    if (await getUserSettings() == null) {
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+        builder: (context) => const SetupPage(),
+      ));
+      return;
+    }
     Navigator.of(context).pushReplacement(MaterialPageRoute(
       builder: (context) => const HomePage(),
     ));

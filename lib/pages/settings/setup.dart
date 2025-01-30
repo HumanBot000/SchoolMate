@@ -86,6 +86,7 @@ class _SetupPageState extends State<SetupPage> {
               ),
             if (_exactSelectedResidence != null)
               GradingSystemSettings(
+                // todo only show when actually using grade feature
                 onChange: changeGradingSystem,
               )
           ],
