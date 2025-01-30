@@ -4,6 +4,7 @@ import 'package:school_mate/Classes/schedule/Lesson.dart';
 import 'package:school_mate/Classes/schedule/Subject.dart';
 import 'package:school_mate/Widgets/public/GradientButton.dart';
 import 'package:school_mate/main.dart';
+import 'package:school_mate/pages/home/homework/Homework.dart';
 import 'package:school_mate/pages/home/homework/add/Widgets/AdditionalHomeworkNote.dart';
 import 'package:school_mate/pages/home/homework/add/Widgets/DateSelector.dart';
 import 'package:school_mate/pages/home/homework/add/Widgets/HandInToggle.dart';
@@ -12,8 +13,22 @@ import 'package:school_mate/pages/home/homework/add/Widgets/TitleSelector.dart';
 
 class AddHomeworkPage extends StatefulWidget {
   final dynamic schedule;
+  final String? title;
+  final String? additionalNote;
+  final Subject? subject;
+  final DateTime? date;
+  final bool handIn;
+  final TimeOfDay? handInTime;
 
-  const AddHomeworkPage({super.key, required this.schedule});
+  const AddHomeworkPage(
+      {super.key,
+      required this.schedule,
+      this.title,
+      this.additionalNote,
+      this.subject,
+      this.date,
+      this.handIn = false,
+      this.handInTime});
 
   @override
   State<AddHomeworkPage> createState() => _AddHomeworkPageState();
@@ -27,6 +42,18 @@ class _AddHomeworkPageState extends State<AddHomeworkPage> {
   DateTime? _selectedDate;
   bool _handInHomework = false;
   TimeOfDay? _handInTime;
+
+  @override
+  void initState() {
+    super.initState();
+    _titleController.text = widget.title ?? '';
+    _additionalNoteController.text = widget.additionalNote ?? '';
+    _selectedSubject = widget.subject;
+    _selectedDate = widget.date;
+    _handInHomework = widget.handIn;
+    _handInTime = widget.handInTime;
+    setState(() {});
+  }
 
   @override
   void dispose() {
@@ -117,22 +144,27 @@ class _AddHomeworkPageState extends State<AddHomeworkPage> {
               ));
       return;
     }
-    try {
-      await addTask(_titleController.text, _handInHomework, _selectedSubject!,
-          dueDate: _selectedDate,
-          handInTime: _handInTime,
-          note: _additionalNoteController.text);
-    } catch (e) {
-      WidgetsBinding.instance.addPostFrameCallback((_) =>
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              backgroundColor: Theme.of(context).colorScheme.error,
-              content: const Text("Something went wrong. Please try again."),
-            ),
-          ));
-      logger.e(e);
-      rethrow;
+    if (widget.title == null) {
+      // Not a preexisting task (new Task)
+      try {
+        await addTask(_titleController.text, _handInHomework, _selectedSubject!,
+            dueDate: _selectedDate,
+            handInTime: _handInTime,
+            note: _additionalNoteController.text);
+      } catch (e) {
+        WidgetsBinding.instance.addPostFrameCallback((_) =>
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                backgroundColor: Theme.of(context).colorScheme.error,
+                content: const Text("Something went wrong. Please try again."),
+              ),
+            ));
+        logger.e(e);
+        rethrow;
+      }
+      return;
     }
+    // Existing Task
 
     WidgetsBinding.instance
         .addPostFrameCallback((_) => ScaffoldMessenger.of(context).showSnackBar(
@@ -141,7 +173,10 @@ class _AddHomeworkPageState extends State<AddHomeworkPage> {
                 content: Text("Added Homework successfully!"),
               ),
             ));
-    Navigator.of(context).pop();
+    // ensure page reload
+    Navigator.of(context).pushReplacement(MaterialPageRoute(
+      builder: (context) => const HomeworkPage(),
+    ));
     logger.i("Added a new homework");
   }
 
@@ -166,7 +201,7 @@ class _AddHomeworkPageState extends State<AddHomeworkPage> {
             onDateSelected: _onDateSelection,
           ),
           AdditionalHomeworkNote(
-            titleController: _additionalNoteController,
+            noteController: _additionalNoteController,
           ),
           HandInHomeworkToggle(
             value: _handInHomework,

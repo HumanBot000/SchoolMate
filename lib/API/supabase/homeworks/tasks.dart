@@ -60,3 +60,12 @@ Future<void> changeTaskCompletionStatus(Homework task) async {
       .eq("user_id", await getUserID())
       .eq("homework_id", task.taskID);
 }
+
+Future<void> deleteTask(Homework task) async {
+  await supabaseClient.client
+      .schema("homework")
+      .from("tasks")
+      .delete()
+      .eq("user_id", await getUserID())
+      .eq("homework_id", task.taskID);
+}

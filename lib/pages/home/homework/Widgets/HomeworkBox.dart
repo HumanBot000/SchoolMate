@@ -57,14 +57,20 @@ class _HomeworkBoxState extends State<HomeworkBox> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        widget.homework.title,
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            decoration: _checkboxIsActivated
-                                ? TextDecoration.lineThrough
-                                : null,
-                            decorationThickness: 2.0,
-                            decorationColor: Colors.red),
+                      Flexible(
+                        child: Text(
+                          widget.homework.title,
+                          overflow: TextOverflow.ellipsis,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyLarge
+                              ?.copyWith(
+                                  decoration: _checkboxIsActivated
+                                      ? TextDecoration.lineThrough
+                                      : null,
+                                  decorationThickness: 2.0,
+                                  decorationColor: Colors.red),
+                        ),
                       ),
                       if (widget.homework.handIn)
                         const Icon(

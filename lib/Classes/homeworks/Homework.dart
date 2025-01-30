@@ -28,7 +28,6 @@ class Homework {
           .map((e) => Uri.parse(e.toString()))
           .toList();
     }
-
     return Homework(
       await fetchSubjectByID(json["subject_id"]),
       json["homework_id"],
