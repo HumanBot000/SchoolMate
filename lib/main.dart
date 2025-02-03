@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
         appBarTheme: const AppBarTheme(
           backgroundColor: Color(0xFF2B2B2B),
           iconTheme: IconThemeData(color: Color(0xFF3A7BD5)),
-          titleTextStyle: TextStyle(color: Color(0xFF3A7BD5), fontSize: 30),
+          titleTextStyle: TextStyle(color: Color(0xFF3A7BD5), fontSize: 20),
           centerTitle: true,
         ),
         progressIndicatorTheme: const ProgressIndicatorThemeData(
