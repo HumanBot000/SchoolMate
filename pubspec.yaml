@@ -74,7 +74,11 @@ flutter:
   assets:
     - assets/animations/email_verification_animation.json
     - assets/animations/email_verification_animation_foreground.json
+    - assets/animations/running_time.json
     - assets/animations/email_verified.json
+    - assets/animations/holidays.json
+    - assets/animations/working_person.json
+    - assets/animations/working_person_black.json
     - assets/images/svg/flags/de/Baden-Württemberg.svg
     - assets/images/svg/flags/de/Bavaria.svg
     - assets/images/svg/flags/de/Berlin.svg

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:school_mate/API/externalAPIClients/OpenHolidaysAPI.dart'
     as holiday_api;
 import 'package:school_mate/API/supabase/auth/userSettings.dart' as settings;
@@ -71,10 +72,26 @@ class UpcomingHolidaysCard extends StatelessWidget {
                 borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
               ),
               elevation: 4.0,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: _upcomingHolidaysTextData(
-                    residenceCountry, localResidenceCode),
+              child: Stack(
+                children: [
+                  Positioned.fill(
+                    child: Opacity(
+                      opacity: 0.1,
+                      child: Lottie.asset(
+                        'assets/animations/holidays.json',
+                        alignment: Alignment.topCenter,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 8),
+                    child: Center(
+                      child: _upcomingHolidaysTextData(
+                          residenceCountry, localResidenceCode),
+                    ),
+                  ),
+                ],
               ),
             ),
           );

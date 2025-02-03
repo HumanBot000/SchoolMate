@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:school_mate/pages/settings/Widgets/notifications/NotificationSettingsPage.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -22,11 +23,15 @@ class _SettingsPageState extends State<SettingsPage> {
                 child: Text("General"),
               ),
               Tab(
-                icon: Icon(Icons.settings),
-                child: Text("Other"),
+                icon: Icon(Icons.notifications),
+                child: Text("Notifications"),
               ),
             ]),
           ),
+          body: const TabBarView(children: [
+            Center(child: Text("General Settings")),
+            NotificationSettingsPage(),
+          ]),
         ));
   }
 }

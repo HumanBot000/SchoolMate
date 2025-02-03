@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:school_mate/API/supabase/homeworks/tasks.dart';
+import 'package:school_mate/Classes/homeworks/Homework.dart';
 import 'package:school_mate/Classes/schedule/Lesson.dart';
 import 'package:school_mate/Classes/schedule/Subject.dart';
 import 'package:school_mate/Widgets/public/GradientButton.dart';
@@ -10,25 +11,17 @@ import 'package:school_mate/pages/home/homework/add/Widgets/DateSelector.dart';
 import 'package:school_mate/pages/home/homework/add/Widgets/HandInToggle.dart';
 import 'package:school_mate/pages/home/homework/add/Widgets/SubjectChooser.dart';
 import 'package:school_mate/pages/home/homework/add/Widgets/TitleSelector.dart';
+import 'package:school_mate/util/extensions/dates.dart';
 
 class AddHomeworkPage extends StatefulWidget {
   final dynamic schedule;
-  final String? title;
-  final String? additionalNote;
-  final Subject? subject;
-  final DateTime? date;
-  final bool handIn;
-  final TimeOfDay? handInTime;
+  final Homework? task;
 
-  const AddHomeworkPage(
-      {super.key,
-      required this.schedule,
-      this.title,
-      this.additionalNote,
-      this.subject,
-      this.date,
-      this.handIn = false,
-      this.handInTime});
+  const AddHomeworkPage({
+    super.key,
+    required this.schedule,
+    this.task,
+  });
 
   @override
   State<AddHomeworkPage> createState() => _AddHomeworkPageState();
@@ -46,12 +39,12 @@ class _AddHomeworkPageState extends State<AddHomeworkPage> {
   @override
   void initState() {
     super.initState();
-    _titleController.text = widget.title ?? '';
-    _additionalNoteController.text = widget.additionalNote ?? '';
-    _selectedSubject = widget.subject;
-    _selectedDate = widget.date;
-    _handInHomework = widget.handIn;
-    _handInTime = widget.handInTime;
+    _titleController.text = widget.task?.title ?? '';
+    _additionalNoteController.text = widget.task?.note ?? '';
+    _selectedSubject = widget.task?.subject;
+    _selectedDate = widget.task?.dueDate;
+    _handInHomework = widget.task?.handIn ?? false;
+    _handInTime = widget.task?.dueDate?.toTimeOfDay();
     setState(() {});
   }
 
@@ -144,13 +137,25 @@ class _AddHomeworkPageState extends State<AddHomeworkPage> {
               ));
       return;
     }
-    if (widget.title == null) {
+    if (widget.task == null) {
       // Not a preexisting task (new Task)
       try {
         await addTask(_titleController.text, _handInHomework, _selectedSubject!,
             dueDate: _selectedDate,
             handInTime: _handInTime,
             note: _additionalNoteController.text);
+        logger.i("Added a new homework");
+        WidgetsBinding.instance.addPostFrameCallback(
+            (_) => ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    backgroundColor: Colors.green,
+                    content: Text("Added Homework successfully!"),
+                  ),
+                ));
+        // ensure page reload
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) => const HomeworkPage(),
+        ));
       } catch (e) {
         WidgetsBinding.instance.addPostFrameCallback((_) =>
             ScaffoldMessenger.of(context).showSnackBar(
@@ -165,19 +170,35 @@ class _AddHomeworkPageState extends State<AddHomeworkPage> {
       return;
     }
     // Existing Task
-
-    WidgetsBinding.instance
-        .addPostFrameCallback((_) => ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                backgroundColor: Colors.green,
-                content: Text("Added Homework successfully!"),
-              ),
-            ));
-    // ensure page reload
-    Navigator.of(context).pushReplacement(MaterialPageRoute(
-      builder: (context) => const HomeworkPage(),
-    ));
-    logger.i("Added a new homework");
+    try {
+      await updateTask(widget.task!, _titleController.text, _handInHomework,
+          _selectedSubject!,
+          dueDate: _selectedDate,
+          handInTime: _handInTime,
+          note: _additionalNoteController.text);
+      logger.i("Updated a homework");
+      WidgetsBinding.instance.addPostFrameCallback(
+          (_) => ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  backgroundColor: Colors.green,
+                  content: Text("Updated Homework successfully!"),
+                ),
+              ));
+      // ensure page reload
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+        builder: (context) => const HomeworkPage(),
+      ));
+    } catch (e) {
+      WidgetsBinding.instance.addPostFrameCallback((_) =>
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor: Theme.of(context).colorScheme.error,
+              content: const Text("Something went wrong. Please try again."),
+            ),
+          ));
+      logger.e(e);
+      rethrow;
+    }
   }
 
   @override

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:school_mate/API/supabase/homeworks/tasks.dart';
 import 'package:school_mate/API/supabase/schedule/schedule.dart';
 import 'package:school_mate/Classes/homeworks/Homework.dart';
@@ -7,7 +8,6 @@ import 'package:school_mate/pages/home/Widgets/BottomNavBar.dart';
 import 'package:school_mate/pages/home/homework/Widgets/HomeworkBox.dart';
 import 'package:school_mate/pages/home/homework/add/AddHomework.dart';
 import 'package:school_mate/pages/home/schedule/setup/scheduleSetup.dart';
-import 'package:school_mate/util/extensions/dates.dart';
 
 class HomeworkPage extends StatefulWidget {
   const HomeworkPage({super.key});
@@ -89,8 +89,6 @@ class _HomeworkPageState extends State<HomeworkPage>
                     children: [
                       TextButton.icon(
                         onPressed: () async {
-                          Navigator.of(context).pop();
-                          await deleteTask(homework);
                           WidgetsBinding.instance.addPostFrameCallback((_) =>
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
@@ -99,6 +97,8 @@ class _HomeworkPageState extends State<HomeworkPage>
                                       Text("This homework has been deleted!"),
                                 ),
                               ));
+                          Navigator.of(context).pop();
+                          await deleteTask(homework);
                           setState(() {
                             tasks = tasks
                                 .where((task) => task.taskID != homework.taskID)
@@ -138,12 +138,7 @@ class _HomeworkPageState extends State<HomeworkPage>
                               }
                               return AddHomeworkPage(
                                 schedule: snapshot.data!,
-                                title: tasks[index].title,
-                                subject: tasks[index].subject,
-                                additionalNote: tasks[index].note,
-                                date: tasks[index].dueDate,
-                                handIn: tasks[index].handIn,
-                                handInTime: tasks[index].dueDate?.toTimeOfDay(),
+                                task: tasks[index],
                               );
                             } else if (snapshot.hasError) {
                               return Text('Error: ${snapshot.error}');
@@ -239,9 +234,24 @@ class _HomeworkPageState extends State<HomeworkPage>
                       (index) =>
                           const Center(child: CircularProgressIndicator()))
                   : [
-                      _buildHomeworkPage(tasks
-                          .where((homework) => !homework.isCompleted)
-                          .toList()),
+                      Stack(
+                        children: [
+                          Positioned.fill(
+                            top: 100,
+                            child: Opacity(
+                              opacity: 0.1,
+                              child: Lottie.asset(
+                                'assets/animations/working_person_black.json',
+                                alignment: Alignment.topCenter,
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                          ),
+                          _buildHomeworkPage(tasks
+                              .where((homework) => !homework.isCompleted)
+                              .toList()),
+                        ],
+                      ),
                       _buildHomeworkPage(tasks
                           .where((homework) => homework.isCompleted)
                           .toList())

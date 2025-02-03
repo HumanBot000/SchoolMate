@@ -69,3 +69,40 @@ Future<void> deleteTask(Homework task) async {
       .eq("user_id", await getUserID())
       .eq("homework_id", task.taskID);
 }
+
+Future<Homework> updateTask(
+    Homework oldTask, String title, bool handIn, Subject subject,
+    {DateTime? dueDate,
+    TimeOfDay? handInTime,
+    String note = "",
+    bool completed = false,
+    List<Uri> attachments = const []}) async {
+  if (handIn) {
+    if (dueDate == null || handInTime == null) {
+      throw ArgumentError(
+          'If handIn is true, a dueDate and handInTime must be provided.');
+    }
+    dueDate =
+        dueDate.copyWith(hour: handInTime.hour, minute: handInTime.minute);
+  }
+  final response = await supabaseClient.client
+      .schema("homework")
+      .from("tasks")
+      .update({
+        "user_id": await getUserID(),
+        "subject_id": subject.id,
+        "completed": completed,
+        "complete_due": dueDate == null
+            ? null
+            : DateFormat("yyyy-MM-dd HH:mm:ss").format(dueDate.toUtc()),
+        "submit": handIn,
+        "title": title,
+        "note": note,
+        "attachments": attachments,
+      })
+      .eq("user_id", await getUserID())
+      .eq("homework_id", oldTask.taskID)
+      .select()
+      .single();
+  return Homework.fromJson(response);
+}
