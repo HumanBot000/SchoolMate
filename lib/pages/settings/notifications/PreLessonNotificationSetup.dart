@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:school_mate/API/supabase/settings/preLessonNotifications.dart';
+import 'package:school_mate/main.dart';
 
 class PreLessonNotificationSetup extends StatefulWidget {
   const PreLessonNotificationSetup({super.key});
@@ -24,14 +25,19 @@ class _PreLessonNotificationSetupState extends State<PreLessonNotificationSetup>
 
   Future<void> _fetchReminders() async {
     final reminders = await fetchPreLessonNotifications();
+    List<TextEditingController> reminderValueControllers = [];
+    for (var reminder in reminders) {
+      reminderValueControllers
+          .add(TextEditingController(text: reminder[1].toString()));
+    }
     setState(() {
       _reminders = reminders;
       _notificationsEnabled = _reminders.isNotEmpty;
-      for (var reminder in _reminders) {
-        _reminderValueControllers
-            .add(TextEditingController(text: reminder[1].toString()));
-      }
+      _reminderValueControllers = reminderValueControllers;
     });
+    if (_reminders.isEmpty) return;
+    _listKey.currentState?.insertItem(_reminders.length - 1,
+        duration: const Duration(milliseconds: 300));
   }
 
   @override
@@ -42,16 +48,17 @@ class _PreLessonNotificationSetupState extends State<PreLessonNotificationSetup>
     super.dispose();
   }
 
-  void _addReminder() {
+  Future<void> _addReminder() async {
     final newReminder = ["minutes", 5];
     final newController = TextEditingController(text: "5");
     _reminders.add(newReminder);
     _reminderValueControllers.add(newController);
     _listKey.currentState?.insertItem(_reminders.length - 1,
         duration: const Duration(milliseconds: 300));
+    await _onChange();
   }
 
-  void _removeReminder(int index) {
+  Future<void> _removeReminder(int index) async {
     final removedItem = _reminders.removeAt(index);
     _reminderValueControllers.removeAt(index);
     _listKey.currentState?.removeItem(
@@ -59,6 +66,14 @@ class _PreLessonNotificationSetupState extends State<PreLessonNotificationSetup>
       (context, animation) => _buildReminderItem(removedItem, index, animation),
       duration: const Duration(milliseconds: 300),
     );
+    await _onChange();
+  }
+
+  Future<void> _onChange() async {
+    if (preLessonNotificationListIsValid(_reminders)) {
+      await updatePreLessonNotifications(_reminders);
+      logger.i("Updated pre-lesson notifications");
+    }
   }
 
   Widget _buildReminderItem(
@@ -113,11 +128,12 @@ class _PreLessonNotificationSetupState extends State<PreLessonNotificationSetup>
             : _reminderValueControllers[index],
         keyboardType: TextInputType.number,
         textAlign: TextAlign.center,
-        onChanged: (value) {
+        onChanged: (value) async {
           if (value.isEmpty || int.tryParse(value) == null) return;
           setState(() {
             _reminders[index][1] = int.parse(value);
           });
+          await _onChange();
         },
         decoration: const InputDecoration(
           prefixIcon: Icon(Icons.timer, color: Colors.blueAccent),
@@ -134,11 +150,12 @@ class _PreLessonNotificationSetupState extends State<PreLessonNotificationSetup>
         DropdownMenuItem(value: "minutes", child: Text("Minutes")),
         DropdownMenuItem(value: "hours", child: Text("Hours")),
       ],
-      onChanged: (value) {
+      onChanged: (value) async {
         if (value != null) {
           setState(() {
             _reminders[index][0] = value;
           });
+          await _onChange();
         }
       },
     );
