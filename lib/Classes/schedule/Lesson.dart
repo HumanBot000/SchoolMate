@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:school_mate/Classes/schedule/Subject.dart';
 import 'package:school_mate/util/alphabet.dart';
+import 'package:school_mate/util/dates.dart';
 import 'package:school_mate/util/extensions/dates.dart';
 
 class LessonTemporalData {
@@ -15,6 +16,11 @@ class LessonTemporalData {
       this.endTime, this.numericalAlternatingWeeks);
 
   Duration get duration => endTime.difference(startTime);
+
+  DateTime get startDateTime => getStartOfWeek(DateTime.now())
+      .copyWith(hour: 0, minute: 0, second: 0, millisecond: 0, microsecond: 0)
+      .add(Duration(days: weekday - 1))
+      .add(Duration(hours: startTime.hour, minutes: startTime.minute));
 }
 
 class Lesson extends Subject {

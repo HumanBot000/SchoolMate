@@ -11,7 +11,7 @@ class AuthenticationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return supabaseClient.client.auth.currentSession == null
+    return supabaseClient!.client.auth.currentSession == null
         ? auth_ui.build(context)
         : FutureBuilder(
             future: settings.getUserSettings(),

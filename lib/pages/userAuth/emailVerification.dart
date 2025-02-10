@@ -55,7 +55,8 @@ class _EmailVerificationPageState extends State<EmailVerificationPage>
       _resendCountdown = 160;
     });
     _startResendCountdown();
-    supabaseClient.client.auth.resend(type: OtpType.email, email: widget.email);
+    supabaseClient!.client.auth
+        .resend(type: OtpType.email, email: widget.email);
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text("Verification code sent to ${widget.email}"),
     ));
@@ -64,7 +65,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage>
 
   Future<void> _handleVerification() async {
     String username = prefs.getString('pending_username') ?? '';
-    await supabaseClient.client.auth.updateUser(UserAttributes(
+    await supabaseClient!.client.auth.updateUser(UserAttributes(
       data: {'display_name': username, "email_verified": true},
     ));
     logger.i("Set display name to $username");
@@ -75,7 +76,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage>
 
   Future<bool> _validateOTP(value) async {
     try {
-      AuthResponse response = await supabaseClient.client.auth
+      AuthResponse response = await supabaseClient!.client.auth
           .verifyOTP(type: OtpType.email, token: value, email: widget.email);
       setState(() {
         _isCodeValid = response.user != null;

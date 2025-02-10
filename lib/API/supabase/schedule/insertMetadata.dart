@@ -75,7 +75,7 @@ Future<void> insertScheduleMetadata(
   }
 
   try {
-    await supabaseClient.client.schema("schedule").from("metadata").insert(({
+    await supabaseClient!.client.schema("schedule").from("metadata").insert(({
           "user_id": await getUserID(),
           "first_lesson": firstLesson,
           "last_lesson": lastLesson,

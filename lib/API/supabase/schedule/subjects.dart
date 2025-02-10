@@ -15,7 +15,7 @@ Future<Subject> createSubject(Subject subject) async {
       "${(subject.color.g * 255).toInt().toRadixString(16).padLeft(2, '0')}"
       "${(subject.color.b * 255).toInt().toRadixString(16).padLeft(2, '0')}";
 
-  final response = await supabaseClient.client
+  final response = await supabaseClient!.client
       .schema("schedule")
       .from("subjects")
       .insert({
@@ -34,7 +34,7 @@ Future<void> deleteSubject(Subject subject) async {
     throw Exception(
         "The provided Subject element wasn't created via the DB->Subject factory and therefore hasn't an ID. It can't be deleted without an ID.");
   }
-  await supabaseClient.client
+  await supabaseClient!.client
       .schema("schedule")
       .from("subjects")
       .delete()
@@ -52,7 +52,7 @@ Future<Subject> editSubject(Subject oldSubject, Subject newSubject) async {
       "${(newSubject.color.r * 255).toInt().toRadixString(16).padLeft(2, '0')}"
       "${(newSubject.color.g * 255).toInt().toRadixString(16).padLeft(2, '0')}"
       "${(newSubject.color.b * 255).toInt().toRadixString(16).padLeft(2, '0')}";
-  final response = await supabaseClient.client
+  final response = await supabaseClient!.client
       .schema("schedule")
       .from("subjects")
       .update({
@@ -68,7 +68,7 @@ Future<Subject> editSubject(Subject oldSubject, Subject newSubject) async {
 }
 
 Future<Subject> fetchSubjectByID(int id) async {
-  final response = await supabaseClient.client
+  final response = await supabaseClient!.client
       .schema("schedule")
       .from("subjects")
       .select()

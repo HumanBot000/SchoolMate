@@ -6,7 +6,7 @@ import 'package:school_mate/Classes/schedule/Subject.dart';
 import 'package:school_mate/main.dart';
 
 Future<dynamic> fetchSchedule() async {
-  final metadata = await supabaseClient.client
+  final metadata = await supabaseClient!.client
       .schema("schedule")
       .from("schedule_metadata_with_current_week")
       .select()
@@ -15,7 +15,7 @@ Future<dynamic> fetchSchedule() async {
     return ""; // Can't return null because FutureBuilder thinks it didn't finish yet
   }
 
-  final subjects = await supabaseClient.client
+  final subjects = await supabaseClient!.client
       .schema("schedule")
       .from("subjects")
       .select()
@@ -25,7 +25,7 @@ Future<dynamic> fetchSchedule() async {
     subjectList.add(await Subject.fromJson(subject));
   }
 
-  final lessons = await supabaseClient.client
+  final lessons = await supabaseClient!.client
       .schema("schedule")
       .from("lessons")
       .select()

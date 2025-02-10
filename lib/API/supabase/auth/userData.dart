@@ -1,6 +1,7 @@
 import 'package:school_mate/main.dart';
 
 String getUserName() =>
-    supabaseClient.client.auth.currentUser!.userMetadata!['username'] as String;
+    supabaseClient!.client.auth.currentUser!.userMetadata!['username']
+        as String;
 
-Future<String> getUserID() async => supabaseClient.client.auth.currentUser!.id;
+Future<String> getUserID() async => supabaseClient!.client.auth.currentUser!.id;

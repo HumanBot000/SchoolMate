@@ -9,7 +9,7 @@ import 'package:school_mate/util/extensions/dates.dart';
 
 Future<void> addLesson(Subject subject, TimeOfDay startTime, TimeOfDay endTime,
     int weekday, List<int> alternatingWeeks, String roomNumber) async {
-  await supabaseClient.client.schema("schedule").from("lessons").insert({
+  await supabaseClient!.client.schema("schedule").from("lessons").insert({
     "subject_id": subject.id,
     "weekday": weekday + 1,
     "start_time": DateFormat("HH:mm:ss").format(startTime.toDateTime()),
@@ -28,7 +28,7 @@ Future<void> editLesson(
     int weekday,
     List<int> alternatingWeeks,
     String roomNumber) async {
-  await supabaseClient.client
+  await supabaseClient!.client
       .schema("schedule")
       .from("lessons")
       .update({
@@ -45,7 +45,7 @@ Future<void> editLesson(
 }
 
 Future<void> deleteLesson(Lesson lesson) async {
-  await supabaseClient.client
+  await supabaseClient!.client
       .schema("schedule")
       .from("lessons")
       .delete()

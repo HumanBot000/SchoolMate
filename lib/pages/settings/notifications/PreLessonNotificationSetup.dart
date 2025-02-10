@@ -174,9 +174,14 @@ class _PreLessonNotificationSetupState extends State<PreLessonNotificationSetup>
             title: const Text("Pre-Lesson Notifications Enabled"),
             trailing: Switch.adaptive(
               value: _notificationsEnabled,
-              onChanged: (value) {
-                setState(() {
+              onChanged: (value) async {
+                setState(() async {
                   _notificationsEnabled = value;
+                  if (!value) {
+                    _reminders.clear();
+                    _reminderValueControllers.clear();
+                  }
+                  await _onChange();
                 });
               },
             ),

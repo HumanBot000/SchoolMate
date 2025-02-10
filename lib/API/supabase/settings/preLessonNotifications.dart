@@ -2,7 +2,7 @@ import 'package:school_mate/API/supabase/auth/userData.dart';
 import 'package:school_mate/main.dart';
 
 Future<List<List<dynamic>>> fetchPreLessonNotifications() async {
-  final response = await supabaseClient.client
+  final response = await supabaseClient!.client
       .schema("settings")
       .from("notifications")
       .select("pre_lesson_notifications")
@@ -26,7 +26,7 @@ Future<void> updatePreLessonNotifications(
     return {"unit": notification[0], "value": notification[1]};
   }).toList();
 
-  await supabaseClient.client.schema("settings").from("notifications").upsert(
+  await supabaseClient!.client.schema("settings").from("notifications").upsert(
     {
       "user_id": await getUserID(),
       "pre_lesson_notifications": encodedNotifications

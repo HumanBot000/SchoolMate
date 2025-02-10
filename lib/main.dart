@@ -1,20 +1,64 @@
+import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:school_mate/API/supabase/schedule/schedule.dart'
+    as fetch_schedule;
 import 'package:school_mate/API/supabase/setup.dart';
 import 'package:school_mate/pages/userAuth/userAuthentication.dart';
 import 'package:school_mate/util/NavigatorTree.dart';
+import 'package:school_mate/util/notifications/schedule.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
+import 'API/supabase/settings/preLessonNotifications.dart';
 
 late final Supabase supabaseClient;
 final logger = Logger();
 late final SharedPreferences prefs;
 final NavigationTreeObserver navigatorTreeObserver = NavigationTreeObserver();
 
+/// Callback function that will be executed at midnight
+void scheduleTaskCallback() async {
+  //await initializeSupabase();
+  try {
+    logger.d("Executing scheduled task at midnight");
+    await schedulePreLessonNotificationsForCurrentDay(
+      fetchSchedule: fetch_schedule.fetchSchedule,
+      preLessonNotificationsFetcher: fetchPreLessonNotifications,
+    );
+  } catch (e) {
+    logger.e("Error executing scheduled task: $e");
+  }
+}
+
+Future<void> scheduleDailyTask() async {
+  DateTime now = DateTime.now();
+  DateTime nextMidnight = DateTime(now.year, now.month, now.day + 1, 0, 0, 0);
+  Duration initialDelay = nextMidnight.difference(now);
+  logger.i("Scheduling daily task in $initialDelay");
+
+  // Schedule the task to run at midnight every day
+  await AndroidAlarmManager.initialize();
+  await AndroidAlarmManager.periodic(
+    const Duration(days: 1),
+    0,
+    scheduleTaskCallback,
+    startAt: nextMidnight,
+    exact: true,
+    wakeup: true, // Ensures execution even if the device is asleep
+  );
+
+  logger.i("Scheduled daily task");
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeSupabase();
   prefs = await SharedPreferences.getInstance();
+  var success = await AndroidAlarmManager.initialize();
+  logger.i("Alarm manager initialized with ${success ? "success" : "failure"}");
+  await scheduleDailyTask();
+  scheduleTaskCallback(); // One manual call on startup
   runApp(const MyApp());
 }
 
