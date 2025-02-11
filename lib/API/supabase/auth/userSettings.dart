@@ -13,7 +13,7 @@ Future<void> updateUserSettings(
   }
   try {
     //Insert or Update
-    await supabaseClient!.client.schema("settings").from("residence").upsert({
+    await supabaseClient.client.schema("settings").from("residence").upsert({
       "user_id": await getUserID(),
       "residence": residence,
       "residence_country": residenceCountry.code,
@@ -25,7 +25,7 @@ Future<void> updateUserSettings(
 }
 
 Future<Map<String, dynamic>?> getUserSettings() async {
-  final response = await supabaseClient!.client
+  final response = await supabaseClient.client
       .schema("settings")
       .from("residence")
       .select()
@@ -42,19 +42,19 @@ Future<void> forceUpdateUserSettings(
     Country? residenceCountry, String? residence, String? gradingSystem) async {
   // implement old logic from deprecated function
   if (residence != "unset" && residence != null) {
-    await supabaseClient!.client.schema("settings").from("residence").update({
+    await supabaseClient.client.schema("settings").from("residence").update({
       "residence": residence,
     }).eq("user_id", await getUserID());
   }
 
   if (residenceCountry != null) {
-    await supabaseClient!.client.schema("settings").from("residence").update({
+    await supabaseClient.client.schema("settings").from("residence").update({
       "residence_country": residenceCountry.code,
     }).eq("user_id", await getUserID());
   }
 
   if (gradingSystem != null) {
-    await supabaseClient!.client.schema("settings").from("residence").update({
+    await supabaseClient.client.schema("settings").from("residence").update({
       "grading_system": gradingSystem,
     }).eq("user_id", await getUserID());
   }

@@ -19,7 +19,8 @@ extension DateExtension on DateTime {
 
 extension TimeOfDayExtension on TimeOfDay {
   DateTime toDateTime() {
-    return DateTime(1, 1, 1, this.hour, this.minute);
+    return DateTime(DateTime.now().year, DateTime.now().month,
+        DateTime.now().day, this.hour, this.minute);
   }
 
   bool isBetween(TimeOfDay start, TimeOfDay end) {

@@ -5,7 +5,7 @@ import 'package:school_mate/main.dart';
 import '../auth/userData.dart';
 
 Future<List<Teacher>> fetchTeachers() async {
-  final response = await supabaseClient!.client
+  final response = await supabaseClient.client
       .schema("schedule")
       .from("teachers")
       .select()
@@ -14,7 +14,7 @@ Future<List<Teacher>> fetchTeachers() async {
 }
 
 Future<Teacher> fetchTeacherByID(int id) async {
-  final response = await supabaseClient!.client
+  final response = await supabaseClient.client
       .schema("schedule")
       .from("teachers")
       .select()
@@ -26,7 +26,7 @@ Future<Teacher> fetchTeacherByID(int id) async {
 
 Future<Teacher> addTeacher(String name, Gender gender) async {
   try {
-    final response = await supabaseClient!.client
+    final response = await supabaseClient.client
         .schema("schedule")
         .from("teachers")
         .insert({
@@ -49,7 +49,7 @@ Future<void> deleteTeacher(Teacher teacher) async {
     throw Exception(
         "The provided Teacher element wasn't created via the DB->Teacher factory and therefore hasn't an ID. It can't be deleted without an ID.");
   }
-  await supabaseClient!.client
+  await supabaseClient.client
       .schema("schedule")
       .from("teachers")
       .delete()
@@ -62,7 +62,7 @@ Future<Teacher> editTeacher(Teacher oldTeacher, Teacher newTeacher) async {
     throw Exception(
         "The provided Teacher element wasn't created via the DB->Teacher factory and therefore hasn't an ID. It can't be updated without an ID.");
   }
-  final response = await supabaseClient!.client
+  final response = await supabaseClient.client
       .schema("schedule")
       .from("teachers")
       .update({

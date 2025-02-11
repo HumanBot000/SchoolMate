@@ -19,7 +19,7 @@ Future<Homework> addTask(String title, bool handIn, Subject subject,
     dueDate =
         dueDate.copyWith(hour: handInTime.hour, minute: handInTime.minute);
   }
-  final response = await supabaseClient!.client
+  final response = await supabaseClient.client
       .schema("homework")
       .from("tasks")
       .insert({
@@ -40,7 +40,7 @@ Future<Homework> addTask(String title, bool handIn, Subject subject,
 }
 
 Future<List<Homework>> fetchHomeworks() async {
-  final response = await supabaseClient!.client
+  final response = await supabaseClient.client
       .schema("homework")
       .from("tasks")
       .select()
@@ -53,7 +53,7 @@ Future<List<Homework>> fetchHomeworks() async {
 }
 
 Future<void> changeTaskCompletionStatus(Homework task) async {
-  await supabaseClient!.client
+  await supabaseClient.client
       .schema("homework")
       .from("tasks")
       .update({"completed": !task.isCompleted})
@@ -62,7 +62,7 @@ Future<void> changeTaskCompletionStatus(Homework task) async {
 }
 
 Future<void> deleteTask(Homework task) async {
-  await supabaseClient!.client
+  await supabaseClient.client
       .schema("homework")
       .from("tasks")
       .delete()
@@ -85,7 +85,7 @@ Future<Homework> updateTask(
     dueDate =
         dueDate.copyWith(hour: handInTime.hour, minute: handInTime.minute);
   }
-  final response = await supabaseClient!.client
+  final response = await supabaseClient.client
       .schema("homework")
       .from("tasks")
       .update({

@@ -71,27 +71,28 @@ class UpcomingHolidaysCard extends StatelessWidget {
               shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
               ),
+              margin: const EdgeInsets.symmetric(horizontal: 16),
               elevation: 4.0,
-              child: Stack(
-                children: [
-                  Positioned.fill(
-                    child: Opacity(
-                      opacity: 0.1,
-                      child: Lottie.asset(
-                        'assets/animations/holidays.json',
-                        alignment: Alignment.topCenter,
-                        fit: BoxFit.contain,
+              child: Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Stack(
+                  children: [
+                    Positioned.fill(
+                      child: Opacity(
+                        opacity: 0.1,
+                        child: Lottie.asset(
+                          'assets/animations/holidays.json',
+                          alignment: Alignment.topCenter,
+                          fit: BoxFit.contain,
+                        ),
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 8),
-                    child: Center(
+                    Center(
                       child: _upcomingHolidaysTextData(
                           residenceCountry, localResidenceCode),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           );

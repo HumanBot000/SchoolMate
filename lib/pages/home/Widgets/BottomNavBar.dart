@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:school_mate/pages/home/home/start.dart';
 import 'package:school_mate/pages/home/homework/Homework.dart';
+import 'package:school_mate/pages/home/marks/Grades.dart';
 import 'package:school_mate/pages/home/schedule/start.dart';
 
 GlobalKey bottomNavBarKey = GlobalKey();
@@ -44,6 +45,7 @@ class _HomeNavBarState extends State<HomeNavBar> {
     const HomePage(),
     const ScheduleNavigationIntersection(),
     const HomeworkPage(),
+    const MarksPage(),
   ];
 
   List<NavigationDestination> navigationBarItems(BuildContext context) => [
@@ -65,6 +67,13 @@ class _HomeNavBarState extends State<HomeNavBar> {
           label: 'Homework',
           icon: Icon(Icons.assignment,
               color: _selectedPage == 2
+                  ? Theme.of(context).colorScheme.primary
+                  : Colors.grey),
+        ),
+        NavigationDestination(
+          label: 'Marks',
+          icon: Icon(Icons.show_chart,
+              color: _selectedPage == 3
                   ? Theme.of(context).colorScheme.primary
                   : Colors.grey),
         ),
