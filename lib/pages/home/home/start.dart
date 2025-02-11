@@ -60,8 +60,10 @@ class _HomePageState extends State<HomePage> {
                 .last
                 .temporalData
                 .endTime,
+            widgetBuildTime: DateTime.now(),
           ),
-        Align(alignment: Alignment.bottomCenter, child: UpcomingHolidaysCard()),
+        const Align(
+            alignment: Alignment.bottomCenter, child: UpcomingHolidaysCard()),
       ]),
     );
   }

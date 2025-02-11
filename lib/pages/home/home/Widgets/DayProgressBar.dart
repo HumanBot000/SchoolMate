@@ -8,12 +8,14 @@ import 'package:school_mate/util/extensions/dates.dart';
 class DayProgressBar extends StatefulWidget {
   final TimeOfDay startTime;
   final TimeOfDay endTime;
+  final DateTime widgetBuildTime;
 
   const DayProgressBar({
-    Key? key,
+    super.key,
     required this.startTime,
     required this.endTime,
-  }) : super(key: key);
+    required this.widgetBuildTime,
+  });
 
   @override
   State<DayProgressBar> createState() => _DayProgressBarState();
@@ -21,22 +23,24 @@ class DayProgressBar extends StatefulWidget {
 
 class _DayProgressBarState extends State<DayProgressBar>
     with SingleTickerProviderStateMixin {
-  double progress = 0.0; // Value between 0.0 and 1.0
+  double progress = 0.0;
   Timer? timer;
   late AnimationController _animationController;
   late Animation<double> _animation;
+  OverlayEntry? _overlayEntry;
+  bool showCelebration = false;
 
   @override
   void initState() {
     super.initState();
     _animationController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 300));
-    // Initialize with a tween that does nothing initially.
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    );
     _animation = Tween<double>(begin: progress, end: progress).animate(
       CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
     );
     _updateProgress();
-    // Update progress every 100ms for smooth yet efficient animations.
     timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
       _updateProgress();
     });
@@ -57,23 +61,70 @@ class _DayProgressBarState extends State<DayProgressBar>
     } else if (elapsed >= totalDuration) {
       newProgress = 1.0;
       timer?.cancel();
+      // We need to make sure that the animation is only playing when the endTime gets reached and this widget is currently shown. Not everytime we build the widget after the endTime
+      if (!showCelebration &&
+          widget.widgetBuildTime.isBefore(widget.endTime.toDateTime())) {
+        showCelebration = true;
+        _showCelebrationAnimation();
+      }
     } else {
       newProgress = elapsed / totalDuration;
     }
 
-    // Animate from the current progress to the new progress.
-    _animation = Tween<double>(begin: progress, end: newProgress).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
+    // Only trigger setState if progress is actually changing.
+    if (progress != newProgress) {
+      _animation = Tween<double>(begin: progress, end: newProgress).animate(
+        CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
+      );
+      _animationController.forward(from: 0);
+      progress = newProgress;
+      setState(() {}); // This will trigger a rebuild, which should happen once.
+    }
+  }
+
+  void _showCelebrationAnimation() {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
+    _overlayEntry = OverlayEntry(
+      builder: (context) {
+        return Positioned.fill(
+          child: Stack(
+            children: List.generate(30, (index) {
+              final random = math.Random();
+              final left =
+                  random.nextDouble() * screenWidth; // Random X position
+              final duration = Duration(
+                  milliseconds: random.nextInt(2500) + 1500); // 1.5s - 4s
+              final size = random.nextDouble() * 20 + 24; // Random size 24 - 44
+              return FallingEmoji(
+                left: left,
+                duration: duration,
+                size: size,
+                screenHeight: screenHeight,
+              );
+            }),
+          ),
+        );
+      },
     );
-    _animationController.forward(from: 0);
-    progress = newProgress;
-    setState(() {}); // Trigger a rebuild to update texts etc.
+
+    Overlay.of(context).insert(_overlayEntry!);
+
+    Future.delayed(const Duration(seconds: 3), () {
+      _overlayEntry?.remove();
+      _overlayEntry = null;
+      setState(() {
+        showCelebration = false;
+      });
+    });
   }
 
   @override
   void dispose() {
     timer?.cancel();
     _animationController.dispose();
+    _overlayEntry?.remove();
     super.dispose();
   }
 
@@ -95,7 +146,6 @@ class _DayProgressBarState extends State<DayProgressBar>
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Title with icon
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -108,7 +158,6 @@ class _DayProgressBarState extends State<DayProgressBar>
               ],
             ),
             const SizedBox(height: 24),
-            // Circular progress indicator with animation
             AnimatedBuilder(
               animation: _animationController,
               builder: (context, child) {
@@ -119,7 +168,7 @@ class _DayProgressBarState extends State<DayProgressBar>
                     height: 150,
                     child: Center(
                       child: Text(
-                        "${(_animation.value * 100).toStringAsFixed(2)}%",
+                        "${_animation.value < 1 ? (_animation.value * 100).toStringAsFixed(2) : "100"}%",
                         style: Theme.of(context).textTheme.headlineSmall,
                       ),
                     ),
@@ -128,7 +177,6 @@ class _DayProgressBarState extends State<DayProgressBar>
               },
             ),
             const SizedBox(height: 16),
-            // Remaining time text
             Text(
               "Remaining: ${_getRemainingTime()}",
               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
@@ -163,7 +211,9 @@ class CircleProgressPainter extends CustomPainter {
     final gradient = SweepGradient(
       startAngle: -math.pi / 2,
       endAngle: (2 * math.pi * progress) - math.pi / 2,
-      colors: [Colors.blue, Colors.blueAccent],
+      colors: progress < 1
+          ? [Colors.blue, Colors.blueAccent]
+          : [Colors.green, Colors.green],
     );
 
     final foregroundPaint = Paint()
@@ -180,5 +230,68 @@ class CircleProgressPainter extends CustomPainter {
   @override
   bool shouldRepaint(CircleProgressPainter oldDelegate) {
     return oldDelegate.progress != progress;
+  }
+}
+
+class FallingEmoji extends StatefulWidget {
+  final double left;
+  final Duration duration;
+  final double size;
+  final double screenHeight;
+
+  const FallingEmoji({
+    super.key,
+    required this.left,
+    required this.duration,
+    required this.size,
+    required this.screenHeight,
+  });
+
+  @override
+  _FallingEmojiState createState() => _FallingEmojiState();
+}
+
+class _FallingEmojiState extends State<FallingEmoji>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _fallAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: widget.duration,
+    );
+
+    _fallAnimation = Tween<double>(begin: -50, end: widget.screenHeight)
+        .animate(CurvedAnimation(parent: _controller, curve: Curves.easeIn));
+
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, child) {
+        return Positioned(
+          top: _fallAnimation.value,
+          left: widget.left,
+          child: DefaultTextStyle(
+            style: TextStyle(fontSize: widget.size),
+            child: const Text(
+              "🎉",
+            ),
+          ),
+        );
+      },
+    );
   }
 }
