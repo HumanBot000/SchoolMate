@@ -1,8 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:school_mate/Classes/schedule/Lesson.dart';
 import 'package:school_mate/Classes/schedule/Schedule.dart';
 import 'package:school_mate/main.dart';
+import 'package:school_mate/util/notifications/debug.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -38,11 +40,12 @@ Future<void> schedulePreLessonNotificationsForCurrentDay({
   await initNotificationPlugin();
   await clearAllScheduledNotifications();
   await requestExactAlarmPermission();
-
   Schedule schedule = await fetchSchedule();
   List<List<dynamic>> preLessonNotifications =
       await preLessonNotificationsFetcher();
-
+  if (kDebugMode) {
+    await testPushMessages();
+  }
   for (Lesson lesson in schedule.lessons) {
     if (lesson.temporalData.weekday != DateTime.now().weekday ||
         !lesson.temporalData.alternatingWeeks

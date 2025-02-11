@@ -18,35 +18,36 @@ late final SharedPreferences prefs;
 final NavigationTreeObserver navigatorTreeObserver = NavigationTreeObserver();
 
 /// Callback function that will be executed at midnight
-void scheduleTaskCallback() async {
-  //await initializeSupabase();
+Future<void> scheduleTaskCallback(
+    {bool reInitializeSupabase = false, bool isRerun = false}) async {
+  if (reInitializeSupabase) {
+    await initializeSupabase();
+  }
   try {
-    logger.d("Executing scheduled task at midnight");
     await schedulePreLessonNotificationsForCurrentDay(
       fetchSchedule: fetch_schedule.fetchSchedule,
       preLessonNotificationsFetcher: fetchPreLessonNotifications,
     );
   } catch (e) {
-    logger.e("Error executing scheduled task: $e");
+    // 1 retry
+    if (!isRerun) {
+      await scheduleTaskCallback(reInitializeSupabase: true, isRerun: true);
+    } else {
+      logger.e("Error executing scheduled task: $e");
+    }
   }
 }
 
 Future<void> scheduleDailyTask() async {
   DateTime now = DateTime.now();
   DateTime nextMidnight = DateTime(now.year, now.month, now.day + 1, 0, 0, 0);
-  Duration initialDelay = nextMidnight.difference(now);
-  logger.i("Scheduling daily task in $initialDelay");
-
-  // Schedule the task to run at midnight every day
   await AndroidAlarmManager.initialize();
   await AndroidAlarmManager.periodic(
-    const Duration(days: 1),
-    0,
-    scheduleTaskCallback,
-    startAt: nextMidnight,
-    exact: true,
-    wakeup: true, // Ensures execution even if the device is asleep
-  );
+      const Duration(days: 1), 0, scheduleTaskCallback,
+      startAt: nextMidnight,
+      exact: true,
+      wakeup: true, // Ensures execution even if the device is asleep
+      params: {"reInitializeSupabase": true});
 
   logger.i("Scheduled daily task");
 }
@@ -58,7 +59,7 @@ void main() async {
   var success = await AndroidAlarmManager.initialize();
   logger.i("Alarm manager initialized with ${success ? "success" : "failure"}");
   await scheduleDailyTask();
-  scheduleTaskCallback(); // One manual call on startup
+  await scheduleTaskCallback(); // One manual call on startup
   runApp(const MyApp());
 }
 
