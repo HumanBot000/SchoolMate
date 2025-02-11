@@ -89,9 +89,9 @@ class _TimePickerDial extends StatefulWidget {
 
 class _TimePickerDialState extends State<_TimePickerDial> {
   late TimeOfDay _selectedTime;
-  FixedExtentScrollController _minuteScrollController =
+  final FixedExtentScrollController _minuteScrollController =
       FixedExtentScrollController();
-  FixedExtentScrollController _hourScrollController =
+  final FixedExtentScrollController _hourScrollController =
       FixedExtentScrollController();
 
   @override

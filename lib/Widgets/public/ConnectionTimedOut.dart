@@ -14,13 +14,13 @@ class ConnectionTimedOutPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // Large sad emoji
-            Text(
+            const Text(
               "😞",
               style: TextStyle(fontSize: 80), // Huge emoji
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             // Error message
-            Text(
+            const Text(
               "We couldn't connect to the servers.",
               textAlign: TextAlign.center,
               style: TextStyle(
@@ -29,7 +29,7 @@ class ConnectionTimedOutPage extends StatelessWidget {
                 color: Colors.black87,
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             // Subtitle
             Text(
               "Please check your connection and try again.",
@@ -39,15 +39,16 @@ class ConnectionTimedOutPage extends StatelessWidget {
                 color: Colors.grey[600],
               ),
             ),
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
             // Try Again button with styling
             ElevatedButton.icon(
               onPressed: onTryAgain,
-              icon: Icon(Icons.refresh),
-              label: Text("Try Again"),
+              icon: const Icon(Icons.refresh),
+              label: const Text("Try Again"),
               style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                textStyle: TextStyle(fontSize: 16),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                textStyle: const TextStyle(fontSize: 16),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),

@@ -9,18 +9,18 @@ extension DateTimeExtension on DateTime {
 
 extension DateExtension on DateTime {
   TimeOfDay toTimeOfDay() {
-    return TimeOfDay(hour: this.hour, minute: this.minute);
+    return TimeOfDay(hour: hour, minute: minute);
   }
 
   DateTime startOfWeek() {
-    return this.subtract(Duration(days: this.weekday - 1));
+    return subtract(Duration(days: weekday - 1));
   }
 }
 
 extension TimeOfDayExtension on TimeOfDay {
   DateTime toDateTime() {
     return DateTime(DateTime.now().year, DateTime.now().month,
-        DateTime.now().day, this.hour, this.minute);
+        DateTime.now().day, hour, minute);
   }
 
   bool isBetween(TimeOfDay start, TimeOfDay end) {

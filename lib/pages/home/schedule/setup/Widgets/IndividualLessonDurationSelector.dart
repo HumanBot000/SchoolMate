@@ -241,7 +241,7 @@ class _IndividualLessonDurationSelectorState
                 ),
               );
             },
-            child: Text(
+            child: const Text(
               "Add a new lesson",
               style: TextStyle(color: Colors.grey),
             ),

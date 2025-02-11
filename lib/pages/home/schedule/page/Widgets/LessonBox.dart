@@ -129,7 +129,7 @@ class CrossOutPainter extends CustomPainter {
       ..color = Colors.red
       ..strokeWidth = 2.0
       ..style = PaintingStyle.stroke;
-    canvas.drawLine(Offset(0, 0), Offset(size.width, size.height), paint);
+    canvas.drawLine(const Offset(0, 0), Offset(size.width, size.height), paint);
     canvas.drawLine(Offset(size.width, 0), Offset(0, size.height), paint);
   }
 

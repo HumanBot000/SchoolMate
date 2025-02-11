@@ -299,7 +299,7 @@ class _ScheduleGridViewState extends State<ScheduleGridView> {
                 child: DottedBorder(
                   borderType: BorderType.RRect,
                   color: isEven ? Colors.blueAccent : Colors.greenAccent,
-                  dashPattern: [10, 10],
+                  dashPattern: const [10, 10],
                   child: Container(
                     color: Colors.blueGrey.shade900,
                     width: _widthPerDay,
