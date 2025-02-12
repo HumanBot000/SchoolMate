@@ -45,18 +45,24 @@ class _HomePageState extends State<HomePage> {
         if (_schedule != null &&
             _schedule!.lessons
                 .where((lesson) =>
-                    lesson.temporalData.weekday == DateTime.now().weekday)
+                    (lesson.temporalData.weekday == DateTime.now().weekday) &&
+                    lesson.temporalData.alternatingWeeks
+                        .contains(_schedule!.metadata.currentAlternatedWeek))
                 .isNotEmpty)
           DayProgressBar(
             startTime: _schedule!.lessons
                 .where((lesson) =>
-                    lesson.temporalData.weekday == DateTime.now().weekday)
+                    (lesson.temporalData.weekday == DateTime.now().weekday) &&
+                    lesson.temporalData.alternatingWeeks
+                        .contains(_schedule!.metadata.currentAlternatedWeek))
                 .first
                 .temporalData
                 .startTime,
             endTime: _schedule!.lessons
                 .where((lesson) =>
-                    lesson.temporalData.weekday == DateTime.now().weekday)
+                    (lesson.temporalData.weekday == DateTime.now().weekday) &&
+                    lesson.temporalData.alternatingWeeks
+                        .contains(_schedule!.metadata.currentAlternatedWeek))
                 .last
                 .temporalData
                 .endTime,

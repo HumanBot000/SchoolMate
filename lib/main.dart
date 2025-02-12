@@ -31,7 +31,7 @@ Future<void> scheduleTaskCallback(
   } catch (e) {
     // 1 retry
     if (!isRerun) {
-      await scheduleTaskCallback(reInitializeSupabase: true, isRerun: true);
+      await scheduleTaskCallback(reInitializeSupabase: false, isRerun: true);
     } else {
       logger.e("Error executing scheduled task: $e");
     }

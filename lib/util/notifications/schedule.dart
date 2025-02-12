@@ -48,7 +48,7 @@ Future<void> schedulePreLessonNotificationsForCurrentDay({
   }
   for (Lesson lesson in schedule.lessons) {
     if (lesson.temporalData.weekday != DateTime.now().weekday ||
-        !lesson.temporalData.alternatingWeeks
+        lesson.temporalData.alternatingWeeks
             .contains(schedule.metadata.currentAlternatedWeek)) {
       continue;
     }
