@@ -36,10 +36,14 @@ jobs:
         run: |
           # Fetch current version from pubspec.yaml
           NEW_VERSION=$(grep 'version:' pubspec.yaml | sed 's/version: //')
-
+          
           # Fetch the previous version (you can store it in a file or use Git tags)
-          PREVIOUS_VERSION=$(git tag -l | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+' | sort -V | tail -n 1)
+          PREVIOUS_VERSION=$(git tag -l | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+(\+[0-9]+)?' | sort -V | tail -n 1)
 
+          echo "New version: $NEW_VERSION"
+          echo "Previous version: $PREVIOUS_VERSION"
+
+          # Check if the version has increased (including build number changes)
           if [ "$NEW_VERSION" == "$PREVIOUS_VERSION" ]; then
             echo "No new version detected."
             exit 0
