@@ -11,6 +11,7 @@ on:
 jobs:
   flutter:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -18,7 +19,13 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: 'stable'
+          flutter-version: '3.7.0'  # Use a specific version instead of 'stable'
+
+      - name: Switch to stable channel
+        run: flutter channel stable  # Ensure Flutter is on the stable channel
+
+      - name: Check Flutter version
+        run: flutter --version  # Check if Flutter is correctly installed
 
       - name: Cache Flutter dependencies
         uses: actions/cache@v2
