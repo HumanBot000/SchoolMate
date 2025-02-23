@@ -16,6 +16,26 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Check if version is increased
+        id: version-check
+        run: |
+          # Fetch current version from pubspec.yaml
+          NEW_VERSION=$(grep 'version:' pubspec.yaml | sed 's/version: //')
+
+          # Fetch the previous version (you can store it in a file or use Git tags)
+          PREVIOUS_VERSION=$(git tag -l | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+(\+[0-9]+)?' | sort -V | tail -n 1)
+
+          echo "New version: $NEW_VERSION"
+          echo "Previous version: $PREVIOUS_VERSION"
+
+          # Check if the version has increased (including build number changes)
+          if [ "$NEW_VERSION" == "$PREVIOUS_VERSION" ]; then
+            echo "No new version detected."
+            exit 0
+          else
+            echo "New version detected: $NEW_VERSION"
+          fi
+
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
@@ -43,6 +63,7 @@ jobs:
 
       - name: Unset or Modify Gradle Java Home (if exists)
         run: |
+          flutter config --jdk-dir $JAVA_HOME
           # If gradle.properties contains org.gradle.java.home, we need to unset or modify it
           if [ -f gradle.properties ]; then
             sed -i '/org.gradle.java.home/d' gradle.properties  # Remove the Java home property
@@ -51,27 +72,6 @@ jobs:
 
       - name: Install dependencies
         run: flutter pub get
-
-      - name: Check if version is increased
-        id: version-check
-        run: |
-          # Fetch current version from pubspec.yaml
-          NEW_VERSION=$(grep 'version:' pubspec.yaml | sed 's/version: //')
-          
-          # Fetch the previous version (you can store it in a file or use Git tags)
-          PREVIOUS_VERSION=$(git tag -l | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+(\+[0-9]+)?' | sort -V | tail -n 1)
-
-          echo "New version: $NEW_VERSION"
-          echo "Previous version: $PREVIOUS_VERSION"
-
-          # Check if the version has increased (including build number changes)
-          if [ "$NEW_VERSION" == "$PREVIOUS_VERSION" ]; then
-            echo "No new version detected."
-            exit 0
-          else
-            echo "New version detected: $NEW_VERSION"
-          fi
-
       - name: Run Dart fix and format
         run: |
           flutter pub get
