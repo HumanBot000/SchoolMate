@@ -32,6 +32,23 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-flutter-
 
+      - name: Install OpenJDK 17
+        run: |
+          sudo apt update
+          sudo apt install -y openjdk-17-jdk
+
+      - name: Set JAVA_HOME environment variable
+        run: |
+          echo "JAVA_HOME=$(dirname $(dirname $(readlink -f $(which java))))" >> $GITHUB_ENV
+
+      - name: Unset or Modify Gradle Java Home (if exists)
+        run: |
+          # If gradle.properties contains org.gradle.java.home, we need to unset or modify it
+          if [ -f gradle.properties ]; then
+            sed -i '/org.gradle.java.home/d' gradle.properties  # Remove the Java home property
+            echo "org.gradle.java.home=$JAVA_HOME" >> gradle.properties  # Ensure it points to the correct JAVA_HOME
+          fi
+
       - name: Install dependencies
         run: flutter pub get
 
