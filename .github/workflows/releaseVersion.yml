@@ -19,10 +19,7 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.7.0'  # Use a specific version instead of 'stable'
-
-      - name: Switch to stable channel
-        run: flutter channel stable  # Ensure Flutter is on the stable channel
+          flutter-version: '3.27.1'
 
       - name: Check Flutter version
         run: flutter --version  # Check if Flutter is correctly installed
