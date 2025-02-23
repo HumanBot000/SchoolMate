@@ -3,7 +3,7 @@ name: Flutter Release Workflow
 on:
   push:
     branches:
-      - main
+      - master
     paths:
       - 'pubspec.yaml'
       - '**/*.dart'
