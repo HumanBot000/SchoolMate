@@ -4,7 +4,7 @@ import 'package:school_mate/main.dart';
 
 @Deprecated("Use forceUpdateUserSettings() instead")
 Future<void> updateUserSettings(
-    Country residenceCountry, String? residence, String gradingSystem) async {
+    Country residenceCountry, String? residence) async {
   // residence is already the code -> makes it easier to work with it
 
   // no idea what I did here... best to deprecate it
@@ -17,7 +17,6 @@ Future<void> updateUserSettings(
       "user_id": await getUserID(),
       "residence": residence,
       "residence_country": residenceCountry.code,
-      "grading_system": gradingSystem
     }).eq("user_id", await getUserID());
   } on Exception catch (e) {
     logger.e(e);

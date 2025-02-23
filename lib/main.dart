@@ -18,7 +18,8 @@ late final SharedPreferences prefs;
 final NavigationTreeObserver navigatorTreeObserver = NavigationTreeObserver();
 
 /// Callback function that will be executed at midnight
-Future<void> scheduleTaskCallback(
+@pragma('vm:entry-point')
+Future<void> scheduleTaskCallback(int id,
     {bool reInitializeSupabase = false, bool isRerun = false}) async {
   if (reInitializeSupabase) {
     await initializeSupabase();
@@ -31,7 +32,7 @@ Future<void> scheduleTaskCallback(
   } catch (e) {
     // 1 retry
     if (!isRerun) {
-      await scheduleTaskCallback(reInitializeSupabase: false, isRerun: true);
+      await scheduleTaskCallback(id, reInitializeSupabase: true, isRerun: true);
     } else {
       logger.e("Error executing scheduled task: $e");
     }
@@ -40,15 +41,28 @@ Future<void> scheduleTaskCallback(
 
 Future<void> scheduleDailyTask() async {
   DateTime now = DateTime.now();
-  DateTime nextMidnight = DateTime(now.year, now.month, now.day + 1, 0, 0, 0);
+  DateTime nextMidnight = now.add(const Duration(days: 1)).subtract(Duration(
+      hours: now.hour,
+      minutes: now.minute,
+      seconds: now.second,
+      milliseconds: now.millisecond,
+      microseconds: now.microsecond));
   await AndroidAlarmManager.initialize();
-  await AndroidAlarmManager.periodic(
-      const Duration(days: 1), 0, scheduleTaskCallback,
-      startAt: nextMidnight,
+  await AndroidAlarmManager.oneShotAt(
+      DateTime.now().add(const Duration(seconds: 5)), 0, scheduleTaskCallback,
       exact: true,
-      wakeup: true, // Ensures execution even if the device is asleep
-      params: {"reInitializeSupabase": true});
-
+      allowWhileIdle: true,
+      rescheduleOnReboot: true,
+      alarmClock: true);
+  await AndroidAlarmManager.periodic(
+    const Duration(days: 1), 1, scheduleTaskCallback,
+    startAt: nextMidnight,
+    exact: true,
+    wakeup: true,
+    // Ensures execution even if the device is asleep
+    allowWhileIdle: true,
+    rescheduleOnReboot: true,
+  );
   logger.i("Scheduled daily task");
 }
 
@@ -59,7 +73,6 @@ void main() async {
   var success = await AndroidAlarmManager.initialize();
   logger.i("Alarm manager initialized with ${success ? "success" : "failure"}");
   await scheduleDailyTask();
-  await scheduleTaskCallback(); // One manual call on startup
   runApp(const MyApp());
 }
 

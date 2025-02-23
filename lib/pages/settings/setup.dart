@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:school_mate/API/supabase/auth/userData.dart';
-import 'package:school_mate/API/supabase/auth/userSettings.dart'
-    as supabase_settings;
 import 'package:school_mate/Classes/geoPolitics/Country.dart';
-import 'package:school_mate/pages/home/home/start.dart';
-
-import 'Widgets/settings/GradingSystemChooser.dart';
-import 'Widgets/settings/ResidenceSelector/CountrySelector.dart';
-import 'Widgets/settings/ResidenceSelector/StateSelector.dart';
+import 'package:school_mate/pages/settings/Widgets/settings/ResidenceSelector/CountrySelector.dart';
+import 'package:school_mate/pages/settings/Widgets/settings/ResidenceSelector/StateSelector.dart';
 
 class SetupPage extends StatefulWidget {
   const SetupPage({super.key});
@@ -35,14 +30,6 @@ class _SetupPageState extends State<SetupPage> {
     setState(() {
       _selectedResidence = residence;
     });
-  }
-
-  Future<void> changeGradingSystem(gradingSystem) async {
-    await supabase_settings.updateUserSettings(
-        _selectedResidence, _exactSelectedResidence, gradingSystem);
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-      return const HomePage();
-    }));
   }
 
   @override
@@ -84,11 +71,6 @@ class _SetupPageState extends State<SetupPage> {
                 selectedCountryString: _selectedResidence!.name,
                 selectedExactResidence: _exactSelectedResidence,
               ),
-            if (_exactSelectedResidence != null)
-              GradingSystemSettings(
-                // todo only show when actually using grade feature
-                onChange: changeGradingSystem,
-              )
           ],
         ),
       ),
