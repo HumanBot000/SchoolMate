@@ -48,7 +48,7 @@ Future<void> schedulePreLessonNotificationsForCurrentDay({
   }
   for (Lesson lesson in schedule.lessons) {
     if (lesson.temporalData.weekday != DateTime.now().weekday ||
-        lesson.temporalData.alternatingWeeks
+        !lesson.temporalData.alternatingWeeks
             .contains(schedule.metadata.currentAlternatedWeek)) {
       continue;
     }
@@ -64,9 +64,11 @@ Future<void> schedulePreLessonNotificationsForCurrentDay({
         scheduledNotificationTime = scheduledNotificationTime
             .subtract(Duration(hours: notification[1]));
       }
+
       if (scheduledNotificationTime.isBefore(DateTime.now())) {
         continue;
       }
+
       await flutterLocalNotificationsPlugin.zonedSchedule(
           DateTime.now().millisecondsSinceEpoch.hashCode & 0x7FFFFFFF,
           // Ensures a unique positive 32-bit integer

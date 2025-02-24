@@ -41,9 +41,6 @@ jobs:
         with:
           flutter-version: '3.27.1'
 
-      - name: Check Flutter version
-        run: flutter --version  # Check if Flutter is correctly installed
-
       - name: Cache Flutter dependencies
         uses: actions/cache@v2
         with:
@@ -52,26 +49,30 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-flutter-
 
-      - name: Install OpenJDK 17
-        run: |
-          sudo apt update
-          sudo apt install -y openjdk-17-jdk
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
 
       - name: Set JAVA_HOME environment variable
-        run: |
-          echo "JAVA_HOME=$(dirname $(dirname $(readlink -f $(which java))))" >> $GITHUB_ENV
+        run: echo "JAVA_HOME=${{ env.JAVA_HOME }}" >> $GITHUB_ENV
 
-      - name: Unset or Modify Gradle Java Home (if exists)
+      - name: Update Gradle Java Home
         run: |
-          flutter config --jdk-dir $JAVA_HOME
-          # If gradle.properties contains org.gradle.java.home, we need to unset or modify it
-          if [ -f gradle.properties ]; then
-            sed -i '/org.gradle.java.home/d' gradle.properties  # Remove the Java home property
-            echo "org.gradle.java.home=$JAVA_HOME" >> gradle.properties  # Ensure it points to the correct JAVA_HOME
+          if [ -f android/gradle.properties ]; then
+            if grep -q "org.gradle.java.home" android/gradle.properties; then
+              sed -i "s|org.gradle.java.home=.*|org.gradle.java.home=$JAVA_HOME|" android/gradle.properties
+            else
+              echo "org.gradle.java.home=$JAVA_HOME" >> android/gradle.properties
+            fi
+          else
+            echo "org.gradle.java.home=$JAVA_HOME" > android/gradle.properties
           fi
 
       - name: Install dependencies
         run: flutter pub get
+
       - name: Run Dart fix and format
         run: |
           flutter pub get
