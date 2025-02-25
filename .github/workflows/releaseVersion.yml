@@ -7,7 +7,8 @@ on:
     paths:
       - 'pubspec.yaml'
       - '**/*.dart'
-
+permissions:
+  contents: write
 jobs:
   flutter:
     runs-on: ubuntu-latest
@@ -87,8 +88,10 @@ jobs:
           echo "COMMITS=$COMMITS" >> $GITHUB_ENV
       - name: Tag version and push
         run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
           git tag "v${NEW_VERSION}"
-          git push origin "v${NEW_VERSION}"
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git "v${NEW_VERSION}"
       - name: Build release APK
         run: flutter build apk --release --dart-define=GEONAMES_API_USER=humanbot000
 
