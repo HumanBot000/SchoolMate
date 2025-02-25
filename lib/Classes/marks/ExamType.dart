@@ -32,12 +32,19 @@ class EvaluationData {
 
 class ExamType {
   final String name;
-  final int id;
+  final int? id;
   final String description;
+  final EvaluationData evaluationData = EvaluationData.basic();
 
   ExamType({
     required this.name,
-    required this.id,
+    this.id,
     this.description = "",
+    EvaluationData? evaluationData,
   });
+
+  factory ExamType.basic() => ExamType(
+      name: "Tests",
+      description: "The default ExamType",
+      evaluationData: EvaluationData.basic());
 }

@@ -85,7 +85,10 @@ jobs:
           # Generate a list of commits since the last tag
           COMMITS=$(git log ${{ steps.version-check.outputs.PREVIOUS_VERSION }}..HEAD --pretty=format:'- %s')
           echo "COMMITS=$COMMITS" >> $GITHUB_ENV
-
+      - name: Tag version and push
+        run: |
+          git tag "v${NEW_VERSION}"
+          git push origin "v${NEW_VERSION}"
       - name: Build release APK
         run: flutter build apk --release --dart-define=GEONAMES_API_USER=humanbot000
 
@@ -95,8 +98,3 @@ jobs:
           files: build/app/outputs/flutter-apk/app-release.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Tag version and push
-        run: |
-          git tag "v${NEW_VERSION}"
-          git push origin "v${NEW_VERSION}"

@@ -1,10 +1,13 @@
 import 'package:collection/collection.dart';
+import 'package:school_mate/Classes/marks/ExamType.dart';
 
 class GradingSystem {
   final List<String> range;
   final List<String> modifiers;
+  final List<ExamType> examTypes;
 
-  GradingSystem({required this.range, required this.modifiers});
+  GradingSystem(
+      {required this.range, required this.modifiers, required this.examTypes});
 
   @override
   bool operator ==(Object other) {

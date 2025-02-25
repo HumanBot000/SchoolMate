@@ -1,5 +1,43 @@
 import 'package:flutter/material.dart';
 
+class IconGradientButton extends StatelessWidget {
+  final VoidCallback? onPressed;
+  final Icon icon;
+  final String tooltip;
+  final double size;
+  final Gradient gradient;
+
+  const IconGradientButton({
+    super.key,
+    required this.onPressed,
+    required this.icon,
+    required this.tooltip,
+    this.size = 56.0, // Default circular button size
+    this.gradient = const LinearGradient(colors: [Colors.cyan, Colors.indigo]),
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Tooltip(
+      message: tooltip,
+      child: Container(
+        width: size,
+        height: size,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle, // Makes it perfectly round
+          gradient: gradient,
+        ),
+        child: IconButton(
+          onPressed: onPressed,
+          icon: icon,
+          color: Colors.white, // Ensures icon is visible on gradient
+          tooltip: tooltip, // Tooltip when hovered or long-pressed
+        ),
+      ),
+    );
+  }
+}
+
 class ElevatedGradientButton extends StatelessWidget {
   final BorderRadiusGeometry? borderRadius;
   final double? width;
@@ -20,7 +58,8 @@ class ElevatedGradientButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final borderRadius = this.borderRadius ?? BorderRadius.circular(0);
+    final borderRadius = this.borderRadius ??
+        BorderRadius.circular(8); // Default rounded corners
     return Container(
       width: width,
       height: height,

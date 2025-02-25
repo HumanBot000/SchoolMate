@@ -4,9 +4,9 @@ import 'package:school_mate/Classes/marks/GradingSystem.dart';
 import 'package:school_mate/pages/home/marks/setup/ExamTypeSelector.dart';
 
 class GradingSetupPage extends StatefulWidget {
-  final EvaluationMethod? selectedEvaluationMethod;
+  final GradingSystem? selectedGradingSystem;
 
-  const GradingSetupPage({super.key, this.selectedEvaluationMethod});
+  const GradingSetupPage({super.key, this.selectedGradingSystem});
 
   @override
   State<GradingSetupPage> createState() => _GradingSetupPageState();
@@ -15,17 +15,49 @@ class GradingSetupPage extends StatefulWidget {
 class _GradingSetupPageState extends State<GradingSetupPage> {
   GradingSystem? _selectedGradingSystem;
   late EvaluationMethod? _selectedEvaluationMethod;
+  List<TextEditingController> _examTypeTextControllers = [];
+  List<ExamType> _examTypes = [];
 
   @override
   void initState() {
     super.initState();
-    _selectedEvaluationMethod = widget.selectedEvaluationMethod;
+    _selectedGradingSystem ??= GradingSystem(
+        range: ["1", "6"], modifiers: ["+"], examTypes: [ExamType.basic()]);
+    _selectedEvaluationMethod = widget
+        .selectedGradingSystem?.examTypes[0].evaluationData.evaluationMethod;
+    _examTypes = widget.selectedGradingSystem?.examTypes ?? [];
+    if (_selectedGradingSystem != null) {
+      _examTypeTextControllers = List.generate(
+        _selectedGradingSystem!.examTypes.length,
+        (index) => TextEditingController(
+            text: _selectedGradingSystem!.examTypes[index].name),
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    // Dispose all TextEditingControllers to avoid memory leaks.
+    for (var controller in _examTypeTextControllers) {
+      controller.dispose();
+    }
+    super.dispose();
   }
 
   Future<void> _onEvaluationMethodChange(
       EvaluationMethod? evaluationMethod) async {
     setState(() {
       _selectedEvaluationMethod = evaluationMethod;
+    });
+  }
+
+  Future<void> _onExamTypeChanges(List<ExamType> examTypes) async {
+    setState(() {
+      _examTypes = examTypes;
+      _examTypeTextControllers = List.generate(
+        _examTypes.length,
+        (index) => TextEditingController(text: _examTypes[index].name),
+      );
     });
   }
 
@@ -52,40 +84,78 @@ class _GradingSetupPageState extends State<GradingSetupPage> {
       Padding(
         padding: const EdgeInsets.all(8.0),
         child: DropdownMenu(
+          initialSelection: _selectedGradingSystem!,
           leadingIcon: const Icon(Icons.numbers),
-          initialSelection: _selectedGradingSystem,
           width: double.infinity,
           enableSearch: false,
           hintText: "Grading System",
           onSelected: (GradingSystem? value) {
             setState(() {
               _selectedGradingSystem = value;
+              // Update the controllers to match the new exam types.
+              _examTypeTextControllers = List.generate(
+                _selectedGradingSystem!.examTypes.length,
+                (index) => TextEditingController(
+                    text: _selectedGradingSystem!.examTypes[index].name),
+              );
             });
           },
           dropdownMenuEntries: [
             DropdownMenuEntry<GradingSystem>(
-                value: GradingSystem(range: ["1", "6"], modifiers: ["+", "-"]),
+                value: GradingSystem(
+                  range: ["1", "6"],
+                  modifiers: ["+", "-"],
+                  examTypes: _selectedGradingSystem?.examTypes ?? [],
+                ),
                 label: "1-6 (±)"),
             DropdownMenuEntry<GradingSystem>(
-                value: GradingSystem(range: ["15", "0"], modifiers: []),
+                value: GradingSystem(
+                  range: ["15", "0"],
+                  modifiers: [],
+                  examTypes: _selectedGradingSystem?.examTypes ?? [],
+                ),
                 label: "15-0 Points"),
             DropdownMenuEntry<GradingSystem>(
-                value: GradingSystem(range: ["15", "0"], modifiers: ["."]),
+                value: GradingSystem(
+                  range: ["15", "0"],
+                  modifiers: ["."],
+                  examTypes: _selectedGradingSystem?.examTypes ?? [],
+                ),
                 label: "15-0 Points (With Decimals)"),
             DropdownMenuEntry<GradingSystem>(
-                value: GradingSystem(range: ["1", "6"], modifiers: ["."]),
+                value: GradingSystem(
+                  range: ["1", "6"],
+                  modifiers: ["."],
+                  examTypes: _selectedGradingSystem?.examTypes ?? [],
+                ),
                 label: "1-6 (With Decimals)"),
             DropdownMenuEntry<GradingSystem>(
-                value: GradingSystem(range: ["100", "0"], modifiers: []),
+                value: GradingSystem(
+                  range: ["100", "0"],
+                  modifiers: [],
+                  examTypes: _selectedGradingSystem?.examTypes ?? [],
+                ),
                 label: "100%-0%"),
             DropdownMenuEntry<GradingSystem>(
-                value: GradingSystem(range: ["1", "5"], modifiers: ["."]),
+                value: GradingSystem(
+                  range: ["1", "5"],
+                  modifiers: ["."],
+                  examTypes: _selectedGradingSystem?.examTypes ?? [],
+                ),
                 label: "1-5 (With Decimals)"),
             DropdownMenuEntry<GradingSystem>(
-                value: GradingSystem(range: ["6", "1"], modifiers: ["."]),
+                value: GradingSystem(
+                  range: ["6", "1"],
+                  modifiers: ["."],
+                  examTypes: _selectedGradingSystem?.examTypes ?? [],
+                ),
                 label: "6-1 (With Decimals)"),
             DropdownMenuEntry<GradingSystem>(
-                value: GradingSystem(range: ["A", "F"], modifiers: ["+", "-"]),
+                value: GradingSystem(
+                  range: ["A", "F"],
+                  modifiers: ["+", "-"],
+                  examTypes: _selectedGradingSystem?.examTypes ?? [],
+                ),
                 label: "A-F (±)"),
           ],
         ),
@@ -157,13 +227,17 @@ class _GradingSetupPageState extends State<GradingSetupPage> {
       else if (_selectedGradingSystem != null &&
           _selectedGradingSystem!.modifiers.contains("."))
         Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Wrap(alignment: WrapAlignment.center, children: [
+          padding: const EdgeInsets.all(8.0),
+          child: Wrap(
+            alignment: WrapAlignment.center,
+            children: [
               Text(
                 "It is possible to assign decimal values",
                 style: Theme.of(context).textTheme.bodyLarge,
               )
-            ])),
+            ],
+          ),
+        ),
       Divider(
         color: Theme.of(context).colorScheme.secondary,
         thickness: 1.5,
@@ -182,6 +256,9 @@ class _GradingSetupPageState extends State<GradingSetupPage> {
           await _onEvaluationMethodChange(evaluationMethod);
         },
         selectedEvaluationMethod: _selectedEvaluationMethod,
+        evaluationMethodNameTextControllers: _examTypeTextControllers,
+        examTypes: _examTypes,
+        onExamTypeChanges: _onExamTypeChanges,
       ),
     ]);
   }
