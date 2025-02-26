@@ -5,7 +5,7 @@ import 'package:school_mate/Widgets/public/GradientButton.dart';
 class ExamTypeSelector extends StatefulWidget {
   final EvaluationMethod? selectedEvaluationMethod;
   final Function(EvaluationMethod) onChanged;
-  final List<TextEditingController> evaluationMethodNameTextControllers;
+  final List<List<TextEditingController>> evaluationMethodNameTextControllers;
   final List<ExamType> examTypes;
   final Function(List<ExamType>) onExamTypeChanges;
 
@@ -174,7 +174,7 @@ class _ExamTypeSelectorState extends State<ExamTypeSelector> {
         if (widget.examTypes.isNotEmpty)
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: _buildExamTypeCards(widget.examTypes),
+            child: _buildPercentageExamTypeCards(widget.examTypes),
           ),
         if (widget.selectedEvaluationMethod != null)
           IconGradientButton(
@@ -183,7 +183,7 @@ class _ExamTypeSelectorState extends State<ExamTypeSelector> {
               newExamTypes.add(ExamType.basic());
               await widget.onExamTypeChanges(newExamTypes);
             },
-            icon: Icon(Icons.add),
+            icon: const Icon(Icons.add),
             tooltip: "Add a new Exam Type",
           )
       ],
@@ -191,7 +191,8 @@ class _ExamTypeSelectorState extends State<ExamTypeSelector> {
   }
 
   // Using a ListView.builder with shrinkWrap is acceptable here, since we set physics to never scroll.
-  Widget _buildExamTypeCards(List<ExamType> examTypes) => ListView.builder(
+  Widget _buildPercentageExamTypeCards(List<ExamType> examTypes) =>
+      ListView.builder(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         itemCount: examTypes.length,
@@ -210,17 +211,94 @@ class _ExamTypeSelectorState extends State<ExamTypeSelector> {
                 children: [
                   TextField(
                     controller:
-                        widget.evaluationMethodNameTextControllers[index],
-                    onChanged: (value) async {},
+                        widget.evaluationMethodNameTextControllers[index][0],
+                    onEditingComplete: () async {
+                      String value = widget
+                          .evaluationMethodNameTextControllers[index][0].text
+                          .trim();
+                      if (value.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content:
+                                const Text("Exam type name cannot be empty"),
+                            backgroundColor:
+                                Theme.of(context).colorScheme.error,
+                          ),
+                        );
+                        return;
+                      }
+                      List<ExamType> newExamTypes = List.from(widget.examTypes);
+                      newExamTypes[index].name = value;
+                      await widget.onExamTypeChanges(newExamTypes);
+                    },
                     decoration: const InputDecoration(
                       prefixIcon:
                           Icon(Icons.text_snippet, color: Colors.blueAccent),
                     ),
                   ),
                   const SizedBox(height: 8),
-                  const Text(
-                    "before the lesson starts",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
+                  const FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      "These exams will contribute to your final grade, accounting for",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
+                    ),
+                  ),
+                  TextField(
+                    controller:
+                        widget.evaluationMethodNameTextControllers[index][1],
+                    onEditingComplete: () {
+                      String value = widget
+                          .evaluationMethodNameTextControllers[index][1].text
+                          .trim();
+                      double? parsedValue = double.tryParse(value);
+                      if (parsedValue == null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: const Text("Percentage must be a number"),
+                            backgroundColor:
+                                Theme.of(context).colorScheme.error,
+                          ),
+                        );
+                        return;
+                      }
+                      if (parsedValue < 0 || parsedValue > 100) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content:
+                                const Text("Percentage must be > 0 and < 100"),
+                            backgroundColor:
+                                Theme.of(context).colorScheme.error,
+                          ),
+                        );
+                        return;
+                      }
+
+                      List<ExamType> newExamTypes = List.from(widget.examTypes);
+                      newExamTypes[index].evaluationData.percentage =
+                          parsedValue;
+                      widget.onExamTypeChanges(newExamTypes);
+                    },
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      suffix: Text(
+                        "%",
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      ),
+                      errorText: double.tryParse(widget
+                                      .evaluationMethodNameTextControllers[
+                                          index][1]
+                                      .text) ==
+                                  null ||
+                              double.parse(widget
+                                      .evaluationMethodNameTextControllers[
+                                          index][1]
+                                      .text) <
+                                  0
+                          ? "Enter a valid non-negative number"
+                          : null,
+                    ),
                   ),
                   IconButton(
                     icon: const Icon(Icons.delete, color: Colors.redAccent),

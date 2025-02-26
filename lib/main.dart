@@ -47,6 +47,7 @@ Future<void> scheduleDailyTask() async {
       seconds: now.second,
       milliseconds: now.millisecond,
       microseconds: now.microsecond));
+  logger.i("Next midnight: $nextMidnight");
   await AndroidAlarmManager.initialize();
   await AndroidAlarmManager.oneShotAt(
       DateTime.now().add(const Duration(seconds: 5)), 0, scheduleTaskCallback,

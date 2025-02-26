@@ -3,6 +3,8 @@ import 'package:school_mate/Classes/marks/ExamType.dart';
 import 'package:school_mate/Classes/marks/GradingSystem.dart';
 import 'package:school_mate/pages/home/marks/setup/ExamTypeSelector.dart';
 
+import '../../../../main.dart';
+
 class GradingSetupPage extends StatefulWidget {
   final GradingSystem? selectedGradingSystem;
 
@@ -15,7 +17,7 @@ class GradingSetupPage extends StatefulWidget {
 class _GradingSetupPageState extends State<GradingSetupPage> {
   GradingSystem? _selectedGradingSystem;
   late EvaluationMethod? _selectedEvaluationMethod;
-  List<TextEditingController> _examTypeTextControllers = [];
+  List<List<TextEditingController>> _examTypeTextControllers = [];
   List<ExamType> _examTypes = [];
 
   @override
@@ -26,11 +28,22 @@ class _GradingSetupPageState extends State<GradingSetupPage> {
     _selectedEvaluationMethod = widget
         .selectedGradingSystem?.examTypes[0].evaluationData.evaluationMethod;
     _examTypes = widget.selectedGradingSystem?.examTypes ?? [];
+
+    logger.d(_selectedGradingSystem!.examTypes.length);
     if (_selectedGradingSystem != null) {
       _examTypeTextControllers = List.generate(
-        _selectedGradingSystem!.examTypes.length,
-        (index) => TextEditingController(
-            text: _selectedGradingSystem!.examTypes[index].name),
+        _examTypes.length,
+        (index) => [
+          TextEditingController(text: _examTypes[index].name),
+          TextEditingController(
+              text: _examTypes[index].evaluationData.evaluationMethod ==
+                      EvaluationMethod.multiplication
+                  ? _examTypes[index]
+                      .evaluationData
+                      .multiplicationFactor
+                      .toString()
+                  : _examTypes[index].evaluationData.percentage.toString())
+        ],
       );
     }
   }
@@ -39,7 +52,9 @@ class _GradingSetupPageState extends State<GradingSetupPage> {
   void dispose() {
     // Dispose all TextEditingControllers to avoid memory leaks.
     for (var controller in _examTypeTextControllers) {
-      controller.dispose();
+      for (var controller in controller) {
+        controller.dispose();
+      }
     }
     super.dispose();
   }
@@ -54,10 +69,37 @@ class _GradingSetupPageState extends State<GradingSetupPage> {
   Future<void> _onExamTypeChanges(List<ExamType> examTypes) async {
     setState(() {
       _examTypes = examTypes;
-      _examTypeTextControllers = List.generate(
-        _examTypes.length,
-        (index) => TextEditingController(text: _examTypes[index].name),
-      );
+
+      // Ensure controllers exist for each exam type
+      for (int i = 0; i < _examTypes.length; i++) {
+        if (i >= _examTypeTextControllers.length) {
+          // If new exam types are added, create new controllers
+          _examTypeTextControllers.add([
+            TextEditingController(text: _examTypes[i].name),
+            TextEditingController(
+                text: _examTypes[i].evaluationData.evaluationMethod ==
+                        EvaluationMethod.multiplication
+                    ? _examTypes[i]
+                        .evaluationData
+                        .multiplicationFactor
+                        .toString()
+                    : _examTypes[i].evaluationData.percentage.toString())
+          ]);
+        } else {
+          // Update existing controllers to avoid losing focus
+          _examTypeTextControllers[i][0].text = _examTypes[i].name;
+          _examTypeTextControllers[i][1].text =
+              _examTypes[i].evaluationData.evaluationMethod ==
+                      EvaluationMethod.multiplication
+                  ? _examTypes[i].evaluationData.multiplicationFactor.toString()
+                  : _examTypes[i].evaluationData.percentage.toString();
+        }
+      }
+
+      // Remove excess controllers if exam types are reduced
+      while (_examTypeTextControllers.length > _examTypes.length) {
+        _examTypeTextControllers.removeLast();
+      }
     });
   }
 
@@ -95,8 +137,20 @@ class _GradingSetupPageState extends State<GradingSetupPage> {
               // Update the controllers to match the new exam types.
               _examTypeTextControllers = List.generate(
                 _selectedGradingSystem!.examTypes.length,
-                (index) => TextEditingController(
-                    text: _selectedGradingSystem!.examTypes[index].name),
+                (index) => [
+                  TextEditingController(text: _examTypes[index].name),
+                  TextEditingController(
+                      text: _examTypes[index].evaluationData.evaluationMethod ==
+                              EvaluationMethod.multiplication
+                          ? _examTypes[index]
+                              .evaluationData
+                              .multiplicationFactor
+                              .toString()
+                          : _examTypes[index]
+                              .evaluationData
+                              .percentage
+                              .toString())
+                ],
               );
             });
           },

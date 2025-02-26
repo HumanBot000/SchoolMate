@@ -7,9 +7,9 @@ enum EvaluationMethod { percentage, multiplication }
 /// The second type is `multiplication`: Here every exam of a group is counted like `x exams of the child group`.
 class EvaluationData {
   final EvaluationMethod evaluationMethod;
-  final ExamType? multiplicationChildType;
-  final int? multiplicationFactor;
-  final double? percentage;
+  ExamType? multiplicationChildType;
+  int? multiplicationFactor;
+  double? percentage;
 
   EvaluationData({
     required this.evaluationMethod,
@@ -31,20 +31,16 @@ class EvaluationData {
 }
 
 class ExamType {
-  final String name;
+  String name;
   final int? id;
-  final String description;
-  final EvaluationData evaluationData = EvaluationData.basic();
+  EvaluationData evaluationData = EvaluationData.basic();
 
   ExamType({
     required this.name,
     this.id,
-    this.description = "",
     EvaluationData? evaluationData,
   });
 
-  factory ExamType.basic() => ExamType(
-      name: "Tests",
-      description: "The default ExamType",
-      evaluationData: EvaluationData.basic());
+  factory ExamType.basic() =>
+      ExamType(name: "Tests", evaluationData: EvaluationData.basic());
 }
