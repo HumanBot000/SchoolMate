@@ -7,8 +7,9 @@ on:
     paths:
       - 'pubspec.yaml'
       - '**/*.dart'
-permissions:
-  contents: write
+
+permissions: write-all
+
 jobs:
   flutter:
     runs-on: ubuntu-latest
@@ -21,9 +22,9 @@ jobs:
         id: version-check
         run: |
           # Fetch current version from pubspec.yaml
-          NEW_VERSION=$(grep '^version:' pubspec.yaml | sed 's/version: //g' | tr -d ' ')
+          NEW_VERSION=$(sed -n 's/^version:[[:space:]]*\(.*\)/\1/p' pubspec.yaml)
           # Fetch the previous version (you can store it in a file or use Git tags)
-          PREVIOUS_VERSION=$(git tag -l | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+(\+[0-9]+)?' | sort -V | tail -n 1)
+          PREVIOUS_VERSION=$(git tag -l --sort=-v:refname | grep -E '^[0-9]+\.[0-9]+\.[0-9]+(\+[0-9]+)?$' | head -n 1 || echo "none")
           echo "New version: $NEW_VERSION"
           echo "Previous version: $PREVIOUS_VERSION"
 
@@ -84,20 +85,15 @@ jobs:
           # Generate a list of commits since the last tag
           COMMITS=$(git log ${{ steps.version-check.outputs.PREVIOUS_VERSION }}..HEAD --pretty=format:'- %s')
           echo "COMMITS=$COMMITS" >> $GITHUB_ENV
-      - name: Tag version and push
-        run: |
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git config --global user.name "github-actions[bot]"
-          git tag "v${NEW_VERSION}"
-          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git "v${NEW_VERSION}"
-      - name: Fetch tags again to ensure latest tag is available
-        run: git fetch --tags
+
       - name: Build release APK
         run: flutter build apk --release --dart-define=GEONAMES_API_USER=humanbot000
 
       - name: Create GitHub release
-        uses: softprops/action-gh-release@v1
+        if: success() && steps.version-check.outputs.PREVIOUS_VERSION != steps.version-check.outputs.NEW_VERSION
+        uses: softprops/action-gh-release@v2
         with:
+          tag_name: "v${{ steps.version-check.outputs.NEW_VERSION }}"
           files: build/app/outputs/flutter-apk/app-release.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

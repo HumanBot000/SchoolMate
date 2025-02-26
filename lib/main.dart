@@ -36,7 +36,20 @@ Future<void> scheduleTaskCallback(int id,
     } else {
       logger.e("Error executing scheduled task: $e");
     }
+    return;
   }
+  DateTime now = DateTime.now();
+  DateTime nextMidnight = now.add(const Duration(days: 1)).subtract(Duration(
+      hours: now.hour,
+      minutes: now.minute,
+      seconds: now.second,
+      milliseconds: now.millisecond,
+      microseconds: now.microsecond));
+  await AndroidAlarmManager.oneShotAt(nextMidnight, 0, scheduleTaskCallback,
+      exact: true,
+      allowWhileIdle: true,
+      rescheduleOnReboot: true,
+      alarmClock: true);
 }
 
 Future<void> scheduleDailyTask() async {
@@ -47,7 +60,6 @@ Future<void> scheduleDailyTask() async {
       seconds: now.second,
       milliseconds: now.millisecond,
       microseconds: now.microsecond));
-  logger.i("Next midnight: $nextMidnight");
   await AndroidAlarmManager.initialize();
   await AndroidAlarmManager.oneShotAt(
       DateTime.now().add(const Duration(seconds: 5)), 0, scheduleTaskCallback,
@@ -55,15 +67,6 @@ Future<void> scheduleDailyTask() async {
       allowWhileIdle: true,
       rescheduleOnReboot: true,
       alarmClock: true);
-  await AndroidAlarmManager.periodic(
-    const Duration(days: 1), 1, scheduleTaskCallback,
-    startAt: nextMidnight,
-    exact: true,
-    wakeup: true,
-    // Ensures execution even if the device is asleep
-    allowWhileIdle: true,
-    rescheduleOnReboot: true,
-  );
   logger.i("Scheduled daily task");
 }
 
