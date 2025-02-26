@@ -88,9 +88,7 @@ jobs:
 
       - name: Build release APK
         run: flutter build apk --release --dart-define=GEONAMES_API_USER=humanbot000
-
       - name: Create GitHub release
-        if: success() && steps.version-check.outputs.PREVIOUS_VERSION != steps.version-check.outputs.NEW_VERSION
         uses: softprops/action-gh-release@v2
         with:
           tag_name: "v${{ steps.version-check.outputs.NEW_VERSION }}"
