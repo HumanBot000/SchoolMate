@@ -69,10 +69,6 @@ jobs:
           else
             echo "org.gradle.java.home=$JAVA_HOME" > android/gradle.properties
           fi
-
-      - name: Install dependencies
-        run: flutter pub get
-
       - name: Run Dart fix and format
         run: |
           flutter pub get
@@ -82,16 +78,17 @@ jobs:
       - name: Generate changelog
         id: changelog
         run: |
-          # Generate a list of commits since the last tag
           COMMITS=$(git log ${{ steps.version-check.outputs.PREVIOUS_VERSION }}..HEAD --pretty=format:'- %s')
+          echo "Release Notes:" > release_notes.txt
+          echo "$COMMITS" >> release_notes.txt
           echo "COMMITS=$COMMITS" >> $GITHUB_ENV
 
-      - name: Build release APK
-        run: flutter build apk --release --dart-define=GEONAMES_API_USER=humanbot000
       - name: Create GitHub release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: "v${{ steps.version-check.outputs.NEW_VERSION }}"
           files: build/app/outputs/flutter-apk/app-release.apk
+          release_notes: ${{ steps.changelog.outputs.COMMITS }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
