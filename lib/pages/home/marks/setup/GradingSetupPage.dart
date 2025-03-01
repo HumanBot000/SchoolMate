@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:school_mate/Classes/marks/ExamType.dart';
 import 'package:school_mate/Classes/marks/GradingSystem.dart';
+import 'package:school_mate/main.dart';
 import 'package:school_mate/pages/home/marks/setup/ExamTypeSelector.dart';
-
-import '../../../../main.dart';
 
 class GradingSetupPage extends StatefulWidget {
   final GradingSystem? selectedGradingSystem;
@@ -27,25 +26,9 @@ class _GradingSetupPageState extends State<GradingSetupPage> {
         range: ["1", "6"], modifiers: ["+"], examTypes: [ExamType.basic()]);
     _selectedEvaluationMethod = widget
         .selectedGradingSystem?.examTypes[0].evaluationData.evaluationMethod;
-    _examTypes = widget.selectedGradingSystem?.examTypes ?? [];
-
-    logger.d(_selectedGradingSystem!.examTypes.length);
-    if (_selectedGradingSystem != null) {
-      _examTypeTextControllers = List.generate(
-        _examTypes.length,
-        (index) => [
-          TextEditingController(text: _examTypes[index].name),
-          TextEditingController(
-              text: _examTypes[index].evaluationData.evaluationMethod ==
-                      EvaluationMethod.multiplication
-                  ? _examTypes[index]
-                      .evaluationData
-                      .multiplicationFactor
-                      .toString()
-                  : _examTypes[index].evaluationData.percentage.toString())
-        ],
-      );
-    }
+    _examTypes = widget.selectedGradingSystem?.examTypes ??
+        _selectedGradingSystem!.examTypes;
+    _onExamTypeChanges(_examTypes);
   }
 
   @override
@@ -61,44 +44,73 @@ class _GradingSetupPageState extends State<GradingSetupPage> {
 
   Future<void> _onEvaluationMethodChange(
       EvaluationMethod? evaluationMethod) async {
+    List<ExamType> newExamTypes;
+    if (evaluationMethod == EvaluationMethod.percentage) {
+      newExamTypes = [ExamType.basic()];
+    } else {
+      newExamTypes = [ExamType.basicAsMultiplicationSystem()];
+      logger.d(newExamTypes[0].evaluationData.multiplicationFactor);
+    }
     setState(() {
       _selectedEvaluationMethod = evaluationMethod;
+      _examTypes = newExamTypes;
     });
+    await _onExamTypeChanges(newExamTypes);
   }
 
   Future<void> _onExamTypeChanges(List<ExamType> examTypes) async {
     setState(() {
       _examTypes = examTypes;
-
-      // Ensure controllers exist for each exam type
-      for (int i = 0; i < _examTypes.length; i++) {
-        if (i >= _examTypeTextControllers.length) {
-          // If new exam types are added, create new controllers
-          _examTypeTextControllers.add([
-            TextEditingController(text: _examTypes[i].name),
-            TextEditingController(
-                text: _examTypes[i].evaluationData.evaluationMethod ==
-                        EvaluationMethod.multiplication
-                    ? _examTypes[i]
-                        .evaluationData
-                        .multiplicationFactor
-                        .toString()
-                    : _examTypes[i].evaluationData.percentage.toString())
-          ]);
-        } else {
-          // Update existing controllers to avoid losing focus
-          _examTypeTextControllers[i][0].text = _examTypes[i].name;
-          _examTypeTextControllers[i][1].text =
-              _examTypes[i].evaluationData.evaluationMethod ==
+      if (_examTypes.isNotEmpty) {
+        if (examTypes[0].evaluationData.percentage != null) {
+          for (int i = 0; i < _examTypes.length; i++) {
+            if (i >= _examTypeTextControllers.length) {
+              // If new exam types are added, create new controllers
+              _examTypeTextControllers.add([
+                TextEditingController(text: _examTypes[i].name),
+                TextEditingController(
+                    text: _examTypes[i].evaluationData.evaluationMethod ==
+                            EvaluationMethod.multiplication
+                        ? _examTypes[i]
+                            .evaluationData
+                            .multiplicationFactor
+                            .toString()
+                        : _examTypes[i].evaluationData.percentage.toString())
+              ]);
+            } else {
+              // Update existing controllers to avoid losing focus
+              _examTypeTextControllers[i][0].text = _examTypes[i].name;
+              _examTypeTextControllers[i][1].text = _examTypes[i]
+                          .evaluationData
+                          .evaluationMethod ==
                       EvaluationMethod.multiplication
                   ? _examTypes[i].evaluationData.multiplicationFactor.toString()
                   : _examTypes[i].evaluationData.percentage.toString();
-        }
-      }
+            }
+          }
 
-      // Remove excess controllers if exam types are reduced
-      while (_examTypeTextControllers.length > _examTypes.length) {
-        _examTypeTextControllers.removeLast();
+          // Remove excess controllers if exam types are reduced
+          while (_examTypeTextControllers.length > _examTypes.length) {
+            _examTypeTextControllers.removeLast();
+          }
+        } else if (examTypes[0].evaluationData.multiplicationFactor != null) {
+          for (int i = 0; i < _examTypes.length; i++) {
+            if (i >= _examTypeTextControllers.length) {
+              _examTypeTextControllers.add([
+                TextEditingController(text: _examTypes[i].name),
+                TextEditingController(
+                    text: _examTypes[i]
+                        .evaluationData
+                        .multiplicationFactor
+                        .toString())
+              ]);
+            } else {
+              _examTypeTextControllers[i][0].text = _examTypes[i].name;
+              _examTypeTextControllers[i][1].text =
+                  _examTypes[i].evaluationData.multiplicationFactor.toString();
+            }
+          }
+        }
       }
     });
   }

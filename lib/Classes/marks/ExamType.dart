@@ -21,10 +21,13 @@ class EvaluationData {
   factory EvaluationData.basic() => EvaluationData(
       evaluationMethod: EvaluationMethod.percentage, percentage: 100);
 
-  factory EvaluationData.xTimesAs(ExamType base, int factor) => EvaluationData(
-      evaluationMethod: EvaluationMethod.multiplication,
-      multiplicationChildType: base,
-      multiplicationFactor: factor);
+  factory EvaluationData.xTimesAs(int factor, {ExamType? base}) {
+    // base = null ==> The default Test, from which all others arrive from
+    return EvaluationData(
+        evaluationMethod: EvaluationMethod.multiplication,
+        multiplicationChildType: base,
+        multiplicationFactor: factor);
+  }
 
   factory EvaluationData.totalShare() => EvaluationData(
       evaluationMethod: EvaluationMethod.percentage, percentage: 100);
@@ -33,14 +36,19 @@ class EvaluationData {
 class ExamType {
   String name;
   final int? id;
-  EvaluationData evaluationData = EvaluationData.basic();
+  EvaluationData evaluationData;
 
   ExamType({
     required this.name,
     this.id,
     EvaluationData? evaluationData,
-  });
+  }) : evaluationData = evaluationData ?? EvaluationData.basic();
 
   factory ExamType.basic() =>
       ExamType(name: "Tests", evaluationData: EvaluationData.basic());
+
+  factory ExamType.basicAsMultiplicationSystem() {
+    var eval = EvaluationData.xTimesAs(1);
+    return ExamType(name: "Tests", evaluationData: eval);
+  }
 }

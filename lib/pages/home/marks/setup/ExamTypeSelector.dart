@@ -171,27 +171,95 @@ class _ExamTypeSelectorState extends State<ExamTypeSelector> {
             ),
           ),
         ],
-        if (widget.examTypes.isNotEmpty)
+        if (widget.selectedEvaluationMethod == EvaluationMethod.percentage)
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: _overallPercentageProgressBar(),
+          ),
+        if (widget.examTypes.isNotEmpty &&
+            widget.selectedEvaluationMethod == EvaluationMethod.percentage)
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: _buildPercentageExamTypeCards(widget.examTypes),
+          ),
+        if (widget.examTypes.isNotEmpty &&
+            widget.selectedEvaluationMethod == EvaluationMethod.multiplication)
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: _buildMultiplicationExamTypeCards(widget.examTypes),
           ),
         if (widget.selectedEvaluationMethod != null)
           IconGradientButton(
             onPressed: () async {
               List<ExamType> newExamTypes = widget.examTypes;
-              newExamTypes.add(ExamType.basic());
+              if (widget.selectedEvaluationMethod ==
+                  EvaluationMethod.multiplication) {
+                newExamTypes.add(ExamType.basicAsMultiplicationSystem());
+              } else if (widget.selectedEvaluationMethod ==
+                  EvaluationMethod.percentage) {
+                newExamTypes.add(ExamType.basic());
+              }
               await widget.onExamTypeChanges(newExamTypes);
             },
             icon: const Icon(Icons.add),
             tooltip: "Add a new Exam Type",
-          )
+          ),
       ],
     );
   }
 
-  // Using a ListView.builder with shrinkWrap is acceptable here, since we set physics to never scroll.
-  Widget _buildPercentageExamTypeCards(List<ExamType> examTypes) =>
+  Widget _overallPercentageProgressBar() {
+    double value = widget.examTypes.fold<double>(
+        0, (sum, examType) => sum + (examType.evaluationData.percentage ?? 0));
+    bool isComplete = value == 100;
+
+    return Column(
+      children: [
+        const SizedBox(height: 8),
+        Stack(
+          alignment: Alignment.center,
+          children: [
+            SizedBox(
+              height: 80,
+              width: 80,
+              child: CircularProgressIndicator(
+                strokeWidth: 6,
+                value: value / 100,
+                backgroundColor: Colors.grey[300],
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  isComplete ? Colors.green : Colors.redAccent,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              //todo not working because of stack
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  "${value.toStringAsFixed(1)}%",
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 10),
+        Text(
+          isComplete
+              ? "Perfect! You're good to go!"
+              : "Keep adjusting until the total is 100%",
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+            color: isComplete ? Colors.green : Colors.redAccent,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMultiplicationExamTypeCards(List<ExamType> examTypes) =>
       ListView.builder(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
@@ -202,13 +270,15 @@ class _ExamTypeSelectorState extends State<ExamTypeSelector> {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16.0)),
             elevation: 4.0,
-            shadowColor: Colors.blueAccent.withValues(alpha: 0.5),
+            shadowColor: Colors.blueAccent.withOpacity(0.5),
+            // Fixed the incorrect method
             child: Padding(
-              padding: const EdgeInsets.all(12.0),
+              padding: const EdgeInsets.all(16.0), // Increased padding
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  /// **Exam Type Name Input**
                   TextField(
                     controller:
                         widget.evaluationMethodNameTextControllers[index][0],
@@ -232,81 +302,124 @@ class _ExamTypeSelectorState extends State<ExamTypeSelector> {
                       await widget.onExamTypeChanges(newExamTypes);
                     },
                     decoration: const InputDecoration(
+                      labelText: "Exam Type Name",
                       prefixIcon:
                           Icon(Icons.text_snippet, color: Colors.blueAccent),
+                      border: OutlineInputBorder(),
                     ),
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  /// **Factor Explanation**
+                  const Text(
+                    "The exams with this type are worth:",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
                   ),
                   const SizedBox(height: 8),
-                  const FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text(
-                      "These exams will contribute to your final grade, accounting for",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
-                    ),
-                  ),
-                  TextField(
-                    controller:
-                        widget.evaluationMethodNameTextControllers[index][1],
-                    onEditingComplete: () {
-                      String value = widget
-                          .evaluationMethodNameTextControllers[index][1].text
-                          .trim();
-                      double? parsedValue = double.tryParse(value);
-                      if (parsedValue == null) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: const Text("Percentage must be a number"),
-                            backgroundColor:
-                                Theme.of(context).colorScheme.error,
-                          ),
-                        );
-                        return;
-                      }
-                      if (parsedValue < 0 || parsedValue > 100) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content:
-                                const Text("Percentage must be > 0 and < 100"),
-                            backgroundColor:
-                                Theme.of(context).colorScheme.error,
-                          ),
-                        );
-                        return;
-                      }
 
+                  /// **Factor Input + Dropdown (Stacked instead of crammed)**
+                  Row(
+                    children: [
+                      /// **Factor Input Field**
+                      Expanded(
+                        child: TextField(
+                          controller: widget
+                              .evaluationMethodNameTextControllers[index][1],
+                          onEditingComplete: () {
+                            String value = widget
+                                .evaluationMethodNameTextControllers[index][1]
+                                .text
+                                .trim();
+                            int? parsedValue = int.tryParse(value);
+                            if (parsedValue == null || parsedValue <= 0) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: const Text(
+                                      "Factor must be a positive integer"),
+                                  backgroundColor:
+                                      Theme.of(context).colorScheme.error,
+                                ),
+                              );
+                              return;
+                            }
+                            List<ExamType> newExamTypes =
+                                List.from(widget.examTypes);
+                            newExamTypes[index]
+                                .evaluationData
+                                .multiplicationFactor = parsedValue;
+                            widget.onExamTypeChanges(newExamTypes);
+                          },
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            labelText: "Factor",
+                            border: const OutlineInputBorder(),
+                            suffixText: "times as",
+                            errorText: int.tryParse(widget
+                                            .evaluationMethodNameTextControllers[
+                                                index][1]
+                                            .text) ==
+                                        null ||
+                                    int.parse(widget
+                                            .evaluationMethodNameTextControllers[
+                                                index][1]
+                                            .text) <
+                                        0
+                                ? "Enter a valid non-negative full number"
+                                : null,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 16), // Added spacing
+                    ],
+                  ),
+
+                  const SizedBox(height: 12),
+
+                  /// **Dropdown (Now on a separate line)**
+                  DropdownButtonFormField<ExamType?>(
+                    decoration: const InputDecoration(
+                      labelText: "Base Exam Type",
+                      border: OutlineInputBorder(),
+                    ),
+                    value: widget.examTypes[index].evaluationData
+                        .multiplicationChildType,
+                    onSaved: (value) {
                       List<ExamType> newExamTypes = List.from(widget.examTypes);
-                      newExamTypes[index].evaluationData.percentage =
-                          parsedValue;
+                      newExamTypes[index]
+                          .evaluationData
+                          .multiplicationChildType = value;
                       widget.onExamTypeChanges(newExamTypes);
                     },
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      suffix: Text(
-                        "%",
-                        style: Theme.of(context).textTheme.bodyLarge,
-                      ),
-                      errorText: double.tryParse(widget
-                                      .evaluationMethodNameTextControllers[
-                                          index][1]
-                                      .text) ==
-                                  null ||
-                              double.parse(widget
-                                      .evaluationMethodNameTextControllers[
-                                          index][1]
-                                      .text) <
-                                  0
-                          ? "Enter a valid non-negative number"
-                          : null,
-                    ),
+                    items: List.generate(widget.examTypes.length, (int i) {
+                      if (i != index) {
+                        return DropdownMenuItem(
+                          value: widget.examTypes[i],
+                          child: Text(widget.examTypes[i].name),
+                        );
+                      }
+                      return const DropdownMenuItem(
+                        value: null,
+                        child: Text("This is the base exam type"),
+                      );
+                    }),
+                    onChanged: (value) {},
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.delete, color: Colors.redAccent),
-                    onPressed: () async {
-                      List<ExamType> newExamTypes = widget.examTypes;
-                      newExamTypes.removeAt(index);
-                      await widget.onExamTypeChanges(newExamTypes);
-                    },
+
+                  const SizedBox(height: 16),
+
+                  /// **Delete Button (Centered)**
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: IconButton(
+                      icon: const Icon(Icons.delete, color: Colors.redAccent),
+                      onPressed: () async {
+                        List<ExamType> newExamTypes =
+                            List.from(widget.examTypes);
+                        newExamTypes.removeAt(index);
+                        await widget.onExamTypeChanges(newExamTypes);
+                      },
+                    ),
                   ),
                 ],
               ),
@@ -314,4 +427,124 @@ class _ExamTypeSelectorState extends State<ExamTypeSelector> {
           ),
         ),
       );
+
+  // Using a ListView.builder with shrinkWrap is acceptable here, since we set physics to never scroll.
+  Widget _buildPercentageExamTypeCards(List<ExamType> examTypes) {
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: examTypes.length,
+      itemBuilder: (context, index) => Container(
+        margin: const EdgeInsets.all(8.0),
+        child: Card(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
+          elevation: 4.0,
+          shadowColor: Colors.blueAccent.withValues(alpha: 0.5),
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: widget.evaluationMethodNameTextControllers[index]
+                      [0],
+                  onEditingComplete: () async {
+                    String value = widget
+                        .evaluationMethodNameTextControllers[index][0].text
+                        .trim();
+                    if (value.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: const Text("Exam type name cannot be empty"),
+                          backgroundColor: Theme.of(context).colorScheme.error,
+                        ),
+                      );
+                      return;
+                    }
+                    List<ExamType> newExamTypes = List.from(widget.examTypes);
+                    newExamTypes[index].name = value;
+                    await widget.onExamTypeChanges(newExamTypes);
+                  },
+                  decoration: const InputDecoration(
+                    prefixIcon:
+                        Icon(Icons.text_snippet, color: Colors.blueAccent),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                const FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    "These exams will contribute to your final grade, accounting for",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
+                  ),
+                ),
+                TextField(
+                  controller: widget.evaluationMethodNameTextControllers[index]
+                      [1],
+                  onEditingComplete: () {
+                    String value = widget
+                        .evaluationMethodNameTextControllers[index][1].text
+                        .trim();
+                    double? parsedValue = double.tryParse(value);
+                    if (parsedValue == null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: const Text("Percentage must be a number"),
+                          backgroundColor: Theme.of(context).colorScheme.error,
+                        ),
+                      );
+                      return;
+                    }
+                    if (parsedValue < 0 || parsedValue > 100) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content:
+                              const Text("Percentage must be > 0 and < 100"),
+                          backgroundColor: Theme.of(context).colorScheme.error,
+                        ),
+                      );
+                      return;
+                    }
+
+                    List<ExamType> newExamTypes = List.from(widget.examTypes);
+                    newExamTypes[index].evaluationData.percentage = parsedValue;
+                    widget.onExamTypeChanges(newExamTypes);
+                  },
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    suffix: Text(
+                      "%",
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                    errorText: double.tryParse(widget
+                                    .evaluationMethodNameTextControllers[index]
+                                        [1]
+                                    .text) ==
+                                null ||
+                            double.parse(widget
+                                    .evaluationMethodNameTextControllers[index]
+                                        [1]
+                                    .text) <
+                                0
+                        ? "Enter a valid non-negative number"
+                        : null,
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.delete, color: Colors.redAccent),
+                  onPressed: () async {
+                    List<ExamType> newExamTypes = widget.examTypes;
+                    newExamTypes.removeAt(index);
+                    await widget.onExamTypeChanges(newExamTypes);
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }
