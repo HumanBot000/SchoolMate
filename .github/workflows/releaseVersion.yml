@@ -31,7 +31,7 @@ jobs:
           echo "Previous version: $PREVIOUS_VERSION"
           
           # Check if the version has increased (including build number changes)
-          if [ "$NEW_VERSION" == "$PREVIOUS_VERSION" ]; then
+          if [ "v$NEW_VERSION" == "$PREVIOUS_VERSION" ]; then
             echo "No new version detected."
             exit 0
           else
