@@ -18,14 +18,15 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-
+        with:
+          fetch-depth: 0  # Fetch all history and tags
       - name: Check if version is increased
         id: version-check
         run: |
           # Fetch current version from pubspec.yaml
           NEW_VERSION=$(sed -n 's/^version:[[:space:]]*\(.*\)/\1/p' pubspec.yaml)
           # Fetch the previous version (you can store it in a file or use Git tags)
-          PREVIOUS_VERSION=$(git describe --tags --abbrev=0 || echo "none")
+          PREVIOUS_VERSION=$(git describe --tags --abbrev=0 || echo "")
           echo "New version: $NEW_VERSION"
           echo "Previous version: $PREVIOUS_VERSION"
           
