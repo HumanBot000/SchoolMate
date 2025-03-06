@@ -1,3 +1,5 @@
+import 'dart:math';
+
 enum EvaluationMethod { percentage, multiplication }
 
 /// There are 2 types of Evaluation Data.
@@ -18,6 +20,24 @@ class EvaluationData {
     this.percentage,
   });
 
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is EvaluationData &&
+        other.evaluationMethod == evaluationMethod &&
+        other.multiplicationChildType == multiplicationChildType &&
+        other.multiplicationFactor == multiplicationFactor &&
+        other.percentage == percentage;
+  }
+
+  @override
+  int get hashCode => Object.hash(
+        evaluationMethod,
+        multiplicationChildType,
+        multiplicationFactor,
+        percentage,
+      );
+
   factory EvaluationData.basic() => EvaluationData(
       evaluationMethod: EvaluationMethod.percentage, percentage: 100);
 
@@ -35,14 +55,31 @@ class EvaluationData {
 
 class ExamType {
   String name;
-  final int? id;
   EvaluationData evaluationData;
+  final int _uniqueId; // Random unique identifier per instance
 
   ExamType({
     required this.name,
-    this.id,
     EvaluationData? evaluationData,
-  }) : evaluationData = evaluationData ?? EvaluationData.basic();
+  })  : evaluationData = evaluationData ?? EvaluationData.basic(),
+        _uniqueId = Random().nextInt(1 << 32); // Generates a random integer
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is ExamType &&
+        other.name == name &&
+        other.evaluationData == evaluationData &&
+        other._uniqueId == _uniqueId;
+  }
+
+  @override
+  String toString() {
+    return "ExamType ${hashCode} with name:$name and multiplicationChildType: ${evaluationData.multiplicationChildType.hashCode} and multiplicationFactor: ${evaluationData.multiplicationFactor}";
+  }
+
+  @override
+  int get hashCode => Object.hash(name, _uniqueId); // Ensures unique hashCode
 
   factory ExamType.basic() =>
       ExamType(name: "Tests", evaluationData: EvaluationData.basic());

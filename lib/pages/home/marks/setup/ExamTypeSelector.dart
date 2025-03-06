@@ -259,6 +259,7 @@ class _ExamTypeSelectorState extends State<ExamTypeSelector> {
     );
   }
 
+  //todo we got problems with text field not closing on finish
   Widget _buildMultiplicationExamTypeCards(List<ExamType> examTypes) =>
       ListView.builder(
         shrinkWrap: true,
@@ -326,11 +327,7 @@ class _ExamTypeSelectorState extends State<ExamTypeSelector> {
                         child: TextField(
                           controller: widget
                               .evaluationMethodNameTextControllers[index][1],
-                          onEditingComplete: () {
-                            String value = widget
-                                .evaluationMethodNameTextControllers[index][1]
-                                .text
-                                .trim();
+                          onChanged: (value) {
                             int? parsedValue = int.tryParse(value);
                             if (parsedValue == null || parsedValue <= 0) {
                               ScaffoldMessenger.of(context).showSnackBar(
@@ -384,13 +381,6 @@ class _ExamTypeSelectorState extends State<ExamTypeSelector> {
                     ),
                     value: widget.examTypes[index].evaluationData
                         .multiplicationChildType,
-                    onSaved: (value) {
-                      List<ExamType> newExamTypes = List.from(widget.examTypes);
-                      newExamTypes[index]
-                          .evaluationData
-                          .multiplicationChildType = value;
-                      widget.onExamTypeChanges(newExamTypes);
-                    },
                     items: List.generate(widget.examTypes.length, (int i) {
                       if (i != index) {
                         return DropdownMenuItem(
@@ -403,7 +393,13 @@ class _ExamTypeSelectorState extends State<ExamTypeSelector> {
                         child: Text("This is the base exam type"),
                       );
                     }),
-                    onChanged: (value) {},
+                    onChanged: (value) async {
+                      List<ExamType> newExamTypes = List.from(widget.examTypes);
+                      newExamTypes[index]
+                          .evaluationData
+                          .multiplicationChildType = value;
+                      await widget.onExamTypeChanges(newExamTypes);
+                    },
                   ),
 
                   const SizedBox(height: 16),

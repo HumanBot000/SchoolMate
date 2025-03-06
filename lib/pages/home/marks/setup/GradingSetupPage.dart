@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:school_mate/API/supabase/grades/setGradingSystem.dart';
 import 'package:school_mate/Classes/marks/ExamType.dart';
 import 'package:school_mate/Classes/marks/GradingSystem.dart';
+import 'package:school_mate/Widgets/public/GradientButton.dart';
 import 'package:school_mate/main.dart';
 import 'package:school_mate/pages/home/marks/setup/ExamTypeSelector.dart';
 
@@ -49,7 +51,6 @@ class _GradingSetupPageState extends State<GradingSetupPage> {
       newExamTypes = [ExamType.basic()];
     } else {
       newExamTypes = [ExamType.basicAsMultiplicationSystem()];
-      logger.d(newExamTypes[0].evaluationData.multiplicationFactor);
     }
     setState(() {
       _selectedEvaluationMethod = evaluationMethod;
@@ -326,6 +327,151 @@ class _GradingSetupPageState extends State<GradingSetupPage> {
         examTypes: _examTypes,
         onExamTypeChanges: _onExamTypeChanges,
       ),
+      Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: ElevatedGradientButton(
+            onPressed: () async => await _onSave(),
+            borderRadius: BorderRadius.circular(12),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.save,
+                  color: Colors.white,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  "Save",
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      fontWeight: FontWeight.bold, color: Colors.white),
+                )
+              ],
+            )),
+      )
     ]);
+  }
+
+  Future<void> _onSave() async {
+    if (_selectedGradingSystem == null) {
+      WidgetsBinding.instance.addPostFrameCallback(
+          (_) => ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  backgroundColor: Theme.of(context).colorScheme.error,
+                  content: const Text(
+                      "Select an evaluation system with at least one exam type!"),
+                ),
+              ));
+
+      return;
+    }
+
+    GradingSystem builtGradingSystem = GradingSystem(
+        range: _selectedGradingSystem!.range,
+        modifiers: _selectedGradingSystem!.modifiers,
+        examTypes: _examTypes);
+
+    try {
+      builtGradingSystem.isValid();
+    } on ArgumentError catch (e) {
+      switch (e.message) {
+        case "Range must have exactly two values. (start, end)":
+          WidgetsBinding.instance.addPostFrameCallback(
+              (_) => ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      backgroundColor: Theme.of(context).colorScheme.error,
+                      content: const Text(
+                          "Please select an grading system from the dropdown"),
+                    ),
+                  ));
+        case "Grading system must have at least one exam type":
+          WidgetsBinding.instance.addPostFrameCallback(
+              (_) => ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      backgroundColor: Theme.of(context).colorScheme.error,
+                      content: const Text("Create at least one exam type!"),
+                    ),
+                  ));
+        case "All exam types must have the same evaluation method":
+          // This should not happen because it's impossible to do this via the UI, but a check is always worth it
+          WidgetsBinding.instance.addPostFrameCallback(
+              (_) => ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      backgroundColor: Theme.of(context).colorScheme.error,
+                      content: const Text(
+                          "All exam types must have the same evaluation method!"),
+                    ),
+                  ));
+        case "All percentage exam types must have a percentage":
+          WidgetsBinding.instance.addPostFrameCallback(
+              (_) => ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      backgroundColor: Theme.of(context).colorScheme.error,
+                      content: const Text(
+                          "Fill in a percentage for each percentage based exam type!"),
+                    ),
+                  ));
+
+        case "All exam types must have a name":
+          WidgetsBinding.instance.addPostFrameCallback(
+              (_) => ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      backgroundColor: Theme.of(context).colorScheme.error,
+                      content: const Text("Fill in a name for each exam type!"),
+                    ),
+                  ));
+        case "All multiplication exam types must have a multiplication factor":
+          WidgetsBinding.instance.addPostFrameCallback(
+              (_) => ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      backgroundColor: Theme.of(context).colorScheme.error,
+                      content: const Text(
+                          "Fill in a multiplication factor for each multiplication based exam type!"),
+                    ),
+                  ));
+
+        case "There must be only one default multiplication exam type":
+          WidgetsBinding.instance.addPostFrameCallback(
+              (_) => ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      backgroundColor: Theme.of(context).colorScheme.error,
+                      content: const Text(
+                          "There may only be one base multiplication exam type!"),
+                    ),
+                  ));
+
+        case "The sum of all multiplication factors must be 100":
+          WidgetsBinding.instance.addPostFrameCallback(
+              (_) => ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      backgroundColor: Theme.of(context).colorScheme.error,
+                      content: const Text(
+                          "The sum of all multiplication factors must be 100!"),
+                    ),
+                  ));
+        case "Multiplication factor must be greater than zero":
+          WidgetsBinding.instance.addPostFrameCallback(
+              (_) => ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      backgroundColor: Theme.of(context).colorScheme.error,
+                      content: const Text(
+                          "The multiplication factor for every exam type must be greater than zero!"),
+                    ),
+                  ));
+        case "Multiplication exam types must not form a circle":
+          WidgetsBinding.instance.addPostFrameCallback(
+              (_) => ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      backgroundColor: Theme.of(context).colorScheme.error,
+                      content: const Text(
+                          "Make sure that a chain of multiplication based exam types doesn't result in a circular pattern!"),
+                    ),
+                  ));
+        default:
+          logger.e(e);
+          rethrow;
+      }
+      return;
+    }
+    await setGradingSystem(builtGradingSystem);
   }
 }

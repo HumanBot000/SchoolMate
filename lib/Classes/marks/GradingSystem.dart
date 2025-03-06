@@ -20,70 +20,150 @@ class GradingSystem {
   }
 
   @override
-  int get hashCode =>
-      Object.hash(
+  int get hashCode => Object.hash(
         range.length,
         modifiers.length,
         range.join(','),
         modifiers.join(','),
       );
 
-  /// Checks if the GradingSystem is valid, but doesn't check if all exam types have an ID
+  /// Uses Cycle Detection in a Directed Graph to check if the multiplication exam types form a circular pattern
+  /// What we consider a circular pattern: (A → B → C → A)
+  bool multiplicationExamTypesCircularPatternCheck() {
+    if (examTypes.isEmpty ||
+        examTypes[0].evaluationData.evaluationMethod !=
+            EvaluationMethod.multiplication) {
+      return false;
+    }
+    List<ExamType> valid = [];
+    for (var element in examTypes) {
+      if (element.evaluationData.multiplicationChildType == null) {
+        // is base type
+        valid.add(element);
+        continue;
+      }
+
+      List<ExamType> visited = [];
+      ExamType destination = element.evaluationData.multiplicationChildType!;
+      while (destination.evaluationData.multiplicationChildType != null) {
+        if (valid.contains(destination)) {
+          // if we already know this path is valid we don't need to check further
+          for (var element in visited) {
+            valid.add(element);
+          }
+          break;
+        }
+        if (visited.contains(destination)) {
+          // we already visited this exam type -> circular pattern
+          return true;
+        }
+        visited.add(destination);
+        destination = destination.evaluationData.multiplicationChildType!;
+      }
+
+      for (var element in visited) {
+        valid.add(element);
+      }
+    }
+
+    return false;
+  }
+
+  /// Ensures exam types are inserted in the correct order.
+  /// Prevents referencing non-existent types using an iterative topological sort.
+  // might not be the fastest algorithm, but we don't expect >10 ExamTypes
+  List<ExamType> sortExamTypesForDatabaseInsertion() {
+    if (examTypes.isEmpty ||
+        examTypes[0].evaluationData.evaluationMethod !=
+            EvaluationMethod.multiplication) {
+      return examTypes;
+    }
+
+    List<ExamType> sortedList = [];
+    Set<ExamType> seen = {};
+
+    while (sortedList.length != examTypes.length) {
+      bool progressMade = false;
+
+      for (var element in examTypes) {
+        if ((element.evaluationData.multiplicationChildType == null ||
+                sortedList.contains(
+                    element.evaluationData.multiplicationChildType)) &&
+            !seen.contains(element)) {
+          sortedList.add(element);
+          seen.add(element);
+          progressMade = true;
+        }
+      }
+
+      if (!progressMade) {
+        // check this before! This is only a fallback so the function doesn't run with O(∞) runtime
+        throw Exception("Cyclic dependency detected in exam types!");
+      }
+    }
+
+    return sortedList;
+  }
+
+  /// Checks if the GradingSystem is valid
   void isValid() {
     if (range.length != 2) {
       throw ArgumentError("Range must have exactly two values. (start, end)");
     }
     if (examTypes.isEmpty) {
-      throw ArgumentError("Grading system must have at least one exam type.");
+      throw ArgumentError("Grading system must have at least one exam type");
     }
+    // don't check if range is ordered because of non-numeric values
 
     bool hasSeenDefaultExamType = false;
     var lastExamEvaluationMethod = examTypes[0].evaluationData.evaluationMethod;
-    int sum = 0;
-    for (int i = 1; i < examTypes.length; i++) {
+    double sum = 0;
+    for (int i = 0; i < examTypes.length; i++) {
       if (lastExamEvaluationMethod !=
           examTypes[i].evaluationData.evaluationMethod) {
         throw ArgumentError(
-            "All exam types must have the same evaluation method.");
+            "All exam types must have the same evaluation method");
       }
 
+      if (examTypes[i].name.isEmpty) {
+        throw ArgumentError("All exam types must have a name");
+      }
       if (lastExamEvaluationMethod == EvaluationMethod.percentage &&
           examTypes[i].evaluationData.percentage == null) {
-        throw ArgumentError(
-            "All percentage exam types must have a percentage.");
+        throw ArgumentError("All percentage exam types must have a percentage");
       }
 
       if (lastExamEvaluationMethod == EvaluationMethod.multiplication &&
           examTypes[i].evaluationData.multiplicationFactor == null) {
         throw ArgumentError(
-            "All multiplication exam types must have a multiplication factor.");
+            "All multiplication exam types must have a multiplication factor");
       }
 
       if (lastExamEvaluationMethod == EvaluationMethod.multiplication &&
-          examTypes[i].evaluationData.multiplicationChildTyp == null) {
+          examTypes[i].evaluationData.multiplicationChildType == null) {
         if (hasSeenDefaultExamType) {
           throw ArgumentError(
-              "There must be only one default multiplication exam type.");
+              "There must be only one default multiplication exam type");
         } else {
           hasSeenDefaultExamType = true;
         }
       }
 
-      if (lastExamEvaluationMethod == EvaluationMethod.multiplication) {
-        sum += examTypes[i].evaluationData.multiplicationFactor!;
+      if (lastExamEvaluationMethod == EvaluationMethod.multiplication &&
+          (examTypes[i].evaluationData.multiplicationFactor ?? 0) <= 0) {
+        throw ArgumentError("Multiplication factor must be greater than zero");
+      }
+
+      if (lastExamEvaluationMethod == EvaluationMethod.percentage) {
+        sum += examTypes[i].evaluationData.percentage!;
       }
     }
 
-
-    if (lastExamEvaluationMethod == EvaluationMethod.multiplication &&
-        !hasSeenDefaultExamType) {
-      throw ArgumentError(
-          "There must be only one default multiplication exam type.");
+    if (lastExamEvaluationMethod == EvaluationMethod.percentage && sum != 100) {
+      throw ArgumentError("The sum of all percentages must be 100");
     }
-
-    if (lastExamEvaluationMethod == EvaluationMethod.multiplication &&
-        sum != 100) {
-      throw ArgumentError(
-          "The sum of all multiplication factors must be 100.");
+    if (multiplicationExamTypesCircularPatternCheck()) {
+      throw ArgumentError("Multiplication exam types must not form a circle");
     }
   }
+}
