@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:school_mate/API/supabase/grades/setGradingSystem.dart';
+import 'package:school_mate/API/supabase/grades/gradingSystem.dart';
 import 'package:school_mate/Classes/marks/ExamType.dart';
 import 'package:school_mate/Classes/marks/GradingSystem.dart';
 import 'package:school_mate/Widgets/public/GradientButton.dart';

@@ -166,4 +166,37 @@ class GradingSystem {
       throw ArgumentError("Multiplication exam types must not form a circle");
     }
   }
+
+  factory GradingSystem.fromJson(Map<String, dynamic> gradingSystemJson,
+      List<Map<String, dynamic>> examTypeJson) {
+    List<ExamType> examTypes = [];
+
+    Map<int, ExamType> multiplicationChildTypeCrossReferenceLookupTable = {};
+    for (var element in examTypeJson) {
+      ExamType examType = ExamType(
+          name: element["name"],
+          evaluationData: EvaluationData(
+              evaluationMethod: EvaluationMethod.values.firstWhere(
+                  (evaluationMethod) =>
+                      evaluationMethod.name ==
+                      gradingSystemJson["evaluation_method"]),
+              multiplicationFactor: element["multiplication_factor"],
+              percentage: element["percentage"],
+              multiplicationChildType: element["multiplication_base"] == null
+                  ? null
+                  : multiplicationChildTypeCrossReferenceLookupTable[
+                      element["multiplication_base"]]));
+
+      multiplicationChildTypeCrossReferenceLookupTable[element["id"]] =
+          examType;
+      examTypes.add(examType);
+    }
+
+    return GradingSystem(
+      range: [gradingSystemJson["best_mark"], gradingSystemJson["worst_mark"]]
+          .cast<String>(),
+      modifiers: gradingSystemJson["modifiers"].cast<String>(),
+      examTypes: examTypes,
+    );
+  }
 }
