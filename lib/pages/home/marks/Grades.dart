@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:school_mate/API/supabase/grades/gradingSystem.dart';
-import 'package:school_mate/Classes/marks/ExamType.dart';
-import 'package:school_mate/Classes/marks/GradingSystem.dart';
+import 'package:school_mate/main.dart';
 import 'package:school_mate/pages/home/Widgets/BottomNavBar.dart';
+import 'package:school_mate/pages/home/marks/overview/MarksOverviewPage.dart';
 import 'package:school_mate/pages/home/marks/setup/GradingSetupPage.dart';
 
-import '../../../main.dart';
+import '../../../API/supabase/grades/gradingSystem.dart';
 
 class MarksPage extends StatefulWidget {
   const MarksPage({super.key});
@@ -18,14 +17,6 @@ class _MarksPageState extends State<MarksPage> {
   @override
   void initState() {
     super.initState();
-    test();
-  }
-
-  Future<void> test() async {
-    GradingSystem g = await fetchGradingSystem();
-    for (ExamType et in g.examTypes) {
-      logger.wtf(et.evaluationData.multiplicationChildType);
-    }
   }
 
   @override
@@ -36,7 +27,30 @@ class _MarksPageState extends State<MarksPage> {
         automaticallyImplyLeading: false,
       ),
       bottomNavigationBar: const HomeNavBar(currentIndex: 3),
-      body: const GradingSetupPage(),
+      body: FutureBuilder(
+          future: fetchGradingSystem(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              logger.e(snapshot.error);
+              return Center(
+                child: Text(
+                  'Error: ${snapshot.error}',
+                  style: const TextStyle(color: Colors.red),
+                ),
+              );
+            } else if (snapshot.hasData) {
+              if (snapshot.data is String && snapshot.data!.isEmpty) {
+                return const GradingSetupPage();
+              }
+              return MarksOverviewPage(gradingSystem: snapshot.data!);
+            } else {
+              return const Center(
+                child: Text('No data available.'),
+              );
+            }
+          }),
     );
   }
 }

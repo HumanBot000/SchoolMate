@@ -49,7 +49,6 @@ Future<GradingSystem> setGradingSystem(GradingSystem gradingSystem) async {
       })
       .select()
       .single();
-
   for (ExamType examType in orderedInsertionSequenceOfExamTypes) {
     final response = await supabaseClient.client
         .schema("grades")
@@ -91,14 +90,15 @@ Future<GradingSystem> setGradingSystem(GradingSystem gradingSystem) async {
       examTypes: orderedInsertionSequenceOfExamTypes);
 }
 
-Future<GradingSystem> fetchGradingSystem() async {
+Future<dynamic> fetchGradingSystem() async {
   final gradingSystemTableResponse = await supabaseClient.client
       .schema("grades")
       .from("grading_systems")
       .select()
-      .eq("user_id", await getUserID())
-      .single();
-
+      .eq("user_id", await getUserID());
+  if (gradingSystemTableResponse.isEmpty) {
+    return ""; // Can't return null because FutureBuilder thinks it didn't finish yet
+  }
   List<Map<String, dynamic>> examTypeTableResponses = await supabaseClient
       .client
       .schema('grades')
@@ -110,5 +110,5 @@ Future<GradingSystem> fetchGradingSystem() async {
       .order('id', ascending: true);
 
   return GradingSystem.fromJson(
-      gradingSystemTableResponse, examTypeTableResponses);
+      gradingSystemTableResponse.single, examTypeTableResponses);
 }

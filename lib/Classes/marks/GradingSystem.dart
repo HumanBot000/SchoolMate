@@ -181,7 +181,9 @@ class GradingSystem {
                       evaluationMethod.name ==
                       gradingSystemJson["evaluation_method"]),
               multiplicationFactor: element["multiplication_factor"],
-              percentage: element["percentage"],
+              percentage: element["percentage"] is int
+                  ? element["percentage"].toDouble()
+                  : double.tryParse(element["percentage"].toString()),
               multiplicationChildType: element["multiplication_base"] == null
                   ? null
                   : multiplicationChildTypeCrossReferenceLookupTable[
@@ -193,8 +195,14 @@ class GradingSystem {
     }
 
     return GradingSystem(
-      range: [gradingSystemJson["best_mark"], gradingSystemJson["worst_mark"]]
-          .cast<String>(),
+      range: [
+        gradingSystemJson["best_mark"] is int
+            ? gradingSystemJson["best_mark"].toDouble().toString()
+            : gradingSystemJson["best_mark"]!.toString(),
+        gradingSystemJson["worst_mark"] is int
+            ? gradingSystemJson["worst_mark"].toDouble().toString()
+            : gradingSystemJson["worst_mark"]!.toString(),
+      ],
       modifiers: gradingSystemJson["modifiers"].cast<String>(),
       examTypes: examTypes,
     );

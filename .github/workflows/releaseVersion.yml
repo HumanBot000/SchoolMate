@@ -26,7 +26,7 @@ jobs:
           # Fetch current version from pubspec.yaml
           NEW_VERSION=$(sed -n 's/^version:[[:space:]]*\(.*\)/\1/p' pubspec.yaml)
           # Fetch the previous version (you can store it in a file or use Git tags)
-          PREVIOUS_VERSION=$(git describe --tags --abbrev=0 || echo "")
+          PREVIOUS_VERSION=$(git describe --tags --abbrev=0")
           echo "New version: $NEW_VERSION"
           echo "Previous version: $PREVIOUS_VERSION"
           
