@@ -174,6 +174,7 @@ class GradingSystem {
     Map<int, ExamType> multiplicationChildTypeCrossReferenceLookupTable = {};
     for (var element in examTypeJson) {
       ExamType examType = ExamType(
+          id: element["id"],
           name: element["name"],
           evaluationData: EvaluationData(
               evaluationMethod: EvaluationMethod.values.firstWhere(

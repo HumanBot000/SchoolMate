@@ -56,10 +56,12 @@ class EvaluationData {
 class ExamType {
   String name;
   EvaluationData evaluationData;
+  int id;
   final int _uniqueId; // Random unique identifier per instance
 
   ExamType({
     required this.name,
+    required this.id,
     EvaluationData? evaluationData,
   })  : evaluationData = evaluationData ?? EvaluationData.basic(),
         _uniqueId = Random().nextInt(1 << 32); // Generates a random integer
@@ -75,17 +77,17 @@ class ExamType {
 
   @override
   String toString() {
-    return "ExamType ${hashCode} with name:$name and multiplicationChildType: ${evaluationData.multiplicationChildType.hashCode} and multiplicationFactor: ${evaluationData.multiplicationFactor}";
+    return "ExamType $hashCode with name:$name and multiplicationChildType: ${evaluationData.multiplicationChildType.hashCode} and multiplicationFactor: ${evaluationData.multiplicationFactor}";
   }
 
   @override
   int get hashCode => Object.hash(name, _uniqueId); // Ensures unique hashCode
 
   factory ExamType.basic() =>
-      ExamType(name: "Tests", evaluationData: EvaluationData.basic());
+      ExamType(name: "Tests", evaluationData: EvaluationData.basic(), id: -1);
 
   factory ExamType.basicAsMultiplicationSystem() {
     var eval = EvaluationData.xTimesAs(1);
-    return ExamType(name: "Tests", evaluationData: eval);
+    return ExamType(name: "Tests", evaluationData: eval, id: -1);
   }
 }

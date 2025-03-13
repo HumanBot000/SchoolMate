@@ -33,7 +33,7 @@ Future<GradingSystem> setGradingSystem(GradingSystem gradingSystem) async {
       .delete()
       .eq("user_id", await getUserID());
 
-  final system_table_response = await supabaseClient.client
+  final systemTableResponse = await supabaseClient.client
       .schema("grades")
       .from("grading_systems")
       .insert({
@@ -79,7 +79,7 @@ Future<GradingSystem> setGradingSystem(GradingSystem gradingSystem) async {
         .from("exam_type->grading_system")
         .insert({
       "user_id": await getUserID(),
-      "grading_system_id": system_table_response["id"],
+      "grading_system_id": systemTableResponse["id"],
       "exam_type_id": examTypeID
     });
   }

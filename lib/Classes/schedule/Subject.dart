@@ -17,6 +17,15 @@ class Subject {
       required this.color,
       this.id = -1});
 
+  @override
+  int get hashCode => id;
+
+  @override
+  bool operator ==(Object other) => other is Subject && other.id == id;
+
+  @override
+  String toString() => name;
+
   static Future<Subject> fromJson(Map<String, dynamic> json) async {
     // no factory because of async
     try {

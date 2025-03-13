@@ -1,9 +1,13 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:school_mate/API/supabase/grades/marks.dart';
 import 'package:school_mate/API/supabase/schedule/schedule.dart';
 import 'package:school_mate/Classes/marks/GradingSystem.dart';
+import 'package:school_mate/Classes/marks/Mark.dart';
 import 'package:school_mate/Classes/schedule/Subject.dart';
+import 'package:school_mate/Widgets/public/ShimmerEffectForSkeletonLoader.dart';
 import 'package:school_mate/pages/home/schedule/start.dart';
 
 class MarksOverviewPage extends StatefulWidget {
@@ -15,71 +19,126 @@ class MarksOverviewPage extends StatefulWidget {
   State<MarksOverviewPage> createState() => _MarksOverviewPageState();
 }
 
+List<Color> markColors = [
+  const Color(0xFF00C000),
+  const Color(0xFFBDBD00),
+  const Color(0xFFFFC000),
+  const Color(0xFFFF6400),
+  const Color(0xFFB00000),
+];
+
 class _MarksOverviewPageState extends State<MarksOverviewPage> {
-  List<Subject> subjects = [];
-  final Map<int, Map<String, dynamic>> _mockMarks = {};
+  List<Subject> _subjects = [];
+  Map<Subject, List<Mark>> _marks = {};
+  Map<Subject, double?> _averageMarks = {};
   final List<String> _studyTips = [
-    "Break your study sessions into 25-minute chunks with 5-minute breaks",
-    "Teach what you've learned to someone else - it reinforces your understanding",
-    "Create mind maps to visualize complex topics",
-    "Use the Pomodoro technique to maintain focus",
-    "Practice active recall by testing yourself regularly",
-    "Mix different subjects in a single study session for better retention",
-    "Get enough sleep - it's crucial for memory consolidation"
+    "Break study sessions into 25-minute chunks with 5-minute breaks ⏳",
+    "Teach concepts to a friend to reinforce your understanding 👩🏫",
+    "Create colorful mind maps for visual learning 🎨",
+    "Use the Pomodoro technique for focused productivity 🍅",
+    "Test yourself with flashcards for active recall 🗂️",
+    "Study in natural light to reduce eye strain and boost mood ☀️",
+    "Record voice notes of key ideas to listen while walking 🎧",
+    "Start with the hardest task when your energy is highest 💪",
+    "Organize notes with color-coded highlighters 🌈",
+    "Stretch every 30 minutes to improve circulation 🧘♂️",
+    "Keep a water bottle nearby to stay hydrated and focused 💧",
+    "Use website blockers to minimize digital distractions 🚫",
+    "Review notes for 15 minutes before bed for better retention 🌙",
+    "Create a lo-fi study playlist to maintain concentration 🎶",
+    "Practice past exams under timed conditions ⏱️",
+    "Use mnemonics like 'ROYGBIV' for memorization 🧠",
+    "Snack on brain foods like nuts and blueberries 🫐",
+    "Declutter your workspace for mental clarity 🧹",
+    "Reward yourself with a small treat after milestones 🎉",
+    "Schedule weekly goals and celebrate progress 📆",
   ];
 
   final List<String> _motivationalQuotes = [
-    "Success is the sum of small efforts, repeated day in and day out.",
-    "The expert in anything was once a beginner.",
-    "Don't watch the clock; do what it does. Keep going.",
-    "You don't have to be great to start, but you have to start to be great.",
-    "The beautiful thing about learning is that no one can take it away from you.",
-    "Believe you can and you're halfway there.",
-    "Your future is created by what you do today, not tomorrow."
+    "Progress over perfection 🌱",
+    "You don’t have to be great to start – just start 💫",
+    "Every page turned is a step closer to mastery 📖",
+    "Mistakes are proof you’re growing 🌻",
+    "Your pace is valid – comparison steals joy 🐢⚡",
+    "Resting is part of the journey, not quitting 💤",
+    "The expert was once a curious beginner 🔍",
+    "Small efforts compound into big results 🧱",
+    "Courage is quiet persistence, not loud perfection 🦁",
+    "You’ve survived 100% of your toughest days 💯",
+    "Learning is planting seeds for tomorrow’s forest 🌳",
+    "Your brain grows stronger with every challenge 💪🧠",
+    "The best time to start was yesterday. The next best time is now 🕒",
+    "You’re not failing – you’re discovering what works 🔄",
+    "Curiosity is the compass to wisdom 🧭",
+    "Your potential is an ocean – dive in 🌊",
+    "One chapter at a time writes the story 📝",
+    "Burnout isn’t a badge of honor – balance is key ⚖️",
+    "You’re building wings while learning to fly 🦅",
+    "Today’s effort is tomorrow’s foundation 🏗️",
   ];
-
-  int _currentTipIndex = 0;
-  int _currentQuoteIndex = 0;
+  int goal = 7;
   bool _isLoading = true;
+  bool _showSkeleton = false;
 
   @override
   void initState() {
     super.initState();
-    _startLoadingAnimation();
-    _loadSubjects().then((_) {
-      setState(() {
-        _isLoading = false;
-      });
+    _load();
+    Timer(const Duration(seconds: 3), () {
+      if (_isLoading) {
+        setState(() {
+          _showSkeleton = true;
+        });
+      }
     });
   }
 
-  void _startLoadingAnimation() {
-    Future.doWhile(() async {
-      await Future.delayed(const Duration(seconds: 5));
-      setState(() {
-        _currentTipIndex = (_currentTipIndex + 1) % _studyTips.length;
-        _currentQuoteIndex =
-            (_currentQuoteIndex + 1) % _motivationalQuotes.length;
-      });
-      return _isLoading;
+  Future<void> _loadData() async {
+    dynamic schedule = await fetchSchedule();
+    if (schedule is String && schedule.isEmpty) return;
+    Map<Subject, List<Mark>> marks =
+        await fetchMarksBySubjects(onlyConsiderated: true);
+    Map<Subject, double?> averageMarks = await calculateAverageMarksBySubjects(
+        schedule.subjects,
+        onlyConsiderated: true);
+    setState(() {
+      _subjects = schedule.subjects;
+      _marks = marks;
+      _averageMarks = averageMarks;
     });
   }
 
-  void _generateMockMarks() {
-    final Random rand = Random();
-    for (var subject in subjects) {
-      _mockMarks[subject.id] = {
-        'average': 4.0 + rand.nextDouble() * 6.0,
-        'recent': List.generate(3, (_) => 4.0 + rand.nextDouble() * 6.0),
-        'attendance': 0.7 + rand.nextDouble() * 0.3,
-      };
+  Future<void> _load() async {
+    await _loadData();
+    setState(() {
+      _isLoading = false;
+      _showSkeleton = false;
+    });
+  }
+
+  Color getGradeColor({
+    required int bestMark,
+    required int worstMark,
+    required double? valueMark,
+    required List<Color> colors,
+  }) {
+    if (valueMark == null || int.tryParse(valueMark.toString()) == 0) {
+      return Colors.grey;
     }
-  }
+    int markRange = worstMark - bestMark;
+    int colorSteps = colors.length - 1;
 
-  Color _getGradeColor(double grade) {
-    if (grade >= 8.5) return Colors.green.shade600;
-    if (grade >= 6.5) return Colors.orange.shade600;
-    return Colors.red.shade600;
+    if (markRange <= 0 || colors.isEmpty) {
+      throw ArgumentError("Invalid range or empty color list.");
+    }
+
+    // 0 = bestMark, 1 = worstMark
+    double normalizedValue = (valueMark - bestMark) / markRange;
+    normalizedValue = normalizedValue.clamp(0.0, 1.0);
+
+    int colorIndex = (normalizedValue * colorSteps).round();
+
+    return colors[colorIndex.clamp(0, colorSteps)];
   }
 
   Widget _buildLoadingContent() {
@@ -87,33 +146,29 @@ class _MarksOverviewPageState extends State<MarksOverviewPage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          AnimatedSwitcher(
-            duration: const Duration(seconds: 1),
-            child: Container(
-              key: ValueKey<int>(_currentTipIndex),
-              padding: const EdgeInsets.all(20),
-              margin: const EdgeInsets.symmetric(horizontal: 20),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Column(
-                children: [
-                  Text(
-                    'Study Tip',
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          color: Theme.of(context).colorScheme.primary,
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    _studyTips[_currentTipIndex],
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                ],
-              ),
+          Container(
+            padding: const EdgeInsets.all(20),
+            margin: const EdgeInsets.symmetric(horizontal: 20),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Column(
+              children: [
+                Text(
+                  'Study Tip',
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        color: Theme.of(context).colorScheme.primary,
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  _studyTips[Random().nextInt(_studyTips.length)],
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+              ],
             ),
           ),
           const SizedBox(height: 30),
@@ -132,7 +187,6 @@ class _MarksOverviewPageState extends State<MarksOverviewPage> {
               );
             },
             child: Container(
-              key: ValueKey<int>(_currentQuoteIndex),
               padding: const EdgeInsets.all(20),
               margin: const EdgeInsets.symmetric(horizontal: 20),
               decoration: BoxDecoration(
@@ -148,7 +202,8 @@ class _MarksOverviewPageState extends State<MarksOverviewPage> {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    _motivationalQuotes[_currentQuoteIndex],
+                    _motivationalQuotes[
+                        Random().nextInt(_motivationalQuotes.length)],
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodyLarge,
                   ),
@@ -165,11 +220,43 @@ class _MarksOverviewPageState extends State<MarksOverviewPage> {
     );
   }
 
+  LinearGradient createMarkGradient({
+    required int bestMark,
+    required int worstMark,
+    required double valueMark,
+    required List<Color> colors,
+  }) {
+    final double t =
+        ((valueMark - bestMark) / (worstMark - bestMark)).clamp(0.0, 1.0);
+
+    final int colorCount = colors.length;
+    final double segmentSize = 1.0 / (colorCount - 1);
+
+    int segmentIndex = (t / segmentSize).floor();
+    segmentIndex = segmentIndex.clamp(0, colorCount - 2);
+
+    final List<Color> gradientColors = [
+      colors[segmentIndex],
+      colors[segmentIndex + 1],
+    ];
+    final List<double> stops = [0.0, 1.0];
+
+    return LinearGradient(
+      colors: gradientColors,
+      stops: stops,
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+    );
+  }
+
   Widget _buildSubjectCard(Subject subject) {
-    final marks = _mockMarks[subject.id]!;
-    final average = marks['average'] as double;
-    final recent = marks['recent'] as List<double>;
-    final attendance = marks['attendance'] as double;
+    final recent = [10.0];
+    //todo
+    final Color gradeColor = getGradeColor(
+        bestMark: int.parse(widget.gradingSystem.range[0]),
+        worstMark: int.parse(widget.gradingSystem.range[1]),
+        valueMark: _averageMarks[subject] ?? 0,
+        colors: markColors);
 
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
@@ -194,47 +281,28 @@ class _MarksOverviewPageState extends State<MarksOverviewPage> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   decoration: BoxDecoration(
-                    color: _getGradeColor(average).withOpacity(0.15),
+                    gradient: _averageMarks[subject] == null
+                        ? const LinearGradient(
+                            colors: [Colors.grey, Colors.grey])
+                        : createMarkGradient(
+                            bestMark: int.parse(widget.gradingSystem.range[0]),
+                            worstMark: int.parse(widget.gradingSystem.range[1]),
+                            valueMark: _averageMarks[subject]!,
+                            colors: markColors),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
-                    average.toStringAsFixed(1),
-                    style: TextStyle(
-                      color: _getGradeColor(average),
+                    double.tryParse(_averageMarks[subject].toString()) != null
+                        ? _averageMarks[subject]!.toStringAsFixed(2)
+                        : 'N/A',
+                    style: const TextStyle(
+                      color: Colors.white,
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
                     ),
                   ),
                 ),
               ],
-            ),
-            const SizedBox(height: 16),
-            LinearProgressIndicator(
-              value: attendance,
-              backgroundColor: Colors.grey.shade200,
-              valueColor: AlwaysStoppedAnimation<Color>(
-                attendance >= 0.85 ? Colors.green : Colors.orange,
-              ),
-              minHeight: 8,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Attendance ${(attendance * 100).toStringAsFixed(0)}%',
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
-                  Icon(
-                    attendance >= 0.85
-                        ? Icons.trending_up
-                        : Icons.trending_flat,
-                    color: attendance >= 0.85 ? Colors.green : Colors.orange,
-                  ),
-                ],
-              ),
             ),
             const SizedBox(height: 16),
             Row(
@@ -258,9 +326,9 @@ class _MarksOverviewPageState extends State<MarksOverviewPage> {
               spacing: 8,
               children: recent
                   .map((mark) => Chip(
-                        backgroundColor: _getGradeColor(mark).withOpacity(0.15),
+                        backgroundColor: gradeColor.withValues(alpha: 0.15),
                         label: Text(mark.toStringAsFixed(1),
-                            style: TextStyle(color: _getGradeColor(mark))),
+                            style: const TextStyle(color: Colors.white)),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -274,7 +342,8 @@ class _MarksOverviewPageState extends State<MarksOverviewPage> {
   }
 
   Widget _buildStatsHeader() {
-    final averages = _mockMarks.values.map((m) => m['average'] as double);
+    //todo
+    final averages = [10];
     final overallAverage = averages.reduce((a, b) => a + b) / averages.length;
 
     return Container(
@@ -304,25 +373,16 @@ class _MarksOverviewPageState extends State<MarksOverviewPage> {
                   .displaySmall
                   ?.copyWith(color: Colors.white, fontWeight: FontWeight.bold)),
           const SizedBox(height: 16),
-          Row(
+          /* todo Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _buildStatBadge(
-                  Icons.emoji_events,
-                  'Best',
-                  _mockMarks.values
-                      .map((m) => m['average'])
-                      .reduce((a, b) => a > b ? a : b)
-                      .toStringAsFixed(1)),
-              _buildStatBadge(
-                  Icons.warning,
-                  'Needs Attention',
-                  _mockMarks.values
-                      .map((m) => m['average'])
-                      .reduce((a, b) => a < b ? a : b)
-                      .toStringAsFixed(1)),
+              _buildStatBadge(Icons.emoji_events, 'Goal Achieved',
+                  "${_mockMarks.values.where((e) => e['average'] >= goal).length.toString()} Subjects"),
+              _buildStatBadge(Icons.warning, 'Needs Attention',
+                  "${_mockMarks.values.where((e) => e['average'] < goal).length.toString()} Subjects"),
             ],
           ),
+          */
         ],
       ),
     );
@@ -340,15 +400,6 @@ class _MarksOverviewPageState extends State<MarksOverviewPage> {
                 fontSize: 16)),
       ],
     );
-  }
-
-  Future<void> _loadSubjects() async {
-    dynamic schedule = await fetchSchedule();
-    if (schedule is String && schedule.isEmpty) return;
-    setState(() {
-      subjects = schedule.subjects;
-      _generateMockMarks();
-    });
   }
 
   Container _emptySubjectsList() => Container(
@@ -382,13 +433,12 @@ class _MarksOverviewPageState extends State<MarksOverviewPage> {
                         const ScheduleNavigationIntersection()));
               },
               style: ButtonStyle(
-                backgroundColor: WidgetStateProperty.all(Colors.grey),
-                padding: WidgetStateProperty.all(
-                    const EdgeInsets.symmetric(vertical: 12, horizontal: 20)),
-                shape: WidgetStateProperty.all(RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
-                )),
-              ),
+                  backgroundColor: WidgetStateProperty.all(Colors.grey),
+                  padding: WidgetStateProperty.all(
+                      const EdgeInsets.symmetric(vertical: 12, horizontal: 20)),
+                  shape: WidgetStateProperty.all(RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ))),
               child: const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -402,32 +452,137 @@ class _MarksOverviewPageState extends State<MarksOverviewPage> {
         ),
       );
 
+  Widget _buildSkeletonLoader() {
+    return ListView.builder(
+      itemCount: 3,
+      itemBuilder: (context, index) {
+        return Card(
+          margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    ShimmerEffect(
+                      child: Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: ShimmerEffect(
+                        child: Container(
+                          height: 20,
+                          color: Colors.grey[300],
+                        ),
+                      ),
+                    ),
+                    ShimmerEffect(
+                      child: Container(
+                        width: 60,
+                        height: 30,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    ShimmerEffect(
+                      child: Container(
+                        width: 100,
+                        height: 20,
+                        color: Colors.grey[300],
+                      ),
+                    ),
+                    ShimmerEffect(
+                      child: Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    ShimmerEffect(
+                      child: Container(
+                        width: 60,
+                        height: 30,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    ShimmerEffect(
+                      child: Container(
+                        width: 60,
+                        height: 30,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (_isLoading && _showSkeleton) {
+      return Scaffold(
+        body: _buildSkeletonLoader(),
+      );
+    }
+
     if (_isLoading) {
       return Scaffold(
         body: _buildLoadingContent(),
       );
     }
 
-    if (subjects.isEmpty) return _emptySubjectsList();
+    if (_subjects.isEmpty) return _emptySubjectsList();
 
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(child: _buildStatsHeader()),
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (context, index) => _buildSubjectCard(subjects[index]),
-              childCount: subjects.length,
-            ),
-          ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: const Icon(Icons.add_chart_rounded),
-      ),
-    );
+        body: Stack(
+      children: [
+        ListView.builder(
+          itemCount: _subjects.length,
+          itemBuilder: (context, index) => _buildSubjectCard(_subjects[index]),
+        ),
+        FloatingActionButton(
+          onPressed: () {},
+          child: const Icon(Icons.add_chart_rounded),
+        ),
+      ],
+    ));
   }
 }

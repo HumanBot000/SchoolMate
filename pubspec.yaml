@@ -49,6 +49,7 @@ dependencies:
   timezone: any
   collection: ^1.17.0
   fl_chart: ^0.70.2
+  postgrest: any
 dev_dependencies:
   flutter_test:
     sdk: flutter
