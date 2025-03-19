@@ -131,6 +131,6 @@ jobs:
           files: |
             build/app/outputs/flutter-apk/app-release.apk
             release_notes.txt
-          body_file: release_notes.txt
+          body_path: release_notes.txt
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
