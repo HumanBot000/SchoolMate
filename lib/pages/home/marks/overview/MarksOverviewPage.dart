@@ -4,10 +4,12 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:school_mate/API/supabase/grades/marks.dart';
 import 'package:school_mate/API/supabase/schedule/schedule.dart';
+import 'package:school_mate/Classes/marks/ExamType.dart';
 import 'package:school_mate/Classes/marks/GradingSystem.dart';
 import 'package:school_mate/Classes/marks/Mark.dart';
 import 'package:school_mate/Classes/schedule/Subject.dart';
 import 'package:school_mate/Widgets/public/ShimmerEffectForSkeletonLoader.dart';
+import 'package:school_mate/pages/home/marks/overview/subjectView/SubjectMarksInspectionPage.dart';
 import 'package:school_mate/pages/home/schedule/start.dart';
 
 class MarksOverviewPage extends StatefulWidget {
@@ -19,6 +21,35 @@ class MarksOverviewPage extends StatefulWidget {
   State<MarksOverviewPage> createState() => _MarksOverviewPageState();
 }
 
+LinearGradient createMarkGradient({
+  required int bestMark,
+  required int worstMark,
+  required double valueMark,
+  required List<Color> colors,
+}) {
+  final double t =
+      ((valueMark - bestMark) / (worstMark - bestMark)).clamp(0.0, 1.0);
+
+  final int colorCount = colors.length;
+  final double segmentSize = 1.0 / (colorCount - 1);
+
+  int segmentIndex = (t / segmentSize).floor();
+  segmentIndex = segmentIndex.clamp(0, colorCount - 2);
+
+  final List<Color> gradientColors = [
+    colors[segmentIndex],
+    colors[segmentIndex + 1],
+  ];
+  final List<double> stops = [0.0, 1.0];
+
+  return LinearGradient(
+    colors: gradientColors,
+    stops: stops,
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+}
+
 List<Color> markColors = [
   const Color(0xFF00C000),
   const Color(0xFFBDBD00),
@@ -27,10 +58,37 @@ List<Color> markColors = [
   const Color(0xFFB00000),
 ];
 
+Color getMarkColor({
+  required int bestMark,
+  required int worstMark,
+  required double? valueMark,
+  required List<Color> colors,
+}) {
+  if (valueMark == null || int.tryParse(valueMark.toString()) == 0) {
+    return Colors.grey;
+  }
+  int markRange = worstMark - bestMark;
+  int colorSteps = colors.length - 1;
+
+  if (markRange <= 0 || colors.isEmpty) {
+    throw ArgumentError("Invalid range or empty color list.");
+  }
+
+  // 0 = bestMark, 1 = worstMark
+  double normalizedValue = (valueMark - bestMark) / markRange;
+  normalizedValue = normalizedValue.clamp(0.0, 1.0);
+
+  int colorIndex = (normalizedValue * colorSteps).round();
+
+  return colors[colorIndex.clamp(0, colorSteps)];
+}
+
 class _MarksOverviewPageState extends State<MarksOverviewPage> {
   List<Subject> _subjects = [];
   Map<Subject, List<Mark>> _marks = {};
   Map<Subject, double?> _averageMarks = {};
+  Map<Subject, Map<ExamType, List<Mark>>> _marksPerExamType = {};
+  Map<Subject, Map<ExamType, double?>>? _averageMarksPerSubjectAndExamType = {};
   final List<String> _studyTips = [
     "Break study sessions into 25-minute chunks with 5-minute breaks ⏳",
     "Teach concepts to a friend to reinforce your understanding 👩🏫",
@@ -96,15 +154,23 @@ class _MarksOverviewPageState extends State<MarksOverviewPage> {
   Future<void> _loadData() async {
     dynamic schedule = await fetchSchedule();
     if (schedule is String && schedule.isEmpty) return;
-    Map<Subject, List<Mark>> marks =
+
+    Map<Subject, Map<String, Object>> marks =
         await fetchMarksBySubjects(onlyConsiderated: true);
-    Map<Subject, double?> averageMarks = await calculateAverageMarksBySubjects(
-        schedule.subjects,
-        onlyConsiderated: true);
+
+    var _ = await calculateAverageMarksBySubjects(schedule.subjects);
+    var __ =
+        await calculateAverageMarksBySubjectsAndExamTypes(schedule.subjects);
     setState(() {
       _subjects = schedule.subjects;
-      _marks = marks;
-      _averageMarks = averageMarks;
+      _marks = marks.map(
+          (subject, data) => MapEntry(subject, data["marks"] as List<Mark>));
+      _marksPerExamType = marks.map((subject, data) => MapEntry(
+          subject, data["marksPerExamType"] as Map<ExamType, List<Mark>>));
+      _averageMarks = _;
+      if (schedule.subjects.isNotEmpty) {
+        _averageMarksPerSubjectAndExamType = __;
+      }
     });
   }
 
@@ -114,31 +180,6 @@ class _MarksOverviewPageState extends State<MarksOverviewPage> {
       _isLoading = false;
       _showSkeleton = false;
     });
-  }
-
-  Color getGradeColor({
-    required int bestMark,
-    required int worstMark,
-    required double? valueMark,
-    required List<Color> colors,
-  }) {
-    if (valueMark == null || int.tryParse(valueMark.toString()) == 0) {
-      return Colors.grey;
-    }
-    int markRange = worstMark - bestMark;
-    int colorSteps = colors.length - 1;
-
-    if (markRange <= 0 || colors.isEmpty) {
-      throw ArgumentError("Invalid range or empty color list.");
-    }
-
-    // 0 = bestMark, 1 = worstMark
-    double normalizedValue = (valueMark - bestMark) / markRange;
-    normalizedValue = normalizedValue.clamp(0.0, 1.0);
-
-    int colorIndex = (normalizedValue * colorSteps).round();
-
-    return colors[colorIndex.clamp(0, colorSteps)];
   }
 
   Widget _buildLoadingContent() {
@@ -220,41 +261,12 @@ class _MarksOverviewPageState extends State<MarksOverviewPage> {
     );
   }
 
-  LinearGradient createMarkGradient({
-    required int bestMark,
-    required int worstMark,
-    required double valueMark,
-    required List<Color> colors,
-  }) {
-    final double t =
-        ((valueMark - bestMark) / (worstMark - bestMark)).clamp(0.0, 1.0);
-
-    final int colorCount = colors.length;
-    final double segmentSize = 1.0 / (colorCount - 1);
-
-    int segmentIndex = (t / segmentSize).floor();
-    segmentIndex = segmentIndex.clamp(0, colorCount - 2);
-
-    final List<Color> gradientColors = [
-      colors[segmentIndex],
-      colors[segmentIndex + 1],
-    ];
-    final List<double> stops = [0.0, 1.0];
-
-    return LinearGradient(
-      colors: gradientColors,
-      stops: stops,
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-    );
-  }
-
   Widget _buildSubjectCard(Subject subject) {
     final recent = [10.0];
     //todo
-    final Color gradeColor = getGradeColor(
-        bestMark: int.parse(widget.gradingSystem.range[0]),
-        worstMark: int.parse(widget.gradingSystem.range[1]),
+    final Color gradeColor = getMarkColor(
+        bestMark: parseMark(widget.gradingSystem.range[0]).toInt(),
+        worstMark: parseMark(widget.gradingSystem.range[1]).toInt(),
         valueMark: _averageMarks[subject] ?? 0,
         colors: markColors);
 
@@ -285,8 +297,10 @@ class _MarksOverviewPageState extends State<MarksOverviewPage> {
                         ? const LinearGradient(
                             colors: [Colors.grey, Colors.grey])
                         : createMarkGradient(
-                            bestMark: int.parse(widget.gradingSystem.range[0]),
-                            worstMark: int.parse(widget.gradingSystem.range[1]),
+                            bestMark: parseMark(widget.gradingSystem.range[0])
+                                .toInt(),
+                            worstMark: parseMark(widget.gradingSystem.range[1])
+                                .toInt(),
                             valueMark: _averageMarks[subject]!,
                             colors: markColors),
                     borderRadius: BorderRadius.circular(20),
@@ -576,7 +590,19 @@ class _MarksOverviewPageState extends State<MarksOverviewPage> {
       children: [
         ListView.builder(
           itemCount: _subjects.length,
-          itemBuilder: (context, index) => _buildSubjectCard(_subjects[index]),
+          itemBuilder: (context, index) => InkWell(
+            onTap: () => Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => SubjectMarksInspectionPage(
+                subject: _subjects[index],
+                overallAverage: _averageMarks[_subjects[index]],
+                examTypeAverages:
+                    _averageMarksPerSubjectAndExamType?[_subjects[index]] ?? {},
+                marksPerExamType: _marksPerExamType[_subjects[index]] ?? {},
+                gradingSystem: widget.gradingSystem,
+              ),
+            )),
+            child: _buildSubjectCard(_subjects[index]),
+          ),
         ),
         FloatingActionButton(
           onPressed: () {},

@@ -9,6 +9,7 @@ class Mark {
   final GradingSystem gradingSystem;
   final ExamType examType;
   final String value;
+  final String description;
 
   Mark(
       {required this.id,
@@ -16,5 +17,6 @@ class Mark {
       required this.subject,
       required this.gradingSystem,
       required this.examType,
-      required this.value});
+      required this.value,
+      required this.description});
 }

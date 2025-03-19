@@ -29,12 +29,14 @@ void main() {
               name: "Midterm",
               evaluationData: EvaluationData(
                   evaluationMethod: EvaluationMethod.percentage,
-                  percentage: 40)),
+                  percentage: 40),
+              id: 1),
           ExamType(
               name: "Final",
               evaluationData: EvaluationData(
                   evaluationMethod: EvaluationMethod.percentage,
-                  percentage: 60)),
+                  percentage: 60),
+              id: 2),
         ],
       );
 
@@ -50,7 +52,8 @@ void main() {
               name: "Midterm",
               evaluationData: EvaluationData(
                   evaluationMethod: EvaluationMethod.percentage,
-                  percentage: 50)),
+                  percentage: 50),
+              id: 1),
         ],
       );
 
@@ -72,12 +75,14 @@ void main() {
               name: "Midterm",
               evaluationData: EvaluationData(
                   evaluationMethod: EvaluationMethod.percentage,
-                  percentage: 30)),
+                  percentage: 30),
+              id: 1),
           ExamType(
               name: "Final",
               evaluationData: EvaluationData(
                   evaluationMethod: EvaluationMethod.percentage,
-                  percentage: 50)),
+                  percentage: 50),
+              id: 2),
         ],
       );
 
@@ -93,8 +98,10 @@ void main() {
               name: "Midterm",
               evaluationData: EvaluationData(
                   evaluationMethod: EvaluationMethod.percentage,
-                  percentage: 50)),
-          ExamType(name: "Final", evaluationData: EvaluationData.xTimesAs(2)),
+                  percentage: 50),
+              id: 1),
+          ExamType(
+              name: "Final", evaluationData: EvaluationData.xTimesAs(2), id: 2),
         ],
       );
 
@@ -106,7 +113,10 @@ void main() {
         range: ["A", "F"],
         modifiers: [],
         examTypes: [
-          ExamType(name: "Homework", evaluationData: EvaluationData.xTimesAs(0))
+          ExamType(
+              name: "Homework",
+              evaluationData: EvaluationData.xTimesAs(0),
+              id: 1)
         ],
       );
 
@@ -121,8 +131,13 @@ void main() {
         modifiers: [],
         examTypes: [
           ExamType(
-              name: "Homework", evaluationData: EvaluationData.xTimesAs(1)),
-          ExamType(name: "Quizzes", evaluationData: EvaluationData.xTimesAs(1)),
+              name: "Homework",
+              evaluationData: EvaluationData.xTimesAs(1),
+              id: 1),
+          ExamType(
+              name: "Quizzes",
+              evaluationData: EvaluationData.xTimesAs(1),
+              id: 2),
         ],
       );
 
@@ -136,18 +151,20 @@ void main() {
         evaluationData: EvaluationData(
             evaluationMethod: EvaluationMethod.multiplication,
             multiplicationFactor: null,
-            multiplicationChildType: null));
+            multiplicationChildType: null),
+        id: 1);
     var validReferenceExamType = ExamType(
         name: "Quizzes",
         evaluationData: EvaluationData(
             evaluationMethod: EvaluationMethod.multiplication,
             multiplicationFactor: 2,
-            multiplicationChildType: baseExamType));
+            multiplicationChildType: baseExamType),
+        id: 2);
 
     // A → B → C → A
-    var A = ExamType(name: "A", evaluationData: null);
-    var B = ExamType(name: "B", evaluationData: null);
-    var C = ExamType(name: "C", evaluationData: null);
+    var A = ExamType(name: "A", evaluationData: null, id: 1);
+    var B = ExamType(name: "B", evaluationData: null, id: 2);
+    var C = ExamType(name: "C", evaluationData: null, id: 3);
     A.evaluationData = EvaluationData(
         evaluationMethod: EvaluationMethod.multiplication,
         multiplicationFactor: 2,
