@@ -11,5 +11,6 @@ jobs:
     with:
       issue-number: ${{ github.event.issue.number }}
       base-branch: ${{ github.event.repository.default_branch }}
+      model: command-r-plus-08-2024
     secrets: 
-      openai_api_key: ${{ secrets.OPENAI_API_KEY }}
+      cohere_api_key: ${{ secrets.COHERE_API_KEY }}
