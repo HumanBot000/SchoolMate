@@ -1,22 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:school_mate/API/supabase/schedule/subjects.dart';
 import 'package:school_mate/Classes/schedule/Subject.dart';
-import 'package:school_mate/Widgets/public/PreviousPage.dart';
 import 'package:school_mate/main.dart';
 import 'package:school_mate/pages/home/schedule/subjects/SubjectCreation.dart';
 
-class SubjectList extends StatefulWidget {
+class SubjectListWidget extends StatefulWidget {
   final List<Subject> subjects;
   final Function(Subject) onSubjectSelected;
+  final bool popAfterSelection;
 
-  const SubjectList(
-      {super.key, required this.subjects, required this.onSubjectSelected});
+  const SubjectListWidget(
+      {super.key,
+      required this.subjects,
+      required this.onSubjectSelected,
+      this.popAfterSelection = true});
 
   @override
-  State<SubjectList> createState() => _SubjectListState();
+  State<SubjectListWidget> createState() => _SubjectListWidgetState();
 }
 
-class _SubjectListState extends State<SubjectList> {
+class _SubjectListWidgetState extends State<SubjectListWidget> {
   late List<Subject> _subjects;
 
   @override
@@ -113,6 +116,8 @@ class _SubjectListState extends State<SubjectList> {
   }
 
   Widget _existingSubjectSelector() => ListView.builder(
+      physics: const AlwaysScrollableScrollPhysics(),
+      padding: const EdgeInsets.only(bottom: 80),
       itemCount: _subjects.length * 2 - 1,
       itemBuilder: (context, index) {
         if (index % 2 == 1) {
@@ -133,7 +138,9 @@ class _SubjectListState extends State<SubjectList> {
                 ],
               ),
               onTap: () {
-                Navigator.of(context).pop();
+                if (widget.popAfterSelection) {
+                  Navigator.of(context).pop();
+                }
                 widget.onSubjectSelected(_subjects[index ~/ 2]);
               },
             ),
@@ -172,20 +179,18 @@ class _SubjectListState extends State<SubjectList> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-          title: Text("Select a subject to add to the schedule",
-              style: Theme.of(context)
-                  .appBarTheme
-                  .titleTextStyle
-                  ?.copyWith(overflow: TextOverflow.visible, fontSize: 20)),
-          leading: const PreviousPage()),
-      body: Stack(
-        children: [
-          _subjects.isEmpty ? _emptyPage(context) : _existingSubjectSelector(),
-          _addSubjectButton()
-        ],
-      ),
+    return Stack(
+      children: [
+        if (_subjects.isEmpty)
+          _emptyPage(context)
+        else
+          Positioned.fill(child: _existingSubjectSelector()),
+        Positioned(
+          right: 16,
+          bottom: 32,
+          child: _addSubjectButton(),
+        )
+      ],
     );
   }
 }

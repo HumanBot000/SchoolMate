@@ -9,6 +9,7 @@ import 'package:school_mate/Classes/marks/GradingSystem.dart';
 import 'package:school_mate/Classes/marks/Mark.dart';
 import 'package:school_mate/Classes/schedule/Subject.dart';
 import 'package:school_mate/Widgets/public/ShimmerEffectForSkeletonLoader.dart';
+import 'package:school_mate/pages/home/marks/add/AddMark.dart';
 import 'package:school_mate/pages/home/marks/overview/subjectView/SubjectMarksInspectionPage.dart';
 import 'package:school_mate/pages/home/schedule/start.dart';
 
@@ -52,8 +53,10 @@ LinearGradient createMarkGradient({
 
 List<Color> markColors = [
   const Color(0xFF00C000),
+  const Color(0xFF00C000),
   const Color(0xFFBDBD00),
   const Color(0xFFFFC000),
+  const Color(0xFFFFA000),
   const Color(0xFFFF6400),
   const Color(0xFFB00000),
 ];
@@ -605,7 +608,10 @@ class _MarksOverviewPageState extends State<MarksOverviewPage> {
           ),
         ),
         FloatingActionButton(
-          onPressed: () {},
+          onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) =>
+                AddMarkPage(gradingSystem: widget.gradingSystem),
+          )),
           child: const Icon(Icons.add_chart_rounded),
         ),
       ],

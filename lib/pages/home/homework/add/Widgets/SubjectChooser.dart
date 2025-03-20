@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:school_mate/Classes/schedule/Lesson.dart';
 import 'package:school_mate/Classes/schedule/Subject.dart';
 import 'package:school_mate/pages/home/schedule/page/Schedule.dart';
-import 'package:school_mate/pages/home/schedule/subjects/SubjectsList.dart';
+import 'package:school_mate/pages/home/schedule/subjects/SubjectsListPage.dart';
 
 class HomeworkSubjectChooser extends StatelessWidget {
   final Subject? selectedSubject;

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:school_mate/API/supabase/settings/preLessonNotifications.dart';
+import 'package:school_mate/Widgets/public/PreviousPage.dart';
 import 'package:school_mate/main.dart';
 
 class PreLessonNotificationSetup extends StatefulWidget {
@@ -166,7 +167,7 @@ class _PreLessonNotificationSetupState extends State<PreLessonNotificationSetup>
     return Scaffold(
       appBar: AppBar(
         title: const Text("Pre-Lesson Notifications"),
-        leading: const BackButton(),
+        leading: const PreviousPage(),
       ),
       body: ListView(
         children: [
