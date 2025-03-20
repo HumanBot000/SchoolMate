@@ -6,7 +6,6 @@ on:
 jobs:
   generate:
     uses: mirrajabi/aider-github-workflows/.github/workflows/aider-issue-to-pr.yml@main
-    # Check if the label is 'aider'
     if: github.event.label.name == 'aider'
     with:
       issue-number: ${{ github.event.issue.number }}
@@ -14,3 +13,7 @@ jobs:
       model: command-r-plus-08-2024
     secrets: 
       cohere_api_key: ${{ secrets.COHERE_API_KEY }}
+    permissions:
+      contents: write
+      issues: read
+      pull-requests: write
