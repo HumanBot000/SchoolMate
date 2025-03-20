@@ -1,117 +1,63 @@
-import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
-import 'package:school_mate/API/supabase/schedule/schedule.dart'
-    as fetch_schedule;
-import 'package:school_mate/API/supabase/setup.dart';
-import 'package:school_mate/pages/userAuth/userAuthentication.dart';
-import 'package:school_mate/util/NavigatorTree.dart';
-import 'package:school_mate/util/notifications/schedule.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'themes/app_themes.dart';
 
-import 'API/supabase/settings/preLessonNotifications.dart';
+void main() {
+  runApp(MyApp());
+}
 
-late final Supabase supabaseClient;
-final logger = Logger();
-late final SharedPreferences prefs;
-final NavigationTreeObserver navigatorTreeObserver = NavigationTreeObserver();
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
 
-/// Callback function that will be executed at midnight
-@pragma('vm:entry-point')
-Future<void> scheduleTaskCallback(int id,
-    {bool reInitializeSupabase = false, bool isRerun = false}) async {
-  if (reInitializeSupabase) {
-    await initializeSupabase();
+class _MyAppState extends State<MyApp> {
+  bool _isDarkMode = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadThemePreference();
   }
-  try {
-    await schedulePreLessonNotificationsForCurrentDay(
-      fetchSchedule: fetch_schedule.fetchSchedule,
-      preLessonNotificationsFetcher: fetchPreLessonNotifications,
-    );
-  } catch (e) {
-    // 1 retry
-    if (!isRerun) {
-      await scheduleTaskCallback(id, reInitializeSupabase: true, isRerun: true);
-    } else {
-      logger.e("Error executing scheduled task: $e");
-    }
-    return;
+
+  Future<void> _loadThemePreference() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _isDarkMode = prefs.getBool('isDarkMode') ?? false;
+    });
   }
-  DateTime now = DateTime.now();
-  DateTime nextMidnight = now.add(const Duration(days: 1)).subtract(Duration(
-      hours: now.hour,
-      minutes: now.minute,
-      seconds: now.second,
-      milliseconds: now.millisecond,
-      microseconds: now.microsecond));
-  await AndroidAlarmManager.oneShotAt(nextMidnight, 0, scheduleTaskCallback,
-      exact: true,
-      allowWhileIdle: true,
-      rescheduleOnReboot: true,
-      alarmClock: true);
-}
 
-Future<void> scheduleDailyTask() async {
-  DateTime now = DateTime.now();
-  DateTime nextMidnight = now.add(const Duration(days: 1)).subtract(Duration(
-      hours: now.hour,
-      minutes: now.minute,
-      seconds: now.second,
-      milliseconds: now.millisecond,
-      microseconds: now.microsecond));
-  await AndroidAlarmManager.initialize();
-  await AndroidAlarmManager.oneShotAt(
-      DateTime.now().add(const Duration(seconds: 5)), 0, scheduleTaskCallback,
-      exact: true,
-      allowWhileIdle: true,
-      rescheduleOnReboot: true,
-      alarmClock: true);
-  logger.i("Scheduled daily task");
-}
+  Future<void> _saveThemePreference(bool isDarkMode) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isDarkMode', isDarkMode);
+  }
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await initializeSupabase();
-  prefs = await SharedPreferences.getInstance();
-  var success = await AndroidAlarmManager.initialize();
-  logger.i("Alarm manager initialized with ${success ? "success" : "failure"}");
-  await scheduleDailyTask();
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  void _toggleTheme() {
+    setState(() {
+      _isDarkMode = !_isDarkMode;
+      _saveThemePreference(_isDarkMode);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'SchoolMate',
-      themeMode: ThemeMode.dark,
-      navigatorObservers: [navigatorTreeObserver],
-      darkTheme: ThemeData(
-        useMaterial3: true,
-        brightness: Brightness.dark,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF3A7BD5),
-          brightness: Brightness.dark,
-        ).copyWith(
-            surface: const Color(0xFF2B2B2B), secondary: Colors.greenAccent),
-        textTheme: const TextTheme(
-          headlineLarge: TextStyle(color: Colors.white, fontSize: 30),
+      title: 'Flutter App',
+      theme: _isDarkMode ? AppThemes.darkTheme : AppThemes.lightTheme,
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('Flutter App'),
+          actions: [
+            IconButton(
+              icon: Icon(_isDarkMode ? Icons.wb_sunny : Icons.nightlight_round),
+              onPressed: _toggleTheme,
+            ),
+          ],
         ),
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Color(0xFF2B2B2B),
-          iconTheme: IconThemeData(color: Color(0xFF3A7BD5)),
-          titleTextStyle: TextStyle(color: Color(0xFF3A7BD5), fontSize: 20),
-          centerTitle: true,
+        body: const Center(
+          child: Text('Welcome to Flutter App!'),
         ),
-        progressIndicatorTheme: const ProgressIndicatorThemeData(
-          color: Color(0xFF3A7BD5),
-        ),
-        scaffoldBackgroundColor: const Color(0xFF2B2B2B),
       ),
-      home: const AuthenticationPage(),
     );
   }
 }
