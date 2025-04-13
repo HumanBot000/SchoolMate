@@ -5,7 +5,7 @@ import 'package:school_mate/Classes/marks/GradingSystem.dart';
 import 'package:school_mate/Widgets/public/GradientButton.dart';
 import 'package:school_mate/main.dart';
 import 'package:school_mate/pages/home/marks/Grades.dart';
-import 'package:school_mate/pages/home/marks/setup/ExamTypeSelector.dart';
+import 'package:school_mate/pages/home/marks/setup/ExamTypeSetup.dart';
 import 'package:school_mate/pages/home/marks/setup/GradingSystemDropdown.dart';
 
 class GradingSetupPage extends StatefulWidget {
@@ -238,7 +238,7 @@ class _GradingSetupPageState extends State<GradingSetupPage> {
           ),
         ),
         const Divider(thickness: 1.5),
-        ExamTypeSelector(
+        ExamTypeSetupPage(
           onChanged: _onEvaluationMethodChange,
           selectedEvaluationMethod: _selectedEvaluationMethod,
           evaluationMethodNameTextControllers: _examTypeTextControllers,

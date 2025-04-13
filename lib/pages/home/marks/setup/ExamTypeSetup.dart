@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:school_mate/Classes/marks/ExamType.dart';
 import 'package:school_mate/Widgets/public/GradientButton.dart';
 
-class ExamTypeSelector extends StatefulWidget {
+class ExamTypeSetupPage extends StatefulWidget {
   final EvaluationMethod? selectedEvaluationMethod;
   final Function(EvaluationMethod) onChanged;
   final List<List<TextEditingController>> evaluationMethodNameTextControllers;
   final List<ExamType> examTypes;
   final Function(List<ExamType>) onExamTypeChanges;
 
-  const ExamTypeSelector({
+  const ExamTypeSetupPage({
     super.key,
     required this.onChanged,
     this.selectedEvaluationMethod,
@@ -19,10 +19,10 @@ class ExamTypeSelector extends StatefulWidget {
   });
 
   @override
-  State<ExamTypeSelector> createState() => _ExamTypeSelectorState();
+  State<ExamTypeSetupPage> createState() => _ExamTypeSetupPageState();
 }
 
-class _ExamTypeSelectorState extends State<ExamTypeSelector> {
+class _ExamTypeSetupPageState extends State<ExamTypeSetupPage> {
   @override
   Widget build(BuildContext context) {
     // Use Column instead of ListView to avoid nested scrolling issues.

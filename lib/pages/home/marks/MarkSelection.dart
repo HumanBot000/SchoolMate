@@ -8,12 +8,14 @@ class MarkSelector extends StatelessWidget {
   final GradingSystem gradingSystem;
   final Function(double) onMarkSelected;
   final String title;
+  final double? selectedMark;
 
   const MarkSelector(
       {super.key,
       required this.gradingSystem,
       required this.onMarkSelected,
-      this.title = "Add a mark"});
+      this.title = "Add a mark",
+      this.selectedMark});
 
   Widget _buildDecimalMarkSelector() {
     final int minMark = parseMark(gradingSystem.range[0]).toInt();
@@ -32,23 +34,29 @@ class MarkSelector extends StatelessWidget {
                   markRepresentation(selectedValue, gradingSystem),
                   style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                         fontWeight: FontWeight.bold,
-                        color: getMarkColor(
-                          bestMark: minMark,
-                          worstMark: maxMark,
-                          valueMark: selectedValue,
-                          colors: markColors,
-                        ),
+                        color: selectedMark == selectedValue ||
+                                selectedMark == null
+                            ? getMarkColor(
+                                bestMark: minMark,
+                                worstMark: maxMark,
+                                valueMark: selectedValue,
+                                colors: markColors,
+                              )
+                            : Colors.grey,
                       ),
                 ),
                 ElevatedButton(
                   onPressed: () => onMarkSelected(selectedValue),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: getMarkColor(
-                      bestMark: minMark,
-                      worstMark: maxMark,
-                      valueMark: selectedValue,
-                      colors: markColors,
-                    ),
+                    backgroundColor:
+                        selectedMark == selectedValue || selectedMark == null
+                            ? getMarkColor(
+                                bestMark: minMark,
+                                worstMark: maxMark,
+                                valueMark: selectedValue,
+                                colors: markColors,
+                              )
+                            : Colors.grey,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -138,16 +146,19 @@ class MarkSelector extends StatelessWidget {
                                   child: SizedBox(
                                     height: 60,
                                     child: Material(
-                                      color: getMarkColor(
-                                        bestMark:
-                                            parseMark(gradingSystem.range[0])
-                                                .toInt(),
-                                        worstMark:
-                                            parseMark(gradingSystem.range[1])
-                                                .toInt(),
-                                        valueMark: markValue.toDouble(),
-                                        colors: markColors,
-                                      ),
+                                      color: selectedMark == markValue ||
+                                              selectedMark == null
+                                          ? getMarkColor(
+                                              bestMark: parseMark(
+                                                      gradingSystem.range[0])
+                                                  .toInt(),
+                                              worstMark: parseMark(
+                                                      gradingSystem.range[1])
+                                                  .toInt(),
+                                              valueMark: markValue.toDouble(),
+                                              colors: markColors,
+                                            )
+                                          : Colors.grey,
                                       borderRadius: BorderRadius.circular(12),
                                       elevation: 2,
                                       child: InkWell(

@@ -1,18 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:school_mate/Classes/marks/ExamType.dart';
 import 'package:school_mate/Classes/marks/GradingSystem.dart';
 import 'package:school_mate/Classes/schedule/Subject.dart';
 import 'package:school_mate/Widgets/public/MultipleStepPageIndicator.dart';
 import 'package:school_mate/pages/home/marks/MarkSelection.dart';
-import 'package:school_mate/pages/home/marks/add/subpages/gradingSytemSelector.dart';
 import 'package:school_mate/pages/home/marks/add/subpages/subject.dart';
+import 'package:school_mate/pages/home/marks/add/subpages/type.dart';
+import 'package:school_mate/pages/home/marks/add/subpages/validation.dart';
 
 class AddMarkPage extends StatefulWidget {
   final GradingSystem gradingSystem;
   final Subject? subject;
   final double? mark;
+  final ExamType? examType;
 
   const AddMarkPage(
-      {super.key, required this.gradingSystem, this.subject, this.mark});
+      {super.key,
+      required this.gradingSystem,
+      this.subject,
+      this.mark,
+      this.examType});
 
   @override
   State<AddMarkPage> createState() => _AddMarkPageState();
@@ -21,13 +28,17 @@ class AddMarkPage extends StatefulWidget {
 class _AddMarkPageState extends State<AddMarkPage> {
   late Subject? subject;
   late double? mark;
+  late ExamType? selectedExamType;
   late int currentPage;
+  final TextEditingController _descriptionController = TextEditingController();
+  String? markModifier;
 
   @override
   void initState() {
     super.initState();
     subject = widget.subject;
     mark = widget.mark;
+    selectedExamType = widget.examType;
     if (subject == null) {
       currentPage = 1;
       return;
@@ -36,7 +47,11 @@ class _AddMarkPageState extends State<AddMarkPage> {
       currentPage = 2;
       return;
     }
-    currentPage = 3;
+    if (selectedExamType == null) {
+      currentPage = 3;
+      return;
+    }
+    currentPage = 4;
   }
 
   void _onBackButtonPressed() {
@@ -60,6 +75,19 @@ class _AddMarkPageState extends State<AddMarkPage> {
     setState(() {
       mark = selectedMark;
       currentPage = 3;
+    });
+  }
+
+  void _onExamTypeSelection(ExamType selectedExamType) {
+    setState(() {
+      this.selectedExamType = selectedExamType;
+      currentPage = 4;
+    });
+  }
+
+  void _onModifierChange(String? selectedModifier) {
+    setState(() {
+      markModifier = selectedModifier;
     });
   }
 
@@ -97,20 +125,38 @@ class _AddMarkPageState extends State<AddMarkPage> {
               ),
             ],
           ),
-          if (currentPage == 1)
-            AddMarkSubjectSelector(onSelection: _onSubjectSelection),
-          if (currentPage == 2)
-            MarkSelector(
-              gradingSystem: widget.gradingSystem,
-              onMarkSelected: _onMarkValueSelection,
-              title: "Select Mark",
-            ),
-          if (currentPage == 3)
-            GradingSystemSelector(
-              gradingSystem: widget.gradingSystem,
-            )
+          Expanded(
+            child: _buildCurrentPage(),
+          ),
         ],
       ),
     );
+  }
+
+  Widget _buildCurrentPage() {
+    if (currentPage == 1) {
+      return AddMarkSubjectSelector(onSelection: _onSubjectSelection);
+    } else if (currentPage == 2) {
+      return MarkSelector(
+        gradingSystem: widget.gradingSystem,
+        onMarkSelected: _onMarkValueSelection,
+        title: "Select Mark",
+      );
+    } else if (currentPage == 3) {
+      return ExamTypeSelector(
+        gradingSystem: widget.gradingSystem,
+        onSelected: _onExamTypeSelection,
+      );
+    } else {
+      return AddMarkValidationPage(
+        descriptionController: _descriptionController,
+        subject: subject!,
+        markValue: mark!,
+        examType: selectedExamType!,
+        gradingSystem: widget.gradingSystem,
+        onModifierChanged: _onModifierChange,
+        modifier: markModifier,
+      );
+    }
   }
 }
