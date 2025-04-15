@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:school_mate/Widgets/public/PreviousPage.dart';
 import 'package:school_mate/pages/settings/Widgets/notifications/NotificationSettingsPage.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -16,7 +17,7 @@ class _SettingsPageState extends State<SettingsPage> {
         child: Scaffold(
           appBar: AppBar(
             title: const Text("Settings"),
-            leading: const BackButton(),
+            leading: const PreviousPage(),
             bottom: const TabBar(tabs: [
               Tab(
                 icon: Icon(Icons.settings),

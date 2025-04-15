@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:school_mate/API/supabase/grades/marks.dart';
 import 'package:school_mate/API/supabase/schedule/schedule.dart';
 import 'package:school_mate/Classes/marks/ExamType.dart';
@@ -9,6 +10,7 @@ import 'package:school_mate/Classes/marks/GradingSystem.dart';
 import 'package:school_mate/Classes/marks/Mark.dart';
 import 'package:school_mate/Classes/schedule/Subject.dart';
 import 'package:school_mate/Widgets/public/ShimmerEffectForSkeletonLoader.dart';
+import 'package:school_mate/pages/home/marks/add/AddMark.dart';
 import 'package:school_mate/pages/home/marks/overview/subjectView/SubjectMarksInspectionPage.dart';
 import 'package:school_mate/pages/home/schedule/start.dart';
 
@@ -52,8 +54,10 @@ LinearGradient createMarkGradient({
 
 List<Color> markColors = [
   const Color(0xFF00C000),
+  const Color(0xFF00C000),
   const Color(0xFFBDBD00),
   const Color(0xFFFFC000),
+  const Color(0xFFFFA000),
   const Color(0xFFFF6400),
   const Color(0xFFB00000),
 ];
@@ -184,77 +188,95 @@ class _MarksOverviewPageState extends State<MarksOverviewPage> {
 
   Widget _buildLoadingContent() {
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+      child: Stack(
         children: [
-          Container(
-            padding: const EdgeInsets.all(20),
-            margin: const EdgeInsets.symmetric(horizontal: 20),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(20),
+          Positioned.fill(
+            top: 100,
+            child: Opacity(
+              opacity: 0.1,
+              child: Lottie.asset(
+                'assets/animations/school_building.json',
+                alignment: Alignment.topCenter,
+                fit: BoxFit.contain,
+              ),
             ),
-            child: Column(
-              children: [
-                Text(
-                  'Study Tip',
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        color: Theme.of(context).colorScheme.primary,
-                        fontWeight: FontWeight.bold,
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(20),
+                margin: const EdgeInsets.symmetric(horizontal: 20),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Column(
+                  children: [
+                    Text(
+                      'Study Tip',
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            color: Theme.of(context).colorScheme.primary,
+                            fontWeight: FontWeight.bold,
+                          ),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      _studyTips[Random().nextInt(_studyTips.length)],
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 30),
+              AnimatedSwitcher(
+                duration: const Duration(seconds: 1),
+                transitionBuilder: (Widget child, Animation<double> animation) {
+                  return FadeTransition(
+                    opacity: animation,
+                    child: SlideTransition(
+                      position: Tween<Offset>(
+                        begin: const Offset(0, 0.5),
+                        end: Offset.zero,
+                      ).animate(animation),
+                      child: child,
+                    ),
+                  );
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(20),
+                  margin: const EdgeInsets.symmetric(horizontal: 20),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context)
+                        .colorScheme
+                        .secondary
+                        .withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Column(
+                    children: [
+                      Icon(
+                        Icons.lightbulb_outline,
+                        color: Theme.of(context).colorScheme.secondary,
+                        size: 30,
                       ),
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  _studyTips[Random().nextInt(_studyTips.length)],
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 30),
-          AnimatedSwitcher(
-            duration: const Duration(seconds: 1),
-            transitionBuilder: (Widget child, Animation<double> animation) {
-              return FadeTransition(
-                opacity: animation,
-                child: SlideTransition(
-                  position: Tween<Offset>(
-                    begin: const Offset(0, 0.5),
-                    end: Offset.zero,
-                  ).animate(animation),
-                  child: child,
-                ),
-              );
-            },
-            child: Container(
-              padding: const EdgeInsets.all(20),
-              margin: const EdgeInsets.symmetric(horizontal: 20),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.secondary.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Column(
-                children: [
-                  Icon(
-                    Icons.lightbulb_outline,
-                    color: Theme.of(context).colorScheme.secondary,
-                    size: 30,
+                      const SizedBox(height: 10),
+                      Text(
+                        _motivationalQuotes[
+                            Random().nextInt(_motivationalQuotes.length)],
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 10),
-                  Text(
-                    _motivationalQuotes[
-                        Random().nextInt(_motivationalQuotes.length)],
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                ],
+                ),
               ),
-            ),
-          ),
-          const SizedBox(height: 30),
-          CircularProgressIndicator(
-            color: Theme.of(context).colorScheme.primary,
+              const SizedBox(height: 30),
+              CircularProgressIndicator(
+                color: Theme.of(context).colorScheme.primary,
+              ),
+            ],
           ),
         ],
       ),
@@ -605,7 +627,10 @@ class _MarksOverviewPageState extends State<MarksOverviewPage> {
           ),
         ),
         FloatingActionButton(
-          onPressed: () {},
+          onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) =>
+                AddMarkPage(gradingSystem: widget.gradingSystem),
+          )),
           child: const Icon(Icons.add_chart_rounded),
         ),
       ],

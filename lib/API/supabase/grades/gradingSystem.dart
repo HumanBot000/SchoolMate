@@ -87,7 +87,8 @@ Future<GradingSystem> setGradingSystem(GradingSystem gradingSystem) async {
   return GradingSystem(
       range: gradingSystem.range,
       modifiers: gradingSystem.modifiers,
-      examTypes: orderedInsertionSequenceOfExamTypes);
+      examTypes: orderedInsertionSequenceOfExamTypes,
+      id: systemTableResponse["id"]);
 }
 
 Future<dynamic> fetchGradingSystem() async {

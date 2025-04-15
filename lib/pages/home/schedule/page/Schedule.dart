@@ -9,7 +9,7 @@ import 'package:school_mate/pages/home/Widgets/BottomNavBar.dart';
 import 'package:school_mate/pages/home/schedule/lessons/ConfigureLesson.dart';
 import 'package:school_mate/pages/home/schedule/page/Widgets/ScheduleGridView.dart';
 import 'package:school_mate/pages/home/schedule/setup/scheduleSetup.dart';
-import 'package:school_mate/pages/home/schedule/subjects/SubjectsList.dart';
+import 'package:school_mate/pages/home/schedule/subjects/SubjectsListPage.dart';
 
 class SchedulePage extends StatelessWidget {
   final Schedule schedule;
