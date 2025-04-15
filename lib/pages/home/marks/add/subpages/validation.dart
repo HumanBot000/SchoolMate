@@ -16,6 +16,7 @@ class AddMarkValidationPage extends StatefulWidget {
   final GradingSystem gradingSystem;
   final String? modifier;
   final Function(String? modifier) onModifierChanged;
+  final Function() onSave;
 
   const AddMarkValidationPage({
     super.key,
@@ -26,6 +27,7 @@ class AddMarkValidationPage extends StatefulWidget {
     required this.gradingSystem,
     required this.onModifierChanged,
     this.modifier,
+    required this.onSave,
   });
 
   @override
@@ -425,9 +427,7 @@ class _AddMarkValidationPageState extends State<AddMarkValidationPage>
                         ),
                         const SizedBox(width: 8),
                         FilledButton(
-                          onPressed: () {
-                            // Save mark logic here
-                          },
+                          onPressed: () async => await widget.onSave(),
                           style: FilledButton.styleFrom(
                             backgroundColor: markColor,
                             shape: RoundedRectangleBorder(

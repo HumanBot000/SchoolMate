@@ -5,9 +5,13 @@ class GradingSystem {
   final List<String> range;
   final List<String> modifiers;
   final List<ExamType> examTypes;
+  final int? id;
 
   GradingSystem(
-      {required this.range, required this.modifiers, required this.examTypes});
+      {required this.range,
+      required this.modifiers,
+      required this.examTypes,
+      this.id});
 
   @override
   bool operator ==(Object other) {
@@ -206,6 +210,7 @@ class GradingSystem {
       ],
       modifiers: gradingSystemJson["modifiers"].cast<String>(),
       examTypes: examTypes,
+      id: gradingSystemJson["id"],
     );
   }
 }

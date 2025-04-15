@@ -264,6 +264,8 @@ class _SubjectMarksInspectionPageState
                   Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => AddMarkPage(
                       gradingSystem: widget.gradingSystem,
+                      mark: selectedMark,
+                      subject: widget.subject,
                     ),
                   )))
         ],

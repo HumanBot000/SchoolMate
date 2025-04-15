@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:school_mate/API/supabase/grades/marks.dart';
 import 'package:school_mate/Classes/marks/ExamType.dart';
 import 'package:school_mate/Classes/marks/GradingSystem.dart';
 import 'package:school_mate/Classes/schedule/Subject.dart';
 import 'package:school_mate/Widgets/public/MultipleStepPageIndicator.dart';
+import 'package:school_mate/pages/home/marks/Grades.dart';
 import 'package:school_mate/pages/home/marks/MarkSelection.dart';
 import 'package:school_mate/pages/home/marks/add/subpages/subject.dart';
 import 'package:school_mate/pages/home/marks/add/subpages/type.dart';
@@ -30,7 +32,7 @@ class _AddMarkPageState extends State<AddMarkPage> {
   late double? mark;
   late ExamType? selectedExamType;
   late int currentPage;
-  final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
   String? markModifier;
 
   @override
@@ -91,6 +93,18 @@ class _AddMarkPageState extends State<AddMarkPage> {
     });
   }
 
+  Future<void> _onConfirm() async {
+    var markString = mark.toString();
+    if (markModifier != null) {
+      markString = "$markString$markModifier";
+    }
+    await insertMark(markString, subject!, selectedExamType!,
+        description: descriptionController.text);
+    Navigator.of(context).pushReplacement(MaterialPageRoute(
+      builder: (context) => const MarksPage(),
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -149,13 +163,14 @@ class _AddMarkPageState extends State<AddMarkPage> {
       );
     } else {
       return AddMarkValidationPage(
-        descriptionController: _descriptionController,
+        descriptionController: descriptionController,
         subject: subject!,
         markValue: mark!,
         examType: selectedExamType!,
         gradingSystem: widget.gradingSystem,
         onModifierChanged: _onModifierChange,
         modifier: markModifier,
+        onSave: _onConfirm,
       );
     }
   }

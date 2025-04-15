@@ -179,15 +179,51 @@ Future<Map<Subject, double?>> calculateAverageMarksBySubjects(
 }
 
 double parseMark(String mark) {
-  final parsedValue = double.tryParse(mark);
-  if (parsedValue != null) return parsedValue;
-  return {"A": 1.0, "B": 2.0, "C": 3.0, "D": 4.0, "E": 5.0, "F": 6.0}[mark]!;
+  // Replace comma with dot for localization
+  mark = mark.replaceAll(',', '.');
+
+  // Try to extract the first number from the string using RegExp
+  final regex = RegExp(r'[-+]?\d*\.?\d+(?:[eE][-+]?\d+)?');
+  final match = regex.firstMatch(mark);
+  if (match != null) {
+    return double.parse(match.group(0)!);
+  }
+
+  // Handle letter grades
+  const gradeMap = {"A": 1.0, "B": 2.0, "C": 3.0, "D": 4.0, "E": 5.0, "F": 6.0};
+  return gradeMap[mark.trim().toUpperCase()]!;
 }
 
-String markRepresentation(double value, GradingSystem gradingSystem,
-    {int decimalPlaces = 0}) {
+String markRepresentation(
+  dynamic value,
+  GradingSystem gradingSystem, {
+  int decimalPlaces = 0,
+  String modifier = "",
+}) {
+  if (value is String) return value;
   if (gradingSystem.range[0] == "A" && gradingSystem.range[1] == "F") {
-    return {1.0: "A", 2.0: "B", 3.0: "C", 4.0: "D", 5.0: "E", 6.0: "F"}[value]!;
+    var reverseGradeMap = {
+      1.0: "A",
+      2.0: "B",
+      3.0: "C",
+      4.0: "D",
+      5.0: "E",
+      6.0: "F"
+    };
+    return reverseGradeMap[value] ?? value.toStringAsFixed(decimalPlaces);
   }
-  return value.toStringAsFixed(decimalPlaces);
+
+  return "${value.toStringAsFixed(decimalPlaces)}$modifier";
+}
+
+Future<void> insertMark(String value, Subject subject, ExamType examType,
+    {String description = ""}) async {
+  await supabaseClient.client.schema("grades").from("marks").insert({
+    "user_id": await getUserID(),
+    "subject": subject.id,
+    "value": value,
+    "grading_system": (await fetchGradingSystem()).id,
+    "exam_type": examType.id,
+    "description": description
+  });
 }

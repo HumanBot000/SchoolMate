@@ -81,10 +81,10 @@ class _GradingSetupPageState extends State<GradingSetupPage> {
     }
 
     GradingSystem builtGradingSystem = GradingSystem(
-      range: _selectedGradingSystem!.range,
-      modifiers: _selectedGradingSystem!.modifiers,
-      examTypes: _examTypes,
-    );
+        range: _selectedGradingSystem!.range,
+        modifiers: _selectedGradingSystem!.modifiers,
+        examTypes: _examTypes,
+        id: -1);
 
     try {
       builtGradingSystem.isValid();
