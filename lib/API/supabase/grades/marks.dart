@@ -26,7 +26,7 @@ Future<List<Mark>> fetchMarks({bool onlyConsiderated = false}) async {
 
   return Future.wait(marks.map((mark) async {
     Subject subject = await fetchSubjectByID(mark["subject"]);
-    return Mark(
+    return Mark.parse(
       id: mark["id"],
       createdAt: DateTime.parse(mark["created_at"]),
       subject: subject,
@@ -34,8 +34,8 @@ Future<List<Mark>> fetchMarks({bool onlyConsiderated = false}) async {
       examType: gradingSystem.examTypes.firstWhere(
         (e) => e.id == mark["exam_type"],
       ),
-      value: mark["value"],
       description: mark["description"],
+      value: mark["value"],
     );
   }));
 }
@@ -83,7 +83,7 @@ Future<List<Mark>> fetchMarksForSubject(Subject subject,
   List<Mark> markList = [];
   for (var mark in marks) {
     Subject subject = await fetchSubjectByID(mark["subject"]);
-    markList.add(Mark(
+    markList.add(Mark.parse(
       id: mark["id"],
       createdAt: DateTime.parse(mark["created_at"]),
       subject: subject,
@@ -110,7 +110,7 @@ Future<double?> calculateAverageMarkForSubject(Subject subject,
     var marksPerExamType = groupBy(subjectMarks, (Mark mark) => mark.examType);
     var averagePerExamType = marksPerExamType.map((examType, marks) {
       List<double> parsedMarks =
-          marks.map((mark) => parseMark(mark.value.toString())).toList();
+          marks.map((mark) => parseMark(mark.toRawString())).toList();
       double avg = parsedMarks.isNotEmpty
           ? parsedMarks.reduce((a, b) => a + b) / parsedMarks.length
           : 0.0;
@@ -149,7 +149,7 @@ Future<Map<Subject, Map<ExamType, double?>>?>
           groupBy(subjectMarks, (Mark mark) => mark.examType);
       var averagePerExamType = marksPerExamType.map((examType, marks) {
         List<double> parsedMarks =
-            marks.map((mark) => parseMark(mark.value.toString())).toList();
+            marks.map((mark) => parseMark(mark.toRawString())).toList();
         double avg = parsedMarks.isNotEmpty
             ? parsedMarks.reduce((a, b) => a + b) / parsedMarks.length
             : 0.0;

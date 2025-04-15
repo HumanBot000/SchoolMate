@@ -198,24 +198,13 @@ class _SubjectMarksInspectionPageState
                                         height: 30,
                                         child: Container(
                                           decoration: BoxDecoration(
-                                            color: getMarkColor(
-                                              bestMark: parseMark(widget
-                                                      .gradingSystem.range[0])
-                                                  .toInt(),
-                                              worstMark: parseMark(widget
-                                                      .gradingSystem.range[1])
-                                                  .toInt(),
-                                              valueMark: parseMark(mark.value),
-                                              colors: markColors,
-                                            ),
+                                            color: mark.color,
                                             borderRadius:
                                                 BorderRadius.circular(4),
                                           ),
                                           child: Center(
                                             child: Text(
-                                              markRepresentation(
-                                                  parseMark(mark.value),
-                                                  widget.gradingSystem),
+                                              mark.toDisplayString(),
                                               style: const TextStyle(
                                                   color: Colors.white,
                                                   fontWeight: FontWeight.bold,
