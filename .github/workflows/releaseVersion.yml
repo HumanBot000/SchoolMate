@@ -85,7 +85,7 @@ jobs:
           dart fix --apply
           dart format .
       - name: Build APK
-        run: flutter build apk --release
+        run: flutter build apk --release --dart-define=GEONAMES_API_USER=humanbot000
       - name: Generate changelog
         id: changelog
         run: |

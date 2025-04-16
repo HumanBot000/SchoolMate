@@ -197,23 +197,22 @@ double parseMark(String mark) {
 String markRepresentation(
   dynamic value,
   GradingSystem gradingSystem, {
-  int decimalPlaces = 0,
   String modifier = "",
 }) {
-  if (value is String) return value;
   if (gradingSystem.range[0] == "A" && gradingSystem.range[1] == "F") {
     var reverseGradeMap = {
-      1.0: "A",
-      2.0: "B",
-      3.0: "C",
-      4.0: "D",
-      5.0: "E",
-      6.0: "F"
+      "1.0": "A",
+      "2.0": "B",
+      "3.0": "C",
+      "4.0": "D",
+      "5.0": "E",
+      "6.0": "F"
     };
-    return reverseGradeMap[value] ?? value.toStringAsFixed(decimalPlaces);
+    return reverseGradeMap[value] ??
+        value.toStringAsFixed(gradingSystem.modifiers.contains(".") ? 1 : 0);
   }
-
-  return "${value.toStringAsFixed(decimalPlaces)}$modifier";
+  if (value is String) return value;
+  return "${value.toStringAsFixed(gradingSystem.modifiers.contains(".") ? 1 : 0)}$modifier";
 }
 
 Future<void> insertMark(String value, Subject subject, ExamType examType,

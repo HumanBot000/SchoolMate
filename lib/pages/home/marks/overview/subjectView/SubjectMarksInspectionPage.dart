@@ -202,13 +202,21 @@ class _SubjectMarksInspectionPageState
                                             borderRadius:
                                                 BorderRadius.circular(4),
                                           ),
-                                          child: Center(
-                                            child: Text(
-                                              mark.toDisplayString(),
-                                              style: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 16),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(4.0),
+                                            child: Center(
+                                              child: FittedBox(
+                                                fit: BoxFit.scaleDown,
+                                                child: Text(
+                                                  mark.toDisplayString(),
+                                                  maxLines: 1,
+                                                  style: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 16),
+                                                ),
+                                              ),
                                             ),
                                           ),
                                         ),

@@ -71,15 +71,22 @@ Color getMarkColor({
   if (valueMark == null || int.tryParse(valueMark.toString()) == 0) {
     return Colors.grey;
   }
-  int markRange = worstMark - bestMark;
-  int colorSteps = colors.length - 1;
 
-  if (markRange <= 0 || colors.isEmpty) {
-    throw ArgumentError("Invalid range or empty color list.");
+  if (bestMark == worstMark || colors.isEmpty) {
+    throw ArgumentError("Invalid mark range or empty color list.");
   }
 
-  // 0 = bestMark, 1 = worstMark
-  double normalizedValue = (valueMark - bestMark) / markRange;
+  final markRange = (worstMark - bestMark).abs();
+  final colorSteps = colors.length - 1;
+
+  // Normalize based on whether bestMark is lower or higher than worstMark
+  double normalizedValue = (valueMark - bestMark) / (worstMark - bestMark);
+
+  // If the scale is descending (e.g., 1 = best), we need to reverse it
+  if (bestMark > worstMark) {
+    normalizedValue = 1.0 - normalizedValue;
+  }
+
   normalizedValue = normalizedValue.clamp(0.0, 1.0);
 
   int colorIndex = (normalizedValue * colorSteps).round();

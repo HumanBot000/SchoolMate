@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:school_mate/Classes/marks/ExamType.dart';
 import 'package:school_mate/Classes/marks/GradingSystem.dart';
@@ -56,6 +57,17 @@ class Mark {
 
   /// Converts the Mark to a string representation for display (e.g., '2+', '3.5', etc.)
   String toDisplayString() {
+    if (gradingSystem.range.equals(["A", "F"])) {
+      var reverseGradeMap = {
+        1.0: "A",
+        2.0: "B",
+        3.0: "C",
+        4.0: "D",
+        5.0: "E",
+        6.0: "F"
+      };
+      return "${reverseGradeMap[numericValue] ?? numericValue.toStringAsFixed(gradingSystem.modifiers.contains(".") ? 1 : 0)}$modifier";
+    }
     // If grading system allows decimals, show them
     if (gradingSystem.modifiers.contains('.')) {
       return numericValue.toStringAsFixed(1).replaceAll('.0', '') + modifier;
