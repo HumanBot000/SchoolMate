@@ -122,7 +122,7 @@ jobs:
       - name: Create GitHub release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: "v${{ needs.version-check.outputs.version_changed }}"
+          tag_name: "${{ needs.version-check.outputs.version_changed }}"
           files: |
             build/app/outputs/flutter-apk/app-release.apk
             release_notes.txt
