@@ -10,18 +10,20 @@ on:
       - '**/*.yml'
   workflow_dispatch:
 
-permissions: write-all
+permissions:
+  contents: write  # narrowed from write-all
 
 jobs:
   version-check:
     runs-on: ubuntu-latest
     outputs:
       version_changed: ${{ steps.version-check.outputs.NEW_VERSION }}
+      previous_version: ${{ steps.version-check.outputs.PREVIOUS_VERSION }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0  # Alle Tags abrufen
+          fetch-depth: 0  # Fetch all tags
 
       - name: Check if version is increased
         id: version-check
@@ -34,11 +36,13 @@ jobs:
 
           if [ "v$NEW_VERSION" == "$PREVIOUS_VERSION" ]; then
             echo "No new version detected."
-            echo "::set-output name=NEW_VERSION::"
+            echo "NEW_VERSION=" >> $GITHUB_OUTPUT
+            echo "PREVIOUS_VERSION=$PREVIOUS_VERSION" >> $GITHUB_OUTPUT
             exit 0
           fi
 
-          echo "::set-output name=NEW_VERSION::$NEW_VERSION"
+          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "PREVIOUS_VERSION=$PREVIOUS_VERSION" >> $GITHUB_OUTPUT
 
   flutter-build:
     needs: version-check
@@ -49,40 +53,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Generate changelog
-        id: changelog
-        run: |
-          echo "Generating changelog..."
-          echo "Release Notes:" > release_notes.txt
-          echo "----------------------" >> release_notes.txt
-
-          TAGS=$(git tag --sort=-version:refname)
-          if [ -z "$TAGS" ]; then
-            echo "[Current]" >> release_notes.txt
-            GIT_PAGER=cat git log --no-merges --format=" * %s" >> release_notes.txt
-          else
-            NEXT=""
-            echo "$TAGS" | while read TAG; do
-              echo "" >> release_notes.txt
-              if [ -n "$NEXT" ]; then
-                echo "[$NEXT]" >> release_notes.txt
-              else
-                echo "[Current]" >> release_notes.txt
-              fi
-              GIT_PAGER=cat git log --no-merges --format=" * %s" ${TAG}..${NEXT} >> release_notes.txt
-              NEXT=$TAG
-            done
-
-            FIRST=$(echo "$TAGS" | tail -1)
-            echo "" >> release_notes.txt
-            echo "[$FIRST]" >> release_notes.txt
-            GIT_PAGER=cat git log --no-merges --format=" * %s" $FIRST >> release_notes.txt
-          fi
-
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.27.1'
+          cache: true
 
       - name: Cache Flutter dependencies
         uses: actions/cache@v4
@@ -119,18 +94,31 @@ jobs:
 
       - name: Build APK
         run: flutter build apk --release --dart-define=GEONAMES_API_USER=humanbot000
+
       - name: Generate changelog
-        id: changelog
+        id: generate-changelog
         run: |
-          COMMITS=$(git log ${{ steps.version-check.outputs.PREVIOUS_VERSION }}..HEAD --pretty=format:'- %s')
           echo "Release Notes:" > release_notes.txt
-          echo "$COMMITS" >> release_notes.txt
-          echo "COMMITS=$COMMITS" >> $GITHUB_ENV
+          echo "----------------------" >> release_notes.txt
+          git log v${{ needs.version-check.outputs.previous_version }}..HEAD --no-merges --pretty=format:"- %s" >> release_notes.txt
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: flutter-release
+          path: |
+            build/app/outputs/flutter-apk/app-release.apk
+            release_notes.txt
 
   release:
     needs: flutter-build
     runs-on: ubuntu-latest
     steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: flutter-release
+
       - name: Create GitHub release
         uses: softprops/action-gh-release@v2
         with:
