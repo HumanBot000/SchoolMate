@@ -100,7 +100,7 @@ jobs:
         run: |
           echo "Release Notes:" > release_notes.txt
           echo "----------------------" >> release_notes.txt
-          git log v${{ needs.version-check.outputs.previous_version }}..HEAD --no-merges --pretty=format:"- %s" >> release_notes.txt
+          git log ${{ needs.version-check.outputs.previous_version }}..HEAD --no-merges --pretty=format:"- %s" >> release_notes.txt
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
