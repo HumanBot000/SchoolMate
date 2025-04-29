@@ -104,7 +104,6 @@ Future<double?> calculateAverageMarkForSubject(Subject subject,
       await fetchMarksForSubject(subject, onlyConsiderated: onlyConsiderated);
   if (subjectMarks.isEmpty) return null;
 
-  //todo
   if (subjectMarks.first.examType.evaluationData.evaluationMethod ==
       EvaluationMethod.percentage) {
     var marksPerExamType = groupBy(subjectMarks, (Mark mark) => mark.examType);
@@ -126,6 +125,45 @@ Future<double?> calculateAverageMarkForSubject(Subject subject,
     });
 
     return weightedAverage;
+  } else if (subjectMarks.first.examType.evaluationData.evaluationMethod ==
+      EvaluationMethod.multiplication) {
+    List<Mark> parsedMarks = List.from(subjectMarks);
+    List<Mark> resultMarks = [];
+
+    while (parsedMarks.any((mark) =>
+        mark.examType.evaluationData.multiplicationChildType != null)) {
+      List<Mark> nextIterationMarks = [];
+
+      for (Mark mark in parsedMarks) {
+        final childType = mark.examType.evaluationData.multiplicationChildType;
+        final factor = mark.examType.evaluationData.multiplicationFactor ?? 1;
+
+        if (childType != null) {
+          for (int i = 0; i < factor; i++) {
+            nextIterationMarks.add(
+              mark.copyWith(
+                examType: childType,
+              ),
+            );
+          }
+        } else {
+          resultMarks.add(mark);
+        }
+      }
+
+      parsedMarks = nextIterationMarks;
+    }
+
+    resultMarks.addAll(parsedMarks); // In case any final round marks are left
+
+    if (resultMarks.isEmpty) return null;
+
+    double avg = resultMarks
+            .map((mark) => parseMark(mark.toRawString()))
+            .reduce((a, b) => a + b) /
+        resultMarks.length;
+
+    return avg;
   }
   return null;
 }
@@ -142,7 +180,6 @@ Future<Map<Subject, Map<ExamType, double?>>?>
       continue;
     }
 
-    //todo
     if (subjectMarks.first.examType.evaluationData.evaluationMethod ==
         EvaluationMethod.percentage) {
       var marksPerExamType =
@@ -162,6 +199,19 @@ Future<Map<Subject, Map<ExamType, double?>>?>
         marks[subject] = {};
         continue;
       }
+      marks[subject] = averagePerExamType;
+    } else if (subjectMarks.first.examType.evaluationData.evaluationMethod ==
+        EvaluationMethod.multiplication) {
+      var marksPerExamType =
+          groupBy(subjectMarks, (Mark mark) => mark.examType);
+      var averagePerExamType = marksPerExamType.map((examType, marks) {
+        List<double> parsedMarks =
+            marks.map((mark) => parseMark(mark.toRawString())).toList();
+        double avg = parsedMarks.isNotEmpty
+            ? parsedMarks.reduce((a, b) => a + b) / parsedMarks.length
+            : 0.0;
+        return MapEntry(examType, avg);
+      });
       marks[subject] = averagePerExamType;
     }
   }

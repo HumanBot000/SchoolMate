@@ -100,9 +100,14 @@ class _MultipleStepPageIndicatorState extends State<MultipleStepPageIndicator>
                 ]
             : null,
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: _buildStepIndicatorsWithTitles(),
+      child: Center(
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: _buildStepIndicatorsWithTitles(),
+          ),
+        ),
       ),
     );
   }
@@ -164,7 +169,7 @@ class _MultipleStepPageIndicatorState extends State<MultipleStepPageIndicator>
               boxShadow: widget.showShadow
                   ? [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
+                        color: Colors.black.withValues(alpha: 0.1),
                         blurRadius: 4,
                         offset: const Offset(0, 2),
                       )
@@ -248,7 +253,7 @@ class AnimatedWaveEffect extends StatelessWidget {
             height: size,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: color.withOpacity(1 - animation.value),
+              color: color.withValues(alpha: 1 - animation.value),
             ),
           ),
         );

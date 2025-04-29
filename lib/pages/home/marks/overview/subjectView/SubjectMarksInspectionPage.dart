@@ -175,10 +175,50 @@ class _SubjectMarksInspectionPageState
                           ),
                         ),
                         subtitle: examType.evaluationData.percentage == null
-                            ? Text(
-                                "This Exam Group is worth ${examType.evaluationData.multiplicationFactor}x as a mark of ${examType.evaluationData.multiplicationChildType?.name}")
-                            : Text(
-                                "This Exam Group is worth ${examType.evaluationData.percentage}%"),
+                            ? examType.evaluationData.multiplicationChildType ==
+                                    null
+                                ? const Text("This is the default Exam Type")
+                                : Text.rich(
+                                    TextSpan(
+                                      children: [
+                                        const TextSpan(
+                                            text:
+                                                "Every exam in this group is worth "),
+                                        TextSpan(
+                                          text:
+                                              "${examType.evaluationData.multiplicationFactor}x",
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        const TextSpan(
+                                            text: " as much as a exam of the "),
+                                        TextSpan(
+                                          text: examType
+                                                  .evaluationData
+                                                  .multiplicationChildType
+                                                  ?.name ??
+                                              "",
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        const TextSpan(text: " type"),
+                                      ],
+                                    ),
+                                  )
+                            : Text.rich(
+                                TextSpan(
+                                  children: [
+                                    const TextSpan(
+                                        text: "This Exam Group is worth "),
+                                    TextSpan(
+                                      text:
+                                          "${examType.evaluationData.percentage}%",
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
+                                ),
+                              ),
                       ),
                       if (extendedCards.contains(index))
                         Padding(

@@ -9,7 +9,7 @@ class Mark {
   final DateTime createdAt;
   final Subject subject;
   final GradingSystem gradingSystem;
-  final ExamType examType;
+  ExamType examType;
   final double numericValue; // The core value for calculations
   final String modifier; // '+', '-', or ''
   final String description;
@@ -130,4 +130,29 @@ class Mark {
       description: '',
     );
   }
+
+  Mark copyWith({
+    int? id,
+    DateTime? createdAt,
+    Subject? subject,
+    GradingSystem? gradingSystem,
+    ExamType? examType,
+    double? numericValue,
+    String? modifier,
+    String? description,
+  }) =>
+      Mark(
+        id: id ?? this.id,
+        createdAt: createdAt ?? this.createdAt,
+        subject: subject ?? this.subject,
+        gradingSystem: gradingSystem ?? this.gradingSystem,
+        examType: examType ?? this.examType,
+        numericValue: numericValue ?? this.numericValue,
+        modifier: modifier ?? this.modifier,
+        description: description ?? this.description,
+      );
+
+  @override
+  String toString() =>
+      'Mark(id: $id, createdAt: $createdAt, subject: $subject, gradingSystem: $gradingSystem, examType: $examType, numericValue: $numericValue, modifier: $modifier, description: $description)';
 }
