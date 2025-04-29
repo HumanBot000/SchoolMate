@@ -64,18 +64,17 @@ class _AddMarkValidationPageState extends State<AddMarkValidationPage>
     final theme = Theme.of(context);
     final now = DateTime.now();
 
-    final bestMark = parseMark(widget.gradingSystem.range[0]).toInt();
-    final worstMark = parseMark(widget.gradingSystem.range[1]).toInt();
+    final bestMark = parseMark(widget.gradingSystem.range[0]);
+    final worstMark = parseMark(widget.gradingSystem.range[1]);
     final markColor = getMarkColor(
-      colors: markColors,
-      bestMark: bestMark,
-      worstMark: worstMark,
+      colors: bestMark < worstMark ? markColors : markColors.reversed.toList(),
+      bestMark: bestMark.toInt(),
+      worstMark: worstMark.toInt(),
       valueMark: widget.markValue,
     );
 
-    final normalizedValue = bestMark > worstMark
-        ? (widget.markValue - worstMark) / (bestMark - worstMark)
-        : (bestMark - widget.markValue) / (bestMark - worstMark);
+    final normalizedValue =
+        (widget.markValue - worstMark) / (bestMark - worstMark);
 
     return FadeTransition(
       opacity: _animation,
@@ -168,7 +167,7 @@ class _AddMarkValidationPageState extends State<AddMarkValidationPage>
                               color: markColor,
                             ),
                             child: Text(
-                              "${widget.gradingSystem.modifiers.contains(".") ? widget.markValue.toString() : widget.markValue.toStringAsFixed(0)} ${widget.modifier ?? ""}",
+                              "${widget.gradingSystem.modifiers.contains(".") ? widget.markValue.toString() : widget.markValue.toStringAsFixed(0)}${widget.modifier ?? ""}",
                               style: theme.textTheme.titleMedium?.copyWith(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
@@ -181,7 +180,8 @@ class _AddMarkValidationPageState extends State<AddMarkValidationPage>
                       Row(
                         children: [
                           Text(
-                            bestMark.toString(),
+                            markRepresentation(
+                                worstMark.toString(), widget.gradingSystem),
                             style: TextStyle(
                               color: Colors.grey.shade600,
                               fontSize: 12,
@@ -204,7 +204,8 @@ class _AddMarkValidationPageState extends State<AddMarkValidationPage>
                             ),
                           ),
                           Text(
-                            worstMark.toString(),
+                            markRepresentation(
+                                bestMark.toString(), widget.gradingSystem),
                             style: TextStyle(
                               color: Colors.grey.shade600,
                               fontSize: 12,

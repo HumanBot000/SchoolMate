@@ -113,28 +113,30 @@ class _AddMarkPageState extends State<AddMarkPage> {
           Row(
             children: [
               BackButton(onPressed: _onBackButtonPressed),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: MultipleStepPageIndicator(
-                  stepCount: 4,
-                  currentStep: currentPage,
-                  headTitles: ["Subject", "Mark", "Exam Type", "Confirm"],
-                  backgroundColor: Theme.of(context).colorScheme.surface,
-                  connectionLineThickness: 4,
-                  headTitleStyle: Theme.of(context)
-                      .textTheme
-                      .labelLarge
-                      ?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurface,
-                          fontWeight: FontWeight.bold),
-                  icons: const [
-                    Icons.calendar_month_outlined,
-                    Icons.numbers,
-                    Icons.percent_sharp,
-                    Icons.check
-                  ],
-                  indicatorColor: Colors.blueGrey,
-                  waveColor: Colors.blueGrey.shade100,
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: MultipleStepPageIndicator(
+                    stepCount: 4,
+                    currentStep: currentPage,
+                    headTitles: ["Subject", "Mark", "Exam Type", "Confirm"],
+                    backgroundColor: Theme.of(context).colorScheme.surface,
+                    connectionLineThickness: 4,
+                    headTitleStyle: Theme.of(context)
+                        .textTheme
+                        .labelLarge
+                        ?.copyWith(
+                            color: Theme.of(context).colorScheme.onSurface,
+                            fontWeight: FontWeight.bold),
+                    icons: const [
+                      Icons.calendar_month_outlined,
+                      Icons.numbers,
+                      Icons.percent_sharp,
+                      Icons.check
+                    ],
+                    indicatorColor: Colors.blueGrey,
+                    waveColor: Colors.blueGrey.shade100,
+                  ),
                 ),
               ),
             ],

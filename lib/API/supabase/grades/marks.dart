@@ -26,7 +26,7 @@ Future<List<Mark>> fetchMarks({bool onlyConsiderated = false}) async {
 
   return Future.wait(marks.map((mark) async {
     Subject subject = await fetchSubjectByID(mark["subject"]);
-    return Mark(
+    return Mark.parse(
       id: mark["id"],
       createdAt: DateTime.parse(mark["created_at"]),
       subject: subject,
@@ -34,8 +34,8 @@ Future<List<Mark>> fetchMarks({bool onlyConsiderated = false}) async {
       examType: gradingSystem.examTypes.firstWhere(
         (e) => e.id == mark["exam_type"],
       ),
-      value: mark["value"],
       description: mark["description"],
+      value: mark["value"],
     );
   }));
 }
@@ -83,7 +83,7 @@ Future<List<Mark>> fetchMarksForSubject(Subject subject,
   List<Mark> markList = [];
   for (var mark in marks) {
     Subject subject = await fetchSubjectByID(mark["subject"]);
-    markList.add(Mark(
+    markList.add(Mark.parse(
       id: mark["id"],
       createdAt: DateTime.parse(mark["created_at"]),
       subject: subject,
@@ -104,13 +104,12 @@ Future<double?> calculateAverageMarkForSubject(Subject subject,
       await fetchMarksForSubject(subject, onlyConsiderated: onlyConsiderated);
   if (subjectMarks.isEmpty) return null;
 
-  //todo
   if (subjectMarks.first.examType.evaluationData.evaluationMethod ==
       EvaluationMethod.percentage) {
     var marksPerExamType = groupBy(subjectMarks, (Mark mark) => mark.examType);
     var averagePerExamType = marksPerExamType.map((examType, marks) {
       List<double> parsedMarks =
-          marks.map((mark) => parseMark(mark.value.toString())).toList();
+          marks.map((mark) => parseMark(mark.toRawString())).toList();
       double avg = parsedMarks.isNotEmpty
           ? parsedMarks.reduce((a, b) => a + b) / parsedMarks.length
           : 0.0;
@@ -126,6 +125,45 @@ Future<double?> calculateAverageMarkForSubject(Subject subject,
     });
 
     return weightedAverage;
+  } else if (subjectMarks.first.examType.evaluationData.evaluationMethod ==
+      EvaluationMethod.multiplication) {
+    List<Mark> parsedMarks = List.from(subjectMarks);
+    List<Mark> resultMarks = [];
+
+    while (parsedMarks.any((mark) =>
+        mark.examType.evaluationData.multiplicationChildType != null)) {
+      List<Mark> nextIterationMarks = [];
+
+      for (Mark mark in parsedMarks) {
+        final childType = mark.examType.evaluationData.multiplicationChildType;
+        final factor = mark.examType.evaluationData.multiplicationFactor ?? 1;
+
+        if (childType != null) {
+          for (int i = 0; i < factor; i++) {
+            nextIterationMarks.add(
+              mark.copyWith(
+                examType: childType,
+              ),
+            );
+          }
+        } else {
+          resultMarks.add(mark);
+        }
+      }
+
+      parsedMarks = nextIterationMarks;
+    }
+
+    resultMarks.addAll(parsedMarks); // In case any final round marks are left
+
+    if (resultMarks.isEmpty) return null;
+
+    double avg = resultMarks
+            .map((mark) => parseMark(mark.toRawString()))
+            .reduce((a, b) => a + b) /
+        resultMarks.length;
+
+    return avg;
   }
   return null;
 }
@@ -142,14 +180,13 @@ Future<Map<Subject, Map<ExamType, double?>>?>
       continue;
     }
 
-    //todo
     if (subjectMarks.first.examType.evaluationData.evaluationMethod ==
         EvaluationMethod.percentage) {
       var marksPerExamType =
           groupBy(subjectMarks, (Mark mark) => mark.examType);
       var averagePerExamType = marksPerExamType.map((examType, marks) {
         List<double> parsedMarks =
-            marks.map((mark) => parseMark(mark.value.toString())).toList();
+            marks.map((mark) => parseMark(mark.toRawString())).toList();
         double avg = parsedMarks.isNotEmpty
             ? parsedMarks.reduce((a, b) => a + b) / parsedMarks.length
             : 0.0;
@@ -162,6 +199,19 @@ Future<Map<Subject, Map<ExamType, double?>>?>
         marks[subject] = {};
         continue;
       }
+      marks[subject] = averagePerExamType;
+    } else if (subjectMarks.first.examType.evaluationData.evaluationMethod ==
+        EvaluationMethod.multiplication) {
+      var marksPerExamType =
+          groupBy(subjectMarks, (Mark mark) => mark.examType);
+      var averagePerExamType = marksPerExamType.map((examType, marks) {
+        List<double> parsedMarks =
+            marks.map((mark) => parseMark(mark.toRawString())).toList();
+        double avg = parsedMarks.isNotEmpty
+            ? parsedMarks.reduce((a, b) => a + b) / parsedMarks.length
+            : 0.0;
+        return MapEntry(examType, avg);
+      });
       marks[subject] = averagePerExamType;
     }
   }
@@ -197,23 +247,22 @@ double parseMark(String mark) {
 String markRepresentation(
   dynamic value,
   GradingSystem gradingSystem, {
-  int decimalPlaces = 0,
   String modifier = "",
 }) {
-  if (value is String) return value;
   if (gradingSystem.range[0] == "A" && gradingSystem.range[1] == "F") {
     var reverseGradeMap = {
-      1.0: "A",
-      2.0: "B",
-      3.0: "C",
-      4.0: "D",
-      5.0: "E",
-      6.0: "F"
+      "1.0": "A",
+      "2.0": "B",
+      "3.0": "C",
+      "4.0": "D",
+      "5.0": "E",
+      "6.0": "F"
     };
-    return reverseGradeMap[value] ?? value.toStringAsFixed(decimalPlaces);
+    return reverseGradeMap[value] ??
+        value.toStringAsFixed(gradingSystem.modifiers.contains(".") ? 1 : 0);
   }
-
-  return "${value.toStringAsFixed(decimalPlaces)}$modifier";
+  if (value is String) return value;
+  return "${value.toStringAsFixed(gradingSystem.modifiers.contains(".") ? 1 : 0)}$modifier";
 }
 
 Future<void> insertMark(String value, Subject subject, ExamType examType,

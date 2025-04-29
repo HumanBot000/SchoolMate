@@ -118,7 +118,14 @@ jobs:
           dart format .
 
       - name: Build APK
-        run: flutter build apk --release
+        run: flutter build apk --release --dart-define=GEONAMES_API_USER=humanbot000
+      - name: Generate changelog
+        id: changelog
+        run: |
+          COMMITS=$(git log ${{ steps.version-check.outputs.PREVIOUS_VERSION }}..HEAD --pretty=format:'- %s')
+          echo "Release Notes:" > release_notes.txt
+          echo "$COMMITS" >> release_notes.txt
+          echo "COMMITS=$COMMITS" >> $GITHUB_ENV
 
   release:
     needs: flutter-build
