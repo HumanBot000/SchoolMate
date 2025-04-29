@@ -103,7 +103,7 @@ jobs:
           git log v${{ needs.version-check.outputs.previous_version }}..HEAD --no-merges --pretty=format:"- %s" >> release_notes.txt
 
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: flutter-release
           path: |
