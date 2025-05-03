@@ -292,3 +292,45 @@ Future<void> updateMark(Mark oldMark, Mark newMark) async {
       .eq("user_id", await getUserID())
       .eq("id", oldMark.id);
 }
+
+Future<Map<Subject, List<Mark>>> fetchMostRecentMarksForSubjects(
+    GradingSystem gradingSystem, List<Subject> subjects,
+    {limitPerSubject = 3}) async {
+  Map<Subject, List<Mark>> result = {};
+  for (Subject subject in subjects) {
+    List<Mark> subjectMarks = [];
+    final marks = await supabaseClient.client
+        .schema("grades")
+        .from("marks")
+        .select()
+        .eq("user_id", await getUserID())
+        .eq("subject", subject.id)
+        .order("created_at", ascending: false)
+        .limit(limitPerSubject);
+    for (var mark in marks) {
+      subjectMarks.add(Mark.parse(
+        id: mark["id"],
+        createdAt: DateTime.parse(mark["created_at"]),
+        subject: subject,
+        gradingSystem: gradingSystem,
+        examType: gradingSystem.examTypes
+            .where((element) => element.id == mark["exam_type"])
+            .first,
+        value: mark["value"],
+        description: mark["description"],
+      ));
+    }
+    result[subject] = subjectMarks;
+  }
+  return result;
+}
+
+Future<void> deleteMark(Mark mark) async {
+  await supabaseClient.client
+      .schema("grades")
+      .from("marks")
+      .delete()
+      .eq("user_id", await getUserID())
+      .eq("id", mark.id);
+  logger.i("Deleted Mark with ID ${mark.id}");
+}

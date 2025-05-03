@@ -64,6 +64,7 @@ class _MarksOverviewPageState extends State<MarksOverviewPage> {
   int goal = 7;
   bool _isLoading = true;
   bool _showSkeleton = false;
+  Map<Subject, List<Mark>>? recentMarks;
 
   @override
   void initState() {
@@ -99,6 +100,11 @@ class _MarksOverviewPageState extends State<MarksOverviewPage> {
       if (schedule.subjects.isNotEmpty) {
         _averageMarksPerSubjectAndExamType = averageMarksBySubjectAndExamType;
       }
+    });
+    var _recentMarks = await fetchMostRecentMarksForSubjects(
+        widget.gradingSystem, schedule.subjects);
+    setState(() {
+      recentMarks = _recentMarks;
     });
   }
 
@@ -209,7 +215,6 @@ class _MarksOverviewPageState extends State<MarksOverviewPage> {
 
   @deprecated
   Widget _buildStatsHeader() {
-    //todo
     final averages = [10];
     final overallAverage = averages.reduce((a, b) => a + b) / averages.length;
 
@@ -303,7 +308,11 @@ class _MarksOverviewPageState extends State<MarksOverviewPage> {
               ),
             )),
             child: buildGradingSubjectCard(
-                context, _subjects[index], _averageMarks, widget.gradingSystem),
+                context,
+                _subjects[index],
+                _averageMarks,
+                widget.gradingSystem,
+                recentMarks?[_subjects[index]] ?? []),
           ),
         ),
         Align(

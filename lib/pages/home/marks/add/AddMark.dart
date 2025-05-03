@@ -4,6 +4,7 @@ import 'package:school_mate/Classes/marks/ExamType.dart';
 import 'package:school_mate/Classes/marks/GradingSystem.dart';
 import 'package:school_mate/Classes/schedule/Subject.dart';
 import 'package:school_mate/Widgets/public/MultipleStepPageIndicator.dart';
+import 'package:school_mate/main.dart';
 import 'package:school_mate/pages/home/marks/Grades.dart';
 import 'package:school_mate/pages/home/marks/MarkSelection.dart';
 import 'package:school_mate/pages/home/marks/add/subpages/subject.dart';
@@ -190,6 +191,20 @@ class _AddMarkPageState extends State<AddMarkPage> {
     );
   }
 
+  Future<void> _onDelete() async {
+    await deleteMark(widget.oldMark!);
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text("Mark deleted successfully!"),
+        backgroundColor: Colors.green,
+      ),
+    );
+    Navigator.of(context).pushReplacement(MaterialPageRoute(
+      builder: (context) => const MarksPage(),
+    ));
+    logger.d("message");
+  }
+
   Widget _buildCurrentPage() {
     if (currentPage == 1) {
       return AddMarkSubjectSelector(onSelection: _onSubjectSelection);
@@ -216,6 +231,7 @@ class _AddMarkPageState extends State<AddMarkPage> {
         onSave: widget.isInEditMode ? _onUpdate : _onConfirm,
         isEdit: widget.isInEditMode,
         oldMark: widget.oldMark,
+        onMarkDeleteRequested: _onDelete,
       );
     }
   }

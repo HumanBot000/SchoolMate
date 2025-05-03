@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:school_mate/API/supabase/grades/marks.dart';
 import 'package:school_mate/Classes/marks/GradingSystem.dart';
+import 'package:school_mate/Classes/marks/Mark.dart';
 import 'package:school_mate/Classes/schedule/Subject.dart';
 import 'package:school_mate/pages/home/marks/Utils.dart';
 import 'package:school_mate/pages/home/marks/add/AddMark.dart';
 
 import 'MarksOverviewPage.dart';
 
-Widget buildGradingSubjectCard(BuildContext context, Subject subject,
-    Map<Subject, double?> averageMarks, GradingSystem gradingSystem) {
-  final recent = [10.0];
-  final Color gradeColor = getMarkColor(
-      bestMark: parseMark(gradingSystem.range[0]).toInt(),
-      worstMark: parseMark(gradingSystem.range[1]).toInt(),
-      valueMark: averageMarks[subject] ?? 0,
-      colors: markColors);
+Widget buildGradingSubjectCard(
+    BuildContext context,
+    Subject subject,
+    Map<Subject, double?> averageMarks,
+    GradingSystem gradingSystem,
+    List<Mark> recentMarks) {
+  final recent = List.generate(
+      recentMarks.length, (index) => recentMarks[index].toDisplayString());
 
   return Card(
     margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
@@ -88,8 +89,12 @@ Widget buildGradingSubjectCard(BuildContext context, Subject subject,
             spacing: 8,
             children: recent
                 .map((mark) => Chip(
-                      backgroundColor: gradeColor.withValues(alpha: 0.15),
-                      label: Text(mark.toStringAsFixed(1),
+                      backgroundColor: getMarkColor(
+                          bestMark: parseMark(gradingSystem.range[0]).toInt(),
+                          worstMark: parseMark(gradingSystem.range[1]).toInt(),
+                          valueMark: parseMark(mark),
+                          colors: markColors),
+                      label: Text(mark,
                           style: const TextStyle(color: Colors.white)),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),

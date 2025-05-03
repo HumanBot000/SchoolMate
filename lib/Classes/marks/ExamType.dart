@@ -1,4 +1,4 @@
-import 'dart:mathrt';
+import 'dart:math';
 
 enum EvaluationMethod { percentage, multiplication }
 
