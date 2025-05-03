@@ -1,4 +1,4 @@
-import 'dart:math';
+import 'dart:mathrt';
 
 enum EvaluationMethod { percentage, multiplication }
 
@@ -71,8 +71,7 @@ class ExamType {
     if (identical(this, other)) return true;
     return other is ExamType &&
         other.name == name &&
-        other.evaluationData == evaluationData &&
-        other._uniqueId == _uniqueId;
+        other.evaluationData == evaluationData;
   }
 
   @override

@@ -3,8 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:school_mate/API/supabase/grades/marks.dart';
 import 'package:school_mate/Classes/marks/GradingSystem.dart';
-
-import 'overview/MarksOverviewPage.dart';
+import 'package:school_mate/pages/home/marks/Utils.dart';
 
 class MarkSelector extends StatefulWidget {
   final GradingSystem gradingSystem;

@@ -276,3 +276,19 @@ Future<void> insertMark(String value, Subject subject, ExamType examType,
     "description": description
   });
 }
+
+Future<void> updateMark(Mark oldMark, Mark newMark) async {
+  await supabaseClient.client
+      .schema("grades")
+      .from("marks")
+      .update({
+        "user_id": await getUserID(),
+        "subject": newMark.subject.id,
+        "value": newMark.toRawString(),
+        "grading_system": (await fetchGradingSystem()).id,
+        "exam_type": newMark.examType.id,
+        "description": newMark.description
+      })
+      .eq("user_id", await getUserID())
+      .eq("id", oldMark.id);
+}

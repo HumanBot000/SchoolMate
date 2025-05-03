@@ -122,7 +122,9 @@ class _GradingSetupPageState extends State<GradingSetupPage> {
       "Multiplication factor must be greater than zero":
           "The multiplication factor must be greater than zero!",
       "Multiplication exam types must not form a circle":
-          "Avoid circular dependency in multiplication-based exam types!"
+          "Avoid circular dependency in multiplication-based exam types!",
+      "Exam type names must be unique":
+          "Each exam type must have a unique name!"
     };
     logger.w(errorMessage);
     _showErrorSnackbar(errors[errorMessage] ?? "An unknown error occurred.");

@@ -6,6 +6,7 @@ import 'package:school_mate/Classes/marks/Mark.dart';
 import 'package:school_mate/Classes/schedule/Subject.dart';
 import 'package:school_mate/Widgets/public/PreviousPage.dart';
 import 'package:school_mate/pages/home/marks/MarkSelection.dart';
+import 'package:school_mate/pages/home/marks/Utils.dart';
 import 'package:school_mate/pages/home/marks/add/AddMark.dart';
 import 'package:school_mate/pages/home/marks/overview/MarksOverviewPage.dart';
 import 'package:school_mate/util/dates.dart';
@@ -225,7 +226,6 @@ class _SubjectMarksInspectionPageState
                           padding: const EdgeInsets.all(16.0),
                           child: Column(
                             children: [
-                              //todo onTap
                               GridView.count(
                                 shrinkWrap: true,
                                 physics: const NeverScrollableScrollPhysics(),
@@ -233,28 +233,45 @@ class _SubjectMarksInspectionPageState
                                 children: displayedMarks.map((mark) {
                                   return Column(
                                     children: [
-                                      SizedBox(
-                                        width: 30,
-                                        height: 30,
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            color: mark.color,
-                                            borderRadius:
-                                                BorderRadius.circular(4),
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(4.0),
-                                            child: Center(
-                                              child: FittedBox(
-                                                fit: BoxFit.scaleDown,
-                                                child: Text(
-                                                  mark.toDisplayString(),
-                                                  maxLines: 1,
-                                                  style: const TextStyle(
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 16),
+                                      GestureDetector(
+                                        onLongPress: () => Navigator.of(context)
+                                            .push(MaterialPageRoute(
+                                          builder: (context) => AddMarkPage(
+                                              gradingSystem:
+                                                  widget.gradingSystem,
+                                              subject: widget.subject,
+                                              mark:
+                                                  parseMark(mark.toRawString()),
+                                              examType: mark.examType,
+                                              description: mark.description,
+                                              markModifier: mark.modifier,
+                                              isInEditMode: true,
+                                              oldMark: mark),
+                                        )),
+                                        child: SizedBox(
+                                          width: 30,
+                                          height: 30,
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color: mark.color,
+                                              borderRadius:
+                                                  BorderRadius.circular(4),
+                                            ),
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(4.0),
+                                              child: Center(
+                                                child: FittedBox(
+                                                  fit: BoxFit.scaleDown,
+                                                  child: Text(
+                                                    mark.toDisplayString(),
+                                                    maxLines: 1,
+                                                    style: const TextStyle(
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 16),
+                                                  ),
                                                 ),
                                               ),
                                             ),

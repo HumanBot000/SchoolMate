@@ -10,18 +10,28 @@ import 'package:school_mate/pages/home/marks/add/subpages/subject.dart';
 import 'package:school_mate/pages/home/marks/add/subpages/type.dart';
 import 'package:school_mate/pages/home/marks/add/subpages/validation.dart';
 
+import '../../../../Classes/marks/Mark.dart';
+
 class AddMarkPage extends StatefulWidget {
   final GradingSystem gradingSystem;
   final Subject? subject;
   final double? mark;
   final ExamType? examType;
+  final bool isInEditMode;
+  final String? markModifier;
+  final String description;
+  final Mark? oldMark;
 
   const AddMarkPage(
       {super.key,
       required this.gradingSystem,
       this.subject,
       this.mark,
-      this.examType});
+      this.examType,
+      this.isInEditMode = false,
+      this.markModifier,
+      this.description = "",
+      this.oldMark});
 
   @override
   State<AddMarkPage> createState() => _AddMarkPageState();
@@ -41,6 +51,8 @@ class _AddMarkPageState extends State<AddMarkPage> {
     subject = widget.subject;
     mark = widget.mark;
     selectedExamType = widget.examType;
+    markModifier = widget.markModifier;
+    descriptionController.text = widget.description;
     if (subject == null) {
       currentPage = 1;
       return;
@@ -100,6 +112,35 @@ class _AddMarkPageState extends State<AddMarkPage> {
     }
     await insertMark(markString, subject!, selectedExamType!,
         description: descriptionController.text);
+    Navigator.of(context).pushReplacement(MaterialPageRoute(
+      builder: (context) => const MarksPage(),
+    ));
+  }
+
+  Future<void> _onUpdate() async {
+    var markString = mark.toString();
+    if (markModifier != null) {
+      markString = "$markString$markModifier";
+    }
+    await updateMark(
+        widget.oldMark!,
+        Mark(
+          id: widget.oldMark!.id,
+          createdAt: widget.oldMark!.createdAt,
+          subject: subject!,
+          gradingSystem: widget.gradingSystem,
+          examType: selectedExamType!,
+          numericValue: mark!,
+          modifier: markModifier!,
+          description: descriptionController.text,
+        ));
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text("Updated Mark successfully!"),
+                backgroundColor: Colors.green,
+              ),
+            ));
     Navigator.of(context).pushReplacement(MaterialPageRoute(
       builder: (context) => const MarksPage(),
     ));
@@ -172,7 +213,9 @@ class _AddMarkPageState extends State<AddMarkPage> {
         gradingSystem: widget.gradingSystem,
         onModifierChanged: _onModifierChange,
         modifier: markModifier,
-        onSave: _onConfirm,
+        onSave: widget.isInEditMode ? _onUpdate : _onConfirm,
+        isEdit: widget.isInEditMode,
+        oldMark: widget.oldMark,
       );
     }
   }

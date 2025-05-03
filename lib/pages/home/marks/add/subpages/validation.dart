@@ -3,10 +3,10 @@ import 'package:intl/intl.dart';
 import 'package:school_mate/API/supabase/grades/marks.dart';
 import 'package:school_mate/Classes/marks/ExamType.dart';
 import 'package:school_mate/Classes/marks/GradingSystem.dart';
+import 'package:school_mate/Classes/marks/Mark.dart';
 import 'package:school_mate/Classes/schedule/Subject.dart';
+import 'package:school_mate/pages/home/marks/Utils.dart';
 import 'package:school_mate/pages/home/marks/add/subpages/type.dart';
-
-import '../../overview/MarksOverviewPage.dart';
 
 class AddMarkValidationPage extends StatefulWidget {
   final TextEditingController descriptionController;
@@ -17,6 +17,8 @@ class AddMarkValidationPage extends StatefulWidget {
   final String? modifier;
   final Function(String? modifier) onModifierChanged;
   final Function() onSave;
+  final bool isEdit;
+  final Mark? oldMark;
 
   const AddMarkValidationPage({
     super.key,
@@ -28,6 +30,8 @@ class AddMarkValidationPage extends StatefulWidget {
     required this.onModifierChanged,
     this.modifier,
     required this.onSave,
+    this.isEdit = false,
+    this.oldMark,
   });
 
   @override
@@ -125,7 +129,9 @@ class _AddMarkValidationPageState extends State<AddMarkValidationPage>
                       const SizedBox(width: 12),
                       Expanded(
                         child: Text(
-                          "New Mark for ${widget.subject.name}",
+                          widget.isEdit
+                              ? "Edit Mark for ${widget.subject.name}"
+                              : "New Mark for ${widget.subject.name}",
                           style: theme.textTheme.titleLarge?.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
@@ -134,6 +140,13 @@ class _AddMarkValidationPageState extends State<AddMarkValidationPage>
                     ],
                   ),
                 ),
+                if (widget.isEdit)
+                  Text(
+                    "Use the back button to cary out changes to this mark.",
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 const SizedBox(height: 24),
                 Container(
                   decoration: BoxDecoration(
@@ -292,8 +305,8 @@ class _AddMarkValidationPageState extends State<AddMarkValidationPage>
                             Container(
                               padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
-                                color:
-                                    theme.colorScheme.primary.withOpacity(0.1),
+                                color: theme.colorScheme.primary
+                                    .withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Icon(

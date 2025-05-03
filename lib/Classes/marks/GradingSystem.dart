@@ -152,6 +152,9 @@ class GradingSystem {
           hasSeenDefaultExamType = true;
         }
       }
+      if (examTypes.where((e) => e.name == examTypes[i].name).length > 1) {
+        throw ArgumentError("Exam type names must be unique");
+      }
 
       if (lastExamEvaluationMethod == EvaluationMethod.multiplication &&
           (examTypes[i].evaluationData.multiplicationFactor ?? 0) <= 0) {
