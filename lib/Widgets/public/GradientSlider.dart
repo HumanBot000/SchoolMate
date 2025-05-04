@@ -14,7 +14,7 @@ class GradientSlider extends StatelessWidget {
   final Color inactiveColor; // Color for sections beyond slider value
 
   const GradientSlider({
-    Key? key,
+    super.key,
     required this.sliderRadius,
     required this.gradient,
     required this.value,
@@ -26,7 +26,7 @@ class GradientSlider extends StatelessWidget {
     this.textStyle,
     this.isThumbAbove = false,
     this.inactiveColor = Colors.grey, // Default gray for inactive sections
-  }) : super(key: key);
+  });
 
   double get _normalizedValue => (value - min) / (max - min);
 
@@ -232,7 +232,7 @@ class CircleThumbShape extends SliderComponentShape {
         thumbRadius + 2,
         Paint()
           ..color = Colors.black.withOpacity(0.2)
-          ..maskFilter = MaskFilter.blur(BlurStyle.normal, 3));
+          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 3));
 
     // Draw circle
     canvas.drawCircle(circleOffset, thumbRadius, paint);

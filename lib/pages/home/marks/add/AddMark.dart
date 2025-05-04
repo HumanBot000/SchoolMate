@@ -161,7 +161,12 @@ class _AddMarkPageState extends State<AddMarkPage> {
                   child: MultipleStepPageIndicator(
                     stepCount: 4,
                     currentStep: currentPage,
-                    headTitles: ["Subject", "Mark", "Exam Type", "Confirm"],
+                    headTitles: const [
+                      "Subject",
+                      "Mark",
+                      "Exam Type",
+                      "Confirm"
+                    ],
                     backgroundColor: Theme.of(context).colorScheme.surface,
                     connectionLineThickness: 4,
                     headTitleStyle: Theme.of(context)

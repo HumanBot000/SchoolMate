@@ -460,7 +460,7 @@ class _AddMarkValidationPageState extends State<AddMarkValidationPage>
                                   mainAxisSize: MainAxisSize.min,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
+                                    const Text(
                                       "Are you sure you want to delete this mark?",
                                       style: TextStyle(
                                         fontSize: 16,

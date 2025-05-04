@@ -27,8 +27,9 @@ class ExamTypeSelector extends StatelessWidget {
       separatorBuilder: (context, index) => const SizedBox(height: 12),
       itemBuilder: (context, index) {
         final examType = gradingSystem.examTypes[index];
-        if (shownExamTypes.isNotEmpty && !shownExamTypes.contains(examType))
+        if (shownExamTypes.isNotEmpty && !shownExamTypes.contains(examType)) {
           return Container();
+        }
         return Material(
           color: colors.surface,
           borderRadius: BorderRadius.circular(15),

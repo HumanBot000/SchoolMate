@@ -101,10 +101,10 @@ class _MarksOverviewPageState extends State<MarksOverviewPage> {
         _averageMarksPerSubjectAndExamType = averageMarksBySubjectAndExamType;
       }
     });
-    var _recentMarks = await fetchMostRecentMarksForSubjects(
+    var recentMarks = await fetchMostRecentMarksForSubjects(
         widget.gradingSystem, schedule.subjects);
     setState(() {
-      recentMarks = _recentMarks;
+      recentMarks = recentMarks;
     });
   }
 
