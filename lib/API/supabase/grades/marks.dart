@@ -10,39 +10,129 @@ import 'package:school_mate/main.dart';
 
 import 'gradingSystem.dart';
 
-Future<List<Mark>> fetchMarks({bool onlyConsiderated = false}) async {
+/// Central cache storage for marks data to prevent redundant fetching
+class MarksCache {
+  static List<Mark>? _allMarks;
+  static Map<String, Subject?>? _subjectCache;
+  static GradingSystem? _gradingSystem;
+  static DateTime? _lastFetchTime;
+
+  /// Clears the cache to force a refresh on next fetch
+  static void invalidateCache() {
+    _allMarks = null;
+    _subjectCache = null;
+    _lastFetchTime = null;
+  }
+
+  /// Check if cache is still valid (less than 5 minutes old)
+  static bool isCacheValid() {
+    if (_lastFetchTime == null || _allMarks == null) return false;
+
+    final now = DateTime.now();
+    // Cache expires after 5 minutes
+    return now.difference(_lastFetchTime!).inMinutes < 5;
+  }
+}
+
+/// Loads all necessary data once and caches it
+Future<List<Mark>> _loadAllMarksData({bool forceRefresh = false}) async {
+  // Return cached data if it exists and is still valid
+  if (!forceRefresh &&
+      MarksCache.isCacheValid() &&
+      MarksCache._allMarks != null) {
+    return MarksCache._allMarks!;
+  }
+
+  logger.i("Fetching fresh marks data from database");
+
+  // Fetch grading system
   final gradingSystem = await fetchGradingSystem();
   if (gradingSystem == null ||
       (gradingSystem is String && gradingSystem.isEmpty)) {
+    MarksCache._allMarks = [];
+    MarksCache._lastFetchTime = DateTime.now();
     return [];
   }
 
+  MarksCache._gradingSystem = gradingSystem;
+
+  // Fetch all marks in single query
   PostgrestList marks = await supabaseClient.client
       .schema("grades")
       .from("marks")
       .select("*")
-      .eq("user_id", await getUserID())
-      .eq("consider", onlyConsiderated);
+      .eq("user_id", await getUserID());
 
-  return Future.wait(marks.map((mark) async {
-    Subject subject = await fetchSubjectByID(mark["subject"]);
-    return Mark.parse(
+  // Fetch all required subjects at once
+  final uniqueSubjectIds =
+      marks.map((mark) => mark["subject"].toString()).toSet().toList();
+  final subjects = await Future.wait(
+      uniqueSubjectIds.map((id) => fetchSubjectByID(int.parse(id))));
+
+  // Create a lookup map for faster subject access
+  MarksCache._subjectCache = Map.fromIterables(uniqueSubjectIds, subjects);
+
+  // Parse all marks
+  List<Mark> parsedMarks = [];
+
+  for (var mark in marks) {
+    String subjectId = mark["subject"].toString();
+    Subject? subject = MarksCache._subjectCache?[subjectId];
+
+    // Skip marks with missing subjects
+    if (subject == null) {
+      logger.w("Skipping mark with ID ${mark["id"]} - Subject not found");
+      continue;
+    }
+
+    // Find exam type
+    ExamType? examType;
+    try {
+      examType = gradingSystem.examTypes.firstWhere(
+        (e) => e.id == mark["exam_type"],
+      );
+    } catch (e) {
+      logger.w("Skipping mark with ID ${mark["id"]} - Exam type not found");
+      continue;
+    }
+
+    // Create mark
+    parsedMarks.add(Mark.parse(
       id: mark["id"],
       createdAt: DateTime.parse(mark["created_at"]),
       subject: subject,
       gradingSystem: gradingSystem,
-      examType: gradingSystem.examTypes.firstWhere(
-        (e) => e.id == mark["exam_type"],
-      ),
+      examType: examType!,
       description: mark["description"],
       value: mark["value"],
-    );
-  }));
+      isConsidered: mark["consider"],
+    ));
+  }
+
+  // Store in cache
+  MarksCache._allMarks = parsedMarks;
+  MarksCache._lastFetchTime = DateTime.now();
+
+  return parsedMarks;
 }
 
+/// Fetches all marks, with optional filtering for considered marks only
+Future<List<Mark>> fetchMarks(
+    {bool onlyConsiderated = false, bool forceRefresh = false}) async {
+  final allMarks = await _loadAllMarksData(forceRefresh: forceRefresh);
+
+  if (onlyConsiderated) {
+    return allMarks.where((mark) => mark.isConsidered).toList();
+  }
+
+  return allMarks;
+}
+
+/// Fetches marks organized by subject
 Future<Map<Subject, Map<String, Object>>> fetchMarksBySubjects(
-    {bool onlyConsiderated = false}) async {
-  final List<Mark> marks = await fetchMarks(onlyConsiderated: onlyConsiderated);
+    {bool onlyConsiderated = false, bool forceRefresh = false}) async {
+  final List<Mark> marks = await fetchMarks(
+      onlyConsiderated: onlyConsiderated, forceRefresh: forceRefresh);
 
   var markMap = groupBy(marks, (Mark mark) => mark.subject);
   var marksPerExamType = markMap.map((subject, marks) =>
@@ -54,54 +144,21 @@ Future<Map<Subject, Map<String, Object>>> fetchMarksBySubjects(
       }));
 }
 
+/// Fetches marks for a specific subject
 Future<List<Mark>> fetchMarksForSubject(Subject subject,
-    {bool onlyConsiderated = false}) async {
-  final gradingSystem = await fetchGradingSystem();
-  if (gradingSystem is String && gradingSystem.isEmpty) {
-    return [];
-  }
+    {bool onlyConsiderated = false, bool forceRefresh = false}) async {
+  final allMarks = await fetchMarks(
+      onlyConsiderated: onlyConsiderated, forceRefresh: forceRefresh);
 
-  PostgrestList marks;
-  //We currently consider that there is maximum 1 GradingSystem
-  if (onlyConsiderated) {
-    marks = await supabaseClient.client
-        .schema("grades")
-        .from("marks")
-        .select()
-        .eq("user_id", await getUserID())
-        .eq("consider", true)
-        .eq("subject", subject.id);
-  } else {
-    marks = await supabaseClient.client
-        .schema("grades")
-        .from("marks")
-        .select()
-        .eq("user_id", await getUserID())
-        .eq("subject", subject.id);
-  }
-
-  List<Mark> markList = [];
-  for (var mark in marks) {
-    Subject subject = await fetchSubjectByID(mark["subject"]);
-    markList.add(Mark.parse(
-      id: mark["id"],
-      createdAt: DateTime.parse(mark["created_at"]),
-      subject: subject,
-      gradingSystem: gradingSystem,
-      examType: gradingSystem.examTypes
-          .where((element) => element.id == mark["exam_type"])
-          .first,
-      value: mark["value"],
-      description: mark["description"],
-    ));
-  }
-  return markList;
+  return allMarks.where((mark) => mark.subject.id == subject.id).toList();
 }
 
+/// Calculates average mark for a specific subject
 Future<double?> calculateAverageMarkForSubject(Subject subject,
-    {bool onlyConsiderated = false}) async {
-  final List<Mark> subjectMarks =
-      await fetchMarksForSubject(subject, onlyConsiderated: onlyConsiderated);
+    {bool onlyConsiderated = false, bool forceRefresh = false}) async {
+  final List<Mark> subjectMarks = await fetchMarksForSubject(subject,
+      onlyConsiderated: onlyConsiderated, forceRefresh: forceRefresh);
+
   if (subjectMarks.isEmpty) return null;
 
   if (subjectMarks.first.examType.evaluationData.evaluationMethod ==
@@ -168,15 +225,86 @@ Future<double?> calculateAverageMarkForSubject(Subject subject,
   return null;
 }
 
-Future<Map<Subject, Map<ExamType, double?>>?>
+/// Calculates average marks grouped by subjects and exam types
+Future<Map<Subject, Map<ExamType, double?>>>
     calculateAverageMarksBySubjectsAndExamTypes(List<Subject> subjects,
-        {bool onlyConsiderated = false}) async {
-  Map<Subject, Map<ExamType, double?>> marks = {};
-  for (Subject subject in subjects) {
-    final List<Mark> subjectMarks =
-        await fetchMarksForSubject(subject, onlyConsiderated: onlyConsiderated);
+        {bool onlyConsiderated = false, bool forceRefresh = false}) async {
+  final Map<Subject, List<Mark>> subjectMarksMap = {};
+
+  // Get all marks first
+  final allMarks = await fetchMarks(
+      onlyConsiderated: onlyConsiderated, forceRefresh: forceRefresh);
+
+  // Group marks by subject
+  for (final subject in subjects) {
+    subjectMarksMap[subject] =
+        allMarks.where((mark) => mark.subject.id == subject.id).toList();
+  }
+
+  // Calculate averages
+  Map<Subject, Map<ExamType, double?>> results = {};
+
+  for (final subject in subjects) {
+    final List<Mark> subjectMarks = subjectMarksMap[subject] ?? [];
     if (subjectMarks.isEmpty) {
-      marks[subject] = {};
+      results[subject] = {};
+      continue;
+    }
+
+    if (subjectMarks.isNotEmpty) {
+      if (subjectMarks.first.examType.evaluationData.evaluationMethod ==
+          EvaluationMethod.percentage) {
+        var marksPerExamType =
+            groupBy(subjectMarks, (Mark mark) => mark.examType);
+        var averagePerExamType = marksPerExamType.map((examType, marks) {
+          List<double> parsedMarks =
+              marks.map((mark) => parseMark(mark.toRawString())).toList();
+          double avg = parsedMarks.isNotEmpty
+              ? parsedMarks.reduce((a, b) => a + b) / parsedMarks.length
+              : 0.0;
+          return MapEntry(examType, avg);
+        });
+        results[subject] = averagePerExamType;
+      } else if (subjectMarks.first.examType.evaluationData.evaluationMethod ==
+          EvaluationMethod.multiplication) {
+        var marksPerExamType =
+            groupBy(subjectMarks, (Mark mark) => mark.examType);
+        var averagePerExamType = marksPerExamType.map((examType, marks) {
+          List<double> parsedMarks =
+              marks.map((mark) => parseMark(mark.toRawString())).toList();
+          double avg = parsedMarks.isNotEmpty
+              ? parsedMarks.reduce((a, b) => a + b) / parsedMarks.length
+              : 0.0;
+          return MapEntry(examType, avg);
+        });
+        results[subject] = averagePerExamType;
+      } else {
+        results[subject] = {};
+      }
+    } else {
+      results[subject] = {};
+    }
+  }
+
+  return results;
+}
+
+/// Calculates average marks for all subjects
+Future<Map<Subject, double?>> calculateAverageMarksBySubjects(
+    List<Subject> subjects,
+    {bool onlyConsiderated = false,
+    bool forceRefresh = false}) async {
+  final allMarks = await fetchMarks(
+      onlyConsiderated: onlyConsiderated, forceRefresh: forceRefresh);
+
+  Map<Subject, double?> results = {};
+
+  for (final subject in subjects) {
+    final subjectMarks =
+        allMarks.where((mark) => mark.subject.id == subject.id).toList();
+
+    if (subjectMarks.isEmpty) {
+      results[subject] = null;
       continue;
     }
 
@@ -196,38 +324,70 @@ Future<Map<Subject, Map<ExamType, double?>>?>
           (sum, examType) => sum + (examType.evaluationData.percentage ?? 0));
 
       if (totalWeight == 0) {
-        marks[subject] = {};
+        results[subject] = null;
         continue;
       }
-      marks[subject] = averagePerExamType;
+
+      double weightedAverage =
+          averagePerExamType.entries.fold(0.0, (sum, entry) {
+        double weight =
+            (entry.key.evaluationData.percentage ?? 0) / totalWeight;
+        return sum + (entry.value * weight);
+      });
+
+      results[subject] = weightedAverage;
     } else if (subjectMarks.first.examType.evaluationData.evaluationMethod ==
         EvaluationMethod.multiplication) {
-      var marksPerExamType =
-          groupBy(subjectMarks, (Mark mark) => mark.examType);
-      var averagePerExamType = marksPerExamType.map((examType, marks) {
-        List<double> parsedMarks =
-            marks.map((mark) => parseMark(mark.toRawString())).toList();
-        double avg = parsedMarks.isNotEmpty
-            ? parsedMarks.reduce((a, b) => a + b) / parsedMarks.length
-            : 0.0;
-        return MapEntry(examType, avg);
-      });
-      marks[subject] = averagePerExamType;
+      List<Mark> parsedMarks = List.from(subjectMarks);
+      List<Mark> resultMarks = [];
+
+      while (parsedMarks.any((mark) =>
+          mark.examType.evaluationData.multiplicationChildType != null)) {
+        List<Mark> nextIterationMarks = [];
+
+        for (Mark mark in parsedMarks) {
+          final childType =
+              mark.examType.evaluationData.multiplicationChildType;
+          final factor = mark.examType.evaluationData.multiplicationFactor ?? 1;
+
+          if (childType != null) {
+            for (int i = 0; i < factor; i++) {
+              nextIterationMarks.add(
+                mark.copyWith(
+                  examType: childType,
+                ),
+              );
+            }
+          } else {
+            resultMarks.add(mark);
+          }
+        }
+
+        parsedMarks = nextIterationMarks;
+      }
+
+      resultMarks.addAll(parsedMarks); // In case any final round marks are left
+
+      if (resultMarks.isEmpty) {
+        results[subject] = null;
+        continue;
+      }
+
+      double avg = resultMarks
+              .map((mark) => parseMark(mark.toRawString()))
+              .reduce((a, b) => a + b) /
+          resultMarks.length;
+
+      results[subject] = avg;
+    } else {
+      results[subject] = null;
     }
   }
-  return marks;
+
+  return results;
 }
 
-Future<Map<Subject, double?>> calculateAverageMarksBySubjects(
-    List<Subject> subjects,
-    {bool onlyConsiderated = false}) async {
-  return Map.fromEntries(await Future.wait(subjects.map((subject) async =>
-      MapEntry(
-          subject,
-          await calculateAverageMarkForSubject(subject,
-              onlyConsiderated: onlyConsiderated)))));
-}
-
+/// Helper function to parse mark values
 double parseMark(String mark) {
   // Replace comma with dot for localization
   mark = mark.replaceAll(',', '.');
@@ -244,6 +404,7 @@ double parseMark(String mark) {
   return gradeMap[mark.trim().toUpperCase()]!;
 }
 
+/// Creates a string representation of a mark
 String markRepresentation(
   dynamic value,
   GradingSystem gradingSystem, {
@@ -265,6 +426,7 @@ String markRepresentation(
   return "${value.toStringAsFixed(gradingSystem.modifiers.contains(".") ? 1 : 0)}$modifier";
 }
 
+/// Inserts a new mark
 Future<void> insertMark(String value, Subject subject, ExamType examType,
     {String description = ""}) async {
   await supabaseClient.client.schema("grades").from("marks").insert({
@@ -275,8 +437,12 @@ Future<void> insertMark(String value, Subject subject, ExamType examType,
     "exam_type": examType.id,
     "description": description
   });
+
+  // Invalidate cache to reflect new data
+  MarksCache.invalidateCache();
 }
 
+/// Updates an existing mark
 Future<void> updateMark(Mark oldMark, Mark newMark) async {
   await supabaseClient.client
       .schema("grades")
@@ -291,40 +457,36 @@ Future<void> updateMark(Mark oldMark, Mark newMark) async {
       })
       .eq("user_id", await getUserID())
       .eq("id", oldMark.id);
+
+  // Invalidate cache to reflect updated data
+  MarksCache.invalidateCache();
 }
 
+/// Fetches most recent marks for multiple subjects
 Future<Map<Subject, List<Mark>>> fetchMostRecentMarksForSubjects(
     GradingSystem gradingSystem, List<Subject> subjects,
-    {limitPerSubject = 3}) async {
+    {int limitPerSubject = 3, bool forceRefresh = false}) async {
+  // First try to use cached data if available
+  final allMarks = await fetchMarks(forceRefresh: forceRefresh);
+
   Map<Subject, List<Mark>> result = {};
+
   for (Subject subject in subjects) {
-    List<Mark> subjectMarks = [];
-    final marks = await supabaseClient.client
-        .schema("grades")
-        .from("marks")
-        .select()
-        .eq("user_id", await getUserID())
-        .eq("subject", subject.id)
-        .order("created_at", ascending: false)
-        .limit(limitPerSubject);
-    for (var mark in marks) {
-      subjectMarks.add(Mark.parse(
-        id: mark["id"],
-        createdAt: DateTime.parse(mark["created_at"]),
-        subject: subject,
-        gradingSystem: gradingSystem,
-        examType: gradingSystem.examTypes
-            .where((element) => element.id == mark["exam_type"])
-            .first,
-        value: mark["value"],
-        description: mark["description"],
-      ));
-    }
-    result[subject] = subjectMarks;
+    // Filter and sort marks for this subject
+    List<Mark> subjectMarks = allMarks
+        .where((mark) => mark.subject.id == subject.id)
+        .toList()
+      ..sort(
+          (a, b) => b.createdAt.compareTo(a.createdAt)); // Sort by most recent
+
+    // Take only the requested number of marks
+    result[subject] = subjectMarks.take(limitPerSubject).toList();
   }
+
   return result;
 }
 
+/// Deletes a mark
 Future<void> deleteMark(Mark mark) async {
   await supabaseClient.client
       .schema("grades")
@@ -332,5 +494,9 @@ Future<void> deleteMark(Mark mark) async {
       .delete()
       .eq("user_id", await getUserID())
       .eq("id", mark.id);
+
+  // Invalidate cache to reflect deleted data
+  MarksCache.invalidateCache();
+
   logger.i("Deleted Mark with ID ${mark.id}");
 }

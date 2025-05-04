@@ -9,6 +9,7 @@ import 'package:school_mate/Classes/marks/ExamType.dart';
 import 'package:school_mate/Classes/marks/GradingSystem.dart';
 import 'package:school_mate/Classes/marks/Mark.dart';
 import 'package:school_mate/Classes/schedule/Subject.dart';
+import 'package:school_mate/main.dart';
 import 'package:school_mate/pages/home/marks/Utils.dart';
 import 'package:school_mate/pages/home/marks/add/AddMark.dart';
 import 'package:school_mate/pages/home/marks/overview/MarkSubjectCard.dart';
@@ -56,22 +57,29 @@ LinearGradient createMarkGradient({
 }
 
 class _MarksOverviewPageState extends State<MarksOverviewPage> {
+  // Data state variables
   List<Subject> _subjects = [];
   Map<Subject, List<Mark>> _marks = {};
   Map<Subject, double?> _averageMarks = {};
   Map<Subject, Map<ExamType, List<Mark>>> _marksPerExamType = {};
-  Map<Subject, Map<ExamType, double?>>? _averageMarksPerSubjectAndExamType = {};
+  Map<Subject, Map<ExamType, double?>> _averageMarksPerSubjectAndExamType = {};
+  Map<Subject, List<Mark>>? _recentMarks;
+
+  // UI state variables
   int goal = 7;
   bool _isLoading = true;
   bool _showSkeleton = false;
-  Map<Subject, List<Mark>>? recentMarks;
+  bool _hasError = false;
+  String _errorMessage = '';
 
   @override
   void initState() {
     super.initState();
-    _load();
+    _loadData();
+
+    // Show skeleton loader after 3 seconds if still loading
     Timer(const Duration(seconds: 3), () {
-      if (_isLoading) {
+      if (mounted && _isLoading) {
         setState(() {
           _showSkeleton = true;
         });
@@ -79,41 +87,71 @@ class _MarksOverviewPageState extends State<MarksOverviewPage> {
     });
   }
 
+  /// Single point of data loading that optimizes database calls
   Future<void> _loadData() async {
-    dynamic schedule = await fetchSchedule();
-    if (schedule is String && schedule.isEmpty) return;
-
-    Map<Subject, Map<String, Object>> marks =
-        await fetchMarksBySubjects(onlyConsiderated: true);
-
-    var averageMarksBySubjects =
-        await calculateAverageMarksBySubjects(schedule.subjects);
-    var averageMarksBySubjectAndExamType =
-        await calculateAverageMarksBySubjectsAndExamTypes(schedule.subjects);
-    setState(() {
-      _subjects = schedule.subjects;
-      _marks = marks.map(
-          (subject, data) => MapEntry(subject, data["marks"] as List<Mark>));
-      _marksPerExamType = marks.map((subject, data) => MapEntry(
-          subject, data["marksPerExamType"] as Map<ExamType, List<Mark>>));
-      _averageMarks = averageMarksBySubjects;
-      if (schedule.subjects.isNotEmpty) {
-        _averageMarksPerSubjectAndExamType = averageMarksBySubjectAndExamType;
+    try {
+      // Step 1: Fetch schedule once to get subjects
+      dynamic schedule = await fetchSchedule();
+      if (schedule is String && schedule.isEmpty) {
+        setState(() {
+          _isLoading = false;
+          _hasError = true;
+          _errorMessage = 'No schedule available';
+        });
+        return;
       }
-    });
-    var recentMarks = await fetchMostRecentMarksForSubjects(
-        widget.gradingSystem, schedule.subjects);
-    setState(() {
-      recentMarks = recentMarks;
-    });
-  }
 
-  Future<void> _load() async {
-    await _loadData();
-    setState(() {
-      _isLoading = false;
-      _showSkeleton = false;
-    });
+      List<Subject> subjects = schedule.subjects;
+
+      if (subjects.isEmpty) {
+        setState(() {
+          _subjects = [];
+          _isLoading = false;
+        });
+        return;
+      }
+
+      // Step 2: Fetch all marks data - this makes a single DB call with our optimized API
+      Map<Subject, Map<String, Object>> allMarksData =
+          await fetchMarksBySubjects(onlyConsiderated: true);
+
+      // Step 3: Calculate averages - now uses cached data from the previous call
+      Map<Subject, double?> averageMarks =
+          await calculateAverageMarksBySubjects(subjects);
+
+      Map<Subject, Map<ExamType, double?>> averagesPerExamType =
+          await calculateAverageMarksBySubjectsAndExamTypes(subjects);
+
+      // Step 4: Get recent marks - also uses cached data
+      Map<Subject, List<Mark>> recentMarks =
+          await fetchMostRecentMarksForSubjects(widget.gradingSystem, subjects);
+
+      // Update state only once with all the data
+      if (mounted) {
+        setState(() {
+          _subjects = subjects;
+          _marks = allMarksData.map((subject, data) =>
+              MapEntry(subject, data["marks"] as List<Mark>));
+          _marksPerExamType = allMarksData.map((subject, data) => MapEntry(
+              subject, data["marksPerExamType"] as Map<ExamType, List<Mark>>));
+          _averageMarks = averageMarks;
+          _averageMarksPerSubjectAndExamType = averagesPerExamType;
+          _recentMarks = recentMarks;
+          _isLoading = false;
+          _showSkeleton = false;
+        });
+      }
+    } catch (e) {
+      logger.e("Error loading marks data: $e");
+      rethrow;
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+          _hasError = true;
+          _errorMessage = 'Error loading marks data: $e';
+        });
+      }
+    }
   }
 
   Widget _buildLoadingContent() {
@@ -213,123 +251,136 @@ class _MarksOverviewPageState extends State<MarksOverviewPage> {
     );
   }
 
-  @deprecated
-  Widget _buildStatsHeader() {
-    final averages = [10];
-    final overallAverage = averages.reduce((a, b) => a + b) / averages.length;
-
-    return Container(
-      margin: const EdgeInsets.all(16),
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Theme.of(context).colorScheme.primary,
-            Theme.of(context).colorScheme.primaryContainer,
-          ],
-        ),
-        borderRadius: BorderRadius.circular(16),
-      ),
+  Widget _buildErrorContent() {
+    return Center(
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text('Overall Average',
-              style: Theme.of(context)
-                  .textTheme
-                  .titleLarge
-                  ?.copyWith(color: Colors.white, fontWeight: FontWeight.bold)),
-          Text(overallAverage.toStringAsFixed(1),
-              style: Theme.of(context)
-                  .textTheme
-                  .displaySmall
-                  ?.copyWith(color: Colors.white, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 16),
-          /* todo Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _buildStatBadge(Icons.emoji_events, 'Goal Achieved',
-                  "${_mockMarks.values.where((e) => e['average'] >= goal).length.toString()} Subjects"),
-              _buildStatBadge(Icons.warning, 'Needs Attention',
-                  "${_mockMarks.values.where((e) => e['average'] < goal).length.toString()} Subjects"),
-            ],
+          Icon(
+            Icons.error_outline,
+            size: 64,
+            color: Theme.of(context).colorScheme.error,
           ),
-          */
+          const SizedBox(height: 16),
+          Text(
+            'Something went wrong',
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+          const SizedBox(height: 8),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 32),
+            child: Text(
+              _errorMessage,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+          ),
+          const SizedBox(height: 24),
+          ElevatedButton(
+            onPressed: () {
+              setState(() {
+                _isLoading = true;
+                _hasError = false;
+                _errorMessage = '';
+              });
+              _loadData();
+            },
+            child: const Text('Try Again'),
+          ),
         ],
       ),
     );
   }
 
-  @deprecated
-  Widget _buildStatBadge(IconData icon, String label, String value) {
-    return Column(
-      children: [
-        Icon(icon, color: Colors.white.withOpacity(0.8)),
-        Text(label, style: TextStyle(color: Colors.white.withOpacity(0.8))),
-        Text(value,
-            style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 16)),
-      ],
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
+    // Show skeleton loader if loading takes more than 3 seconds
     if (_isLoading && _showSkeleton) {
       return Scaffold(
         body: buildMarkOverviewSkeletonLoader(),
       );
     }
 
+    // Show loading content with tips and animations
     if (_isLoading) {
       return Scaffold(
         body: _buildLoadingContent(),
       );
     }
 
-    if (_subjects.isEmpty) return buildNoSubjectsForGradingNoticePage(context);
+    // Show error screen if there was a problem loading data
+    if (_hasError) {
+      return Scaffold(
+        body: _buildErrorContent(),
+      );
+    }
 
+    // Show empty state if no subjects are available
+    if (_subjects.isEmpty) {
+      return buildNoSubjectsForGradingNoticePage(context);
+    }
+
+    // Show the actual content with subjects and marks
     return Scaffold(
-        body: Stack(
-      children: [
-        ListView.builder(
-          itemCount: _subjects.length,
-          itemBuilder: (context, index) => InkWell(
-            onTap: () => Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => SubjectMarksInspectionPage(
-                subject: _subjects[index],
-                overallAverage: _averageMarks[_subjects[index]],
-                examTypeAverages:
-                    _averageMarksPerSubjectAndExamType?[_subjects[index]] ?? {},
-                marksPerExamType: _marksPerExamType[_subjects[index]] ?? {},
-                gradingSystem: widget.gradingSystem,
+      body: Stack(
+        children: [
+          RefreshIndicator(
+            onRefresh: () async {
+              setState(() {
+                _isLoading = true;
+              });
+              await _loadData();
+            },
+            child: ListView.builder(
+              itemCount: _subjects.length,
+              itemBuilder: (context, index) => InkWell(
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => SubjectMarksInspectionPage(
+                      subject: _subjects[index],
+                      overallAverage: _averageMarks[_subjects[index]],
+                      examTypeAverages: _averageMarksPerSubjectAndExamType[
+                              _subjects[index]] ??
+                          {},
+                      marksPerExamType:
+                          _marksPerExamType[_subjects[index]] ?? {},
+                      gradingSystem: widget.gradingSystem,
+                    ),
+                  ),
+                ),
+                child: buildGradingSubjectCard(
+                  context,
+                  _subjects[index],
+                  _averageMarks,
+                  widget.gradingSystem,
+                  _recentMarks?[_subjects[index]] ?? [],
+                ),
               ),
-            )),
-            child: buildGradingSubjectCard(
-                context,
-                _subjects[index],
-                _averageMarks,
-                widget.gradingSystem,
-                recentMarks?[_subjects[index]] ?? []),
-          ),
-        ),
-        Align(
-          alignment: Alignment.bottomRight,
-          child: Container(
-            margin: const EdgeInsets.all(16),
-            child: FloatingActionButton(
-              tooltip: "Add a Mark to a subject",
-              onPressed: () => Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) =>
-                    AddMarkPage(gradingSystem: widget.gradingSystem),
-              )),
-              child: const Icon(Icons.add_chart_rounded),
             ),
           ),
-        ),
-      ],
-    ));
+          Align(
+            alignment: Alignment.bottomRight,
+            child: Container(
+              margin: const EdgeInsets.all(16),
+              child: FloatingActionButton(
+                tooltip: "Add a Mark to a subject",
+                onPressed: () => Navigator.of(context)
+                    .push(
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        AddMarkPage(gradingSystem: widget.gradingSystem),
+                  ),
+                )
+                    .then((_) {
+                  // Refresh data when returning from add mark page
+                  _loadData();
+                }),
+                child: const Icon(Icons.add_chart_rounded),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

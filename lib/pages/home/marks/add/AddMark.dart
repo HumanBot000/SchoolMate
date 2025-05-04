@@ -126,15 +126,15 @@ class _AddMarkPageState extends State<AddMarkPage> {
     await updateMark(
         widget.oldMark!,
         Mark(
-          id: widget.oldMark!.id,
-          createdAt: widget.oldMark!.createdAt,
-          subject: subject!,
-          gradingSystem: widget.gradingSystem,
-          examType: selectedExamType!,
-          numericValue: mark!,
-          modifier: markModifier!,
-          description: descriptionController.text,
-        ));
+            id: widget.oldMark!.id,
+            createdAt: widget.oldMark!.createdAt,
+            subject: subject!,
+            gradingSystem: widget.gradingSystem,
+            examType: selectedExamType!,
+            numericValue: mark!,
+            modifier: markModifier!,
+            description: descriptionController.text,
+            isConsidered: widget.oldMark!.isConsidered));
     WidgetsBinding.instance
         .addPostFrameCallback((_) => ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(

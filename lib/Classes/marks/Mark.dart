@@ -13,29 +13,30 @@ class Mark {
   final double numericValue; // The core value for calculations
   final String modifier; // '+', '-', or ''
   final String description;
+  final bool isConsidered;
 
-  Mark({
-    required this.id,
-    required this.createdAt,
-    required this.subject,
-    required this.gradingSystem,
-    required this.examType,
-    required this.numericValue,
-    this.modifier = '',
-    required this.description,
-  });
+  Mark(
+      {required this.id,
+      required this.createdAt,
+      required this.subject,
+      required this.gradingSystem,
+      required this.examType,
+      required this.numericValue,
+      this.modifier = '',
+      required this.description,
+      required this.isConsidered});
 
   /// Parses a mark string (e.g., '2+', '3.5', '4-') into a Mark instance.
   /// [value] is the string representation, [gradingSystem] is needed to interpret modifiers and decimals.
-  static Mark parse({
-    required int id,
-    required DateTime createdAt,
-    required Subject subject,
-    required GradingSystem gradingSystem,
-    required ExamType examType,
-    required String value,
-    required String description,
-  }) {
+  static Mark parse(
+      {required int id,
+      required DateTime createdAt,
+      required Subject subject,
+      required GradingSystem gradingSystem,
+      required ExamType examType,
+      required String value,
+      required String description,
+      required bool isConsidered}) {
     final regex = RegExp(r'([0-9]+(?:[.,][0-9]+)?)([+\-]?)');
     final match = regex.firstMatch(value.trim());
     if (match == null) {
@@ -44,15 +45,15 @@ class Mark {
     double numVal = double.parse(match.group(1)!.replaceAll(',', '.'));
     String mod = match.group(2) ?? '';
     return Mark(
-      id: id,
-      createdAt: createdAt,
-      subject: subject,
-      gradingSystem: gradingSystem,
-      examType: examType,
-      numericValue: numVal,
-      modifier: mod,
-      description: description,
-    );
+        id: id,
+        createdAt: createdAt,
+        subject: subject,
+        gradingSystem: gradingSystem,
+        examType: examType,
+        numericValue: numVal,
+        modifier: mod,
+        description: description,
+        isConsidered: isConsidered);
   }
 
   /// Converts the Mark to a string representation for display (e.g., '2+', '3.5', etc.)
@@ -120,37 +121,37 @@ class Mark {
     }
     // Combine numeric values, ignore modifiers and description
     return Mark(
-      id: -1,
-      createdAt: DateTime.now(),
-      subject: subject,
-      gradingSystem: gradingSystem,
-      examType: examType,
-      numericValue: numericValue + other.numericValue,
-      modifier: '',
-      description: '',
-    );
+        id: -1,
+        createdAt: DateTime.now(),
+        subject: subject,
+        gradingSystem: gradingSystem,
+        examType: examType,
+        numericValue: numericValue + other.numericValue,
+        modifier: '',
+        description: '',
+        isConsidered: false);
   }
 
-  Mark copyWith({
-    int? id,
-    DateTime? createdAt,
-    Subject? subject,
-    GradingSystem? gradingSystem,
-    ExamType? examType,
-    double? numericValue,
-    String? modifier,
-    String? description,
-  }) =>
+  Mark copyWith(
+          {int? id,
+          DateTime? createdAt,
+          Subject? subject,
+          GradingSystem? gradingSystem,
+          ExamType? examType,
+          double? numericValue,
+          String? modifier,
+          String? description,
+          bool? isConsidered}) =>
       Mark(
-        id: id ?? this.id,
-        createdAt: createdAt ?? this.createdAt,
-        subject: subject ?? this.subject,
-        gradingSystem: gradingSystem ?? this.gradingSystem,
-        examType: examType ?? this.examType,
-        numericValue: numericValue ?? this.numericValue,
-        modifier: modifier ?? this.modifier,
-        description: description ?? this.description,
-      );
+          id: id ?? this.id,
+          createdAt: createdAt ?? this.createdAt,
+          subject: subject ?? this.subject,
+          gradingSystem: gradingSystem ?? this.gradingSystem,
+          examType: examType ?? this.examType,
+          numericValue: numericValue ?? this.numericValue,
+          modifier: modifier ?? this.modifier,
+          description: description ?? this.description,
+          isConsidered: isConsidered ?? this.isConsidered);
 
   @override
   String toString() =>
