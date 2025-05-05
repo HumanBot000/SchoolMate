@@ -19,7 +19,11 @@ class AuthenticationPage extends StatelessWidget {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const CircularProgressIndicator();
               } else if (snapshot.data == null) {
-                return const SetupPage();
+                return SetupPage(
+                  afterSelectionRoute: MaterialPageRoute(
+                    builder: (context) => const HomePage(),
+                  ),
+                );
               } else if (snapshot.hasError) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(

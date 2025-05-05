@@ -74,7 +74,11 @@ Future<void> _signInHandler(Object response, BuildContext context) async {
     logger.i("Signed in user");
     if (await getUserSettings() == null) {
       Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (context) => const SetupPage(),
+        builder: (context) => SetupPage(
+          afterSelectionRoute: MaterialPageRoute(
+            builder: (context) => const HomePage(),
+          ),
+        ),
       ));
       return;
     }

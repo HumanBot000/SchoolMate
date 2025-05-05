@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:school_mate/Widgets/public/PreviousPage.dart';
-import 'package:school_mate/pages/settings/Widgets/notifications/NotificationSettingsPage.dart';
+import 'package:school_mate/pages/settings/Widgets/NotificationSettingsPage.dart';
+import 'package:school_mate/pages/settings/Widgets/OtherSettingsPage.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -30,7 +31,7 @@ class _SettingsPageState extends State<SettingsPage> {
             ]),
           ),
           body: const TabBarView(children: [
-            Center(child: Text("General Settings")),
+            OtherSettingsPage(),
             NotificationSettingsPage(),
           ]),
         ));

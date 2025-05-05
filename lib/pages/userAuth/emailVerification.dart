@@ -5,6 +5,8 @@ import 'package:school_mate/main.dart';
 import 'package:school_mate/pages/settings/setup.dart';
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 
+import '../home/home/start.dart';
+
 class EmailVerificationPage extends StatefulWidget {
   final String email;
 
@@ -69,7 +71,11 @@ class _EmailVerificationPageState extends State<EmailVerificationPage>
     ));
     logger.i("Set display name to $username");
     Navigator.of(context).pushReplacement(MaterialPageRoute(
-      builder: (context) => const SetupPage(),
+      builder: (context) => SetupPage(
+        afterSelectionRoute: MaterialPageRoute(
+          builder: (context) => const HomePage(),
+        ),
+      ),
     ));
   }
 

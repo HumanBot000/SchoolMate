@@ -92,6 +92,22 @@ flutter:
     - assets/animations/
     - assets/icons/
     - assets/images/
+    - assets/images/svg/flags/de/Baden-Württemberg.svg
+    - assets/images/svg/flags/de/Bavaria.svg
+    - assets/images/svg/flags/de/Berlin.svg
+    - assets/images/svg/flags/de/Brandenburg.svg
+    - assets/images/svg/flags/de/Bremen.svg
+    - assets/images/svg/flags/de/Hamburg.svg
+    - assets/images/svg/flags/de/Hesse.svg
+    - assets/images/svg/flags/de/Lower-Saxony.svg
+    - assets/images/svg/flags/de/Mecklenburg-Western-Pomerania.svg
+    - assets/images/svg/flags/de/North-Rhine-Westphalia.svg
+    - assets/images/svg/flags/de/Rhineland-Palatinate.svg
+    - assets/images/svg/flags/de/Saarland.svg
+    - assets/images/svg/flags/de/Saxony.svg
+    - assets/images/svg/flags/de/Saxony-Anhalt.svg
+    - assets/images/svg/flags/de/Schleswig-Holstein.svg
+    - assets/images/svg/flags/de/Thuringia.svg
   # For details regarding adding assets from package dependencies, see
   # https://flutter.dev/assets-and-images/#from-packages
 
