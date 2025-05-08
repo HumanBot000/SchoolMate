@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:school_mate/API/supabase/auth/userData.dart' as user;
 import 'package:school_mate/Widgets/public/GradientButton.dart';
 import 'package:school_mate/pages/settings/SettingsPage.dart';
+import 'package:school_mate/pages/settings/schedule/ScheduleEditLogic.dart'
+    as schedule_edit_logic;
 import 'package:school_mate/pages/settings/setup.dart';
 
 class OtherSettingsPage extends StatefulWidget {
@@ -39,6 +41,22 @@ class _OtherSettingsPageState extends State<OtherSettingsPage> {
             ),
           )),
         ),
+        ListTile(
+            title: const Text('Schedule'),
+            leading: const Icon(
+              Icons.calendar_month_outlined,
+            ),
+            trailing: const Icon(
+              Icons.keyboard_arrow_right,
+            ),
+            subtitle: Text(
+              "Configure your schedule to start tracking your lessons.",
+              style: Theme.of(context)
+                  .textTheme
+                  .bodySmall
+                  ?.copyWith(color: Colors.grey),
+            ),
+            onTap: () => schedule_edit_logic.onTap(context)),
         Card(
           elevation: 4.0,
           shadowColor: Colors.red,

@@ -6,14 +6,14 @@ import 'package:school_mate/util/dates.dart';
 import 'package:school_mate/util/extensions/dates.dart';
 
 Future<void> insertScheduleMetadata(
-  TimeOfDay startOfDay,
-  TimeOfDay endOfDay,
-  List<bool> workdays,
-  int alternatingWeeksCount,
-  int currentAlternatingWeek,
-  int defaultLessonLength,
-  List<List<TimeOfDay>> visualLessonTimes,
-) async {
+    TimeOfDay startOfDay,
+    TimeOfDay endOfDay,
+    List<bool> workdays,
+    int alternatingWeeksCount,
+    int currentAlternatingWeek,
+    int defaultLessonLength,
+    List<List<TimeOfDay>> visualLessonTimes,
+    {bool idEdit = false}) async {
   alternatingWeeksCount += 1; // 0-indexed
   List<String> workdaysWithStrings = [];
   for (int i = 0; i < 7; i++) {
@@ -75,6 +75,24 @@ Future<void> insertScheduleMetadata(
   }
 
   try {
+    if (idEdit) {
+      await supabaseClient.client
+          .schema("schedule")
+          .from("metadata")
+          .update(({
+            "user_id": await getUserID(),
+            "first_lesson": firstLesson,
+            "last_lesson": lastLesson,
+            "alternate_weeks": alternatingWeeksCount,
+            "week_cycle": alternatingWeeksData,
+            "workdays": workdaysWithStrings,
+            "lesson_default_length": defaultLessonLength,
+            "visual_daily_lessons_timeframe": visualDailyLessonsTimeframe,
+          }))
+          .eq("user_id", await getUserID());
+      return;
+    }
+
     await supabaseClient.client.schema("schedule").from("metadata").insert(({
           "user_id": await getUserID(),
           "first_lesson": firstLesson,
