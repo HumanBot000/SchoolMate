@@ -16,7 +16,7 @@ import 'package:school_mate/pages/home/marks/overview/MarkSubjectCard.dart';
 import 'package:school_mate/pages/home/marks/overview/SkeletonLoader.dart';
 import 'package:school_mate/pages/home/marks/overview/subjectView/SubjectMarksInspectionPage.dart';
 
-import 'EmptySubjectsNotics.dart';
+import 'EmptySubjectsNotice.dart';
 
 class MarksOverviewPage extends StatefulWidget {
   final GradingSystem gradingSystem;
@@ -64,9 +64,9 @@ class _MarksOverviewPageState extends State<MarksOverviewPage> {
   Map<Subject, Map<ExamType, List<Mark>>> _marksPerExamType = {};
   Map<Subject, Map<ExamType, double?>> _averageMarksPerSubjectAndExamType = {};
   Map<Subject, List<Mark>>? _recentMarks;
+  double? _overallAverage;
 
   // UI state variables
-  int goal = 7;
   bool _isLoading = true;
   bool _showSkeleton = false;
   bool _hasError = false;
@@ -126,6 +126,15 @@ class _MarksOverviewPageState extends State<MarksOverviewPage> {
       Map<Subject, List<Mark>> recentMarks =
           await fetchMostRecentMarksForSubjects(widget.gradingSystem, subjects);
 
+      var totalAverage = 0.0;
+      int totalMarks = 0;
+      for (var averagePerSubject in averageMarks.values) {
+        if (averagePerSubject != null) {
+          totalAverage += averagePerSubject;
+          totalMarks++;
+        }
+      }
+      totalAverage /= totalMarks;
       // Update state only once with all the data
       if (mounted) {
         setState(() {
@@ -137,6 +146,7 @@ class _MarksOverviewPageState extends State<MarksOverviewPage> {
           _averageMarks = averageMarks;
           _averageMarksPerSubjectAndExamType = averagesPerExamType;
           _recentMarks = recentMarks;
+          _overallAverage = totalAverage;
           _isLoading = false;
           _showSkeleton = false;
         });
@@ -292,6 +302,42 @@ class _MarksOverviewPageState extends State<MarksOverviewPage> {
     );
   }
 
+  Container _overallAverageContainer() => Container(
+        height: 200,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          gradient: _overallAverage != null
+              ? createMarkGradient(
+                  bestMark: parseMark(widget.gradingSystem.range[0]).toInt(),
+                  worstMark: parseMark(widget.gradingSystem.range[1]).toInt(),
+                  valueMark: _overallAverage!,
+                  colors: markColors)
+              : LinearGradient(
+                  colors: [Colors.grey.shade600, Colors.grey.shade900]),
+        ),
+        child: Center(
+          child: Text(_overallAverage?.toStringAsFixed(2) ?? "No Marks",
+              style: Theme.of(context).textTheme.displayLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: createMarkGradient(
+                                    bestMark:
+                                        parseMark(widget.gradingSystem.range[0])
+                                            .toInt(),
+                                    worstMark:
+                                        parseMark(widget.gradingSystem.range[1])
+                                            .toInt(),
+                                    valueMark: _overallAverage!,
+                                    colors: markColors)
+                                .colors
+                                .first
+                                .computeLuminance() <
+                            0.5
+                        ? Colors.white
+                        : Colors.grey[850],
+                  )),
+        ),
+      );
+
   @override
   Widget build(BuildContext context) {
     // Show skeleton loader if loading takes more than 3 seconds
@@ -332,30 +378,33 @@ class _MarksOverviewPageState extends State<MarksOverviewPage> {
               await _loadData();
             },
             child: ListView.builder(
-              itemCount: _subjects.length,
-              itemBuilder: (context, index) => InkWell(
-                onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => SubjectMarksInspectionPage(
-                      subject: _subjects[index],
-                      overallAverage: _averageMarks[_subjects[index]],
-                      examTypeAverages: _averageMarksPerSubjectAndExamType[
-                              _subjects[index]] ??
-                          {},
-                      marksPerExamType:
-                          _marksPerExamType[_subjects[index]] ?? {},
-                      gradingSystem: widget.gradingSystem,
+              itemCount: _subjects.length + 1,
+              itemBuilder: (context, index) => index == 0
+                  ? _overallAverageContainer()
+                  : InkWell(
+                      onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => SubjectMarksInspectionPage(
+                            subject: _subjects[index - 1],
+                            overallAverage: _averageMarks[_subjects[index - 1]],
+                            examTypeAverages:
+                                _averageMarksPerSubjectAndExamType[
+                                        _subjects[index - 1]] ??
+                                    {},
+                            marksPerExamType:
+                                _marksPerExamType[_subjects[index - 1]] ?? {},
+                            gradingSystem: widget.gradingSystem,
+                          ),
+                        ),
+                      ),
+                      child: buildGradingSubjectCard(
+                        context,
+                        _subjects[index - 1],
+                        _averageMarks,
+                        widget.gradingSystem,
+                        _recentMarks?[_subjects[index - 1]] ?? [],
+                      ),
                     ),
-                  ),
-                ),
-                child: buildGradingSubjectCard(
-                  context,
-                  _subjects[index],
-                  _averageMarks,
-                  widget.gradingSystem,
-                  _recentMarks?[_subjects[index]] ?? [],
-                ),
-              ),
             ),
           ),
           Align(
