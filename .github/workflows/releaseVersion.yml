@@ -114,19 +114,32 @@ jobs:
             release_notes.txt
 
   release:
-    needs: flutter-build
+    needs: [ version-check, flutter-build ]
     runs-on: ubuntu-latest
+    if: needs.version-check.outputs.version_changed != ''
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
           name: flutter-release
           path: ./artifacts
 
+      - name: Create git tag
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          echo "Creating tag ${{ needs.version-check.outputs.version_changed }}"
+          git tag -a "${{ needs.version-check.outputs.version_changed }}" -m "Release ${{ needs.version-check.outputs.version_changed }}"
+          git push origin "${{ needs.version-check.outputs.version_changed }}"
+
       - name: Create GitHub release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: "${{ needs.version-check.outputs.version_changed }}"
+          name: "Release ${{ needs.version-check.outputs.version_changed }}"
           files: |
             artifacts/app-release.apk
             artifacts/release_notes.txt
