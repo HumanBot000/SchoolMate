@@ -2,7 +2,7 @@
 
 ## Subsystems Overview
 
-- [core](./core.md): 72 files
+- [core](./core.md): 76 files
 - [setup](./setup.md): 2 files
 - [schedule](./schedule.md): 2 files
 - [Country](./country.md): 1 files

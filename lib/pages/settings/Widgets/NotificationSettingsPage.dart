@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:school_mate/pages/settings/notifications/PreLessonNotificationSetup.dart';
 
+import '../notifications/HomeworkReminderNotificationSetup.dart';
+
 class NotificationSettingsPage extends StatelessWidget {
   const NotificationSettingsPage({super.key});
 
@@ -35,6 +37,24 @@ class NotificationSettingsPage extends StatelessWidget {
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => const PreLessonNotificationSetup(),
+                ));
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.assignment),
+              title: const Text("Homework Reminders"),
+              subtitle: Text(
+                "Decide how often and when you want to get reminded about open homework",
+                style: Theme.of(context)
+                    .textTheme
+                    .bodySmall
+                    ?.copyWith(color: Colors.grey),
+              ),
+              trailing: const Icon(Icons.arrow_right),
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) =>
+                      const HomeworkReminderNotificationSetup(),
                 ));
               },
             )

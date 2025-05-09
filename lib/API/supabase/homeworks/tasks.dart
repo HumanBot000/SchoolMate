@@ -4,6 +4,7 @@ import 'package:school_mate/API/supabase/auth/userData.dart';
 import 'package:school_mate/Classes/homeworks/Homework.dart';
 import 'package:school_mate/Classes/schedule/Subject.dart';
 import 'package:school_mate/main.dart';
+import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 
 Future<Homework> addTask(String title, bool handIn, Subject subject,
     {DateTime? dueDate,
@@ -59,6 +60,17 @@ Future<void> changeTaskCompletionStatus(Homework task) async {
       .update({"completed": !task.isCompleted})
       .eq("user_id", await getUserID())
       .eq("homework_id", task.taskID);
+}
+
+// specially designed to run self-sufficient and in the background
+Future<void> markTaskCompletedPerID(
+    SupabaseClient supabaseClient, int taskID) async {
+  await supabaseClient
+      .schema("homework")
+      .from("tasks")
+      .update({"completed": true})
+      .eq("user_id", supabaseClient.auth.currentUser!.id)
+      .eq("homework_id", taskID);
 }
 
 Future<void> deleteTask(Homework task) async {

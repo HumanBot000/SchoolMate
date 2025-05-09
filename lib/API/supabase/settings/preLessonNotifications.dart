@@ -2,17 +2,18 @@ import 'package:school_mate/API/supabase/auth/userData.dart';
 import 'package:school_mate/main.dart';
 
 Future<List<List<dynamic>>> fetchPreLessonNotifications() async {
-  final response = await supabaseClient.client
+  dynamic response = await supabaseClient.client
       .schema("settings")
       .from("notifications")
       .select("pre_lesson_notifications")
       .eq("user_id", await getUserID())
       .single();
+  response = response["pre_lesson_notifications"];
   List<List<dynamic>> notifications = [];
-  if (response.isEmpty) {
+  if (response == null || response.isEmpty) {
     return [];
   }
-  for (var notification in response["pre_lesson_notifications"]) {
+  for (var notification in response) {
     notifications.add(
         [notification["unit"].toString().toLowerCase(), notification["value"]]);
   }
@@ -35,7 +36,7 @@ Future<void> updatePreLessonNotifications(
   );
 }
 
-bool preLessonNotificationListIsValid(List<List<dynamic>> notifications) {
+bool preNotificationListIsValid(List<List<dynamic>> notifications) {
   for (var notification in notifications) {
     // Check if the inner list has exactly two elements
     if (notification.length != 2) {
@@ -44,7 +45,7 @@ bool preLessonNotificationListIsValid(List<List<dynamic>> notifications) {
 
     // Check if the first element is a String and is one of the allowed values
     if (notification[0] is! String ||
-        !["seconds", "minutes", "hours"].contains(notification[0])) {
+        !["seconds", "minutes", "hours", "days"].contains(notification[0])) {
       return false;
     }
 
