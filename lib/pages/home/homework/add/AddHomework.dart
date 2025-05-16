@@ -12,6 +12,7 @@ import 'package:school_mate/pages/home/homework/add/Widgets/HandInToggle.dart';
 import 'package:school_mate/pages/home/homework/add/Widgets/SubjectChooser.dart';
 import 'package:school_mate/pages/home/homework/add/Widgets/TitleSelector.dart';
 import 'package:school_mate/util/extensions/dates.dart';
+import 'package:school_mate/util/notifications/homework.dart';
 
 class AddHomeworkPage extends StatefulWidget {
   final dynamic schedule;
@@ -152,6 +153,7 @@ class _AddHomeworkPageState extends State<AddHomeworkPage> {
                     content: Text("Added Homework successfully!"),
                   ),
                 ));
+        await updateHomeworkNotifications(await fetchHomeworks());
         // ensure page reload
         Navigator.of(context).pushReplacement(MaterialPageRoute(
           builder: (context) => const HomeworkPage(),

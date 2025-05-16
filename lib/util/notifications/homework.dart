@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
 import 'package:school_mate/API/supabase/homeworks/tasks.dart';
@@ -109,7 +110,7 @@ Future<void> clearAllHomeworkNotifications() async {
 
 Future<void> updateHomeworkNotifications(List<Homework> homeworks) async {
   await initNotificationPlugin();
-  await clearAllScheduledNotifications();
+  await clearAllHomeworkNotifications();
   await requestExactAlarmPermission();
 
   for (Homework homework in homeworks.where((hw) => !hw.isCompleted)) {
@@ -125,7 +126,51 @@ Future<void> updateHomeworkNotifications(List<Homework> homeworks) async {
         schedule.metadata.firstLessonTime.minute,
       );
     }
-
+    if (homework.handIn) {
+      await flutterLocalNotificationsPlugin.zonedSchedule(
+          DateTime.now().millisecondsSinceEpoch +
+                  Random().nextInt(1000).hashCode &
+              0x7FFFFFFF,
+          homework.title,
+          "Get yourself ready, this task needs to be submitted in 10 minutes.",
+          tz.TZDateTime.from(
+            dueDate.subtract(const Duration(minutes: 10)).toUtc(),
+            tz.UTC,
+          ),
+          const NotificationDetails(
+              // This notification is a top priority delivery! The user relies on us!
+              android: AndroidNotificationDetails(
+            '4',
+            'Homework Notification (High Priority)',
+            channelDescription:
+                'A notification that is sent when a homework task needs to be finished',
+            importance: Importance.max,
+            priority: Priority.max,
+            enableLights: true,
+            enableVibration: true,
+            visibility: NotificationVisibility.public,
+            subText: "This task needs your attention right now!",
+            ledColor: Colors.red,
+            actions: <AndroidNotificationAction>[
+              AndroidNotificationAction(
+                'mark_complete',
+                'Mark as Complete',
+                showsUserInterface: false, // do not startup the Apps UI
+              ),
+              AndroidNotificationAction(
+                'remind',
+                'Remind me later',
+                showsUserInterface: false,
+              ),
+            ],
+          )),
+          androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+          uiLocalNotificationDateInterpretation:
+              UILocalNotificationDateInterpretation.absoluteTime,
+          payload: "HomeworkReminder:${homework.taskID.toString()}");
+      logger.i(
+          "Scheduled homework submission reminder for ${homework.title} at ${DateFormat("dd.MM.yyyy").format(homework.dueDate!)}");
+    }
     List<dynamic> reminders = await fetchHomeworkReminders();
     for (List<dynamic> reminder in reminders) {
       DateTime reminderDate = dueDate;
@@ -146,7 +191,7 @@ Future<void> updateHomeworkNotifications(List<Homework> homeworks) async {
                   Random().nextInt(1000).hashCode &
               0x7FFFFFFF,
           homework.title,
-          "This task needs to be finished by ${DateFormat("dd.MM.yyyy").format(homework.dueDate!)}",
+          "This task needs to be finished by ${DateFormat("dd.MM.yyyy").format(dueDate)}",
           tz.TZDateTime.from(
             reminderDate.toUtc(),
             tz.UTC,
@@ -156,9 +201,10 @@ Future<void> updateHomeworkNotifications(List<Homework> homeworks) async {
           uiLocalNotificationDateInterpretation:
               UILocalNotificationDateInterpretation.absoluteTime,
           payload: "HomeworkReminder:${homework.taskID.toString()}");
-      logger.i("Scheduled homework reminder for ${homework.title}");
+      logger.i(
+          "Scheduled homework reminder for ${homework.title} at ${DateFormat("dd.MM.yyyy").format(reminderDate)}");
     }
-
-    logger.i("Scheduled homework notifications");
   }
+
+  logger.i("Scheduled homework notifications");
 }
