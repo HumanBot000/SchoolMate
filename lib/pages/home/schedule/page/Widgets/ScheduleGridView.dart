@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:school_mate/API/supabase/schedule/lessons.dart';
 import 'package:school_mate/API/supabase/schedule/schedule.dart'
     as fetch_schedule;
+import 'package:school_mate/Classes/homeworks/Homework.dart';
 import 'package:school_mate/Classes/schedule/Lesson.dart';
 import 'package:school_mate/Classes/schedule/Schedule.dart';
 import 'package:school_mate/Classes/schedule/ScheduleMetadata.dart';
@@ -18,13 +19,14 @@ import 'package:school_mate/util/dates.dart';
 import 'package:school_mate/util/extensions/dates.dart';
 
 class ScheduleGridView extends StatefulWidget {
-  // Don't Navigate to this page! Navigate to SchedulePage instead (took me way to long to figure this out)
+  // Don't Navigate to this page! Navigate to SchedulePage instead
   final Schedule schedule;
   final bool showBreaks;
   final Function(TimeOfDay, TimeOfDay, int) onBreakSelection;
   final bool showLessonTapCallback;
   final Function(Lesson, DateTime) onLessonSelection;
   final bool crossOutLessonsInPast;
+  final List<Homework> homeworks;
 
   const ScheduleGridView(
       {super.key,
@@ -33,7 +35,8 @@ class ScheduleGridView extends StatefulWidget {
       required this.onBreakSelection,
       required this.showLessonTapCallback,
       required this.onLessonSelection,
-      required this.crossOutLessonsInPast});
+      required this.crossOutLessonsInPast,
+      this.homeworks = const []});
 
   @override
   State<ScheduleGridView> createState() => _ScheduleGridViewState();
@@ -453,40 +456,67 @@ class _ScheduleGridViewState extends State<ScheduleGridView> {
   List<Widget> _buildLessonBoxes() {
     if (_lessonsByDay.isEmpty) return [];
 
+    final startOfWeek = currentFocusedScheduleWeek.startOfWeek();
+
     return [
       for (var dayIndex = 0;
           dayIndex < widget.schedule.metadata.workdays.length;
           dayIndex++)
         ..._lessonsByDay[widget.schedule.metadata.workdays[dayIndex]]
             .map((lesson) {
+          final lessonDate = startOfWeek
+              .add(Duration(days: widget.schedule.metadata.workdays[dayIndex]));
+
           final startTimeOffset = lesson.temporalData.startTime
                   .difference(widget.schedule.metadata.firstLessonTime)
                   .inMinutes *
               _pixelHeightPerMinute;
+
+          final matchingHomeworks = widget.homeworks.where((homework) {
+            final dueDate = homework.dueDate;
+            return dueDate != null &&
+                homework.subject.id == lesson.subject.id &&
+                dueDate.year == lessonDate.year &&
+                dueDate.month == lessonDate.month &&
+                dueDate.day == lessonDate.day;
+          }).toList();
+
+          final specialIndicatorColor = matchingHomeworks.isEmpty
+              ? null
+              : (matchingHomeworks.first.isCompleted
+                  ? Colors.grey
+                  : Colors.red);
+
+          final subContent = matchingHomeworks.isEmpty
+              ? null
+              : Container(
+                  color: lesson.color.withOpacity(0.15),
+                  width: _widthPerDay,
+                  child: Text(
+                    matchingHomeworks.first.title,
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                );
+
+          final isCrossedOut = widget.crossOutLessonsInPast &&
+              lessonDate.isBefore(DateTime.now());
 
           return Positioned(
             top: _tableHeaderRowRenderBox == null
                 ? 0
                 : _tableHeaderRowRenderBox!.localToGlobal(Offset.zero).dy +
                     startTimeOffset,
-            left: ((32 + _widthPerDay) * (dayIndex + 1)) +
-                -(dayIndex ==
+            left: ((32 + _widthPerDay) * (dayIndex + 1)) -
+                (dayIndex ==
                         widget.schedule.metadata.workdays[
                             widget.schedule.metadata.workdays.length - 1]
                     ? 24
-                    : 4 * dayIndex), // Right margin for last Day
+                    : 4 * dayIndex),
             child: GestureDetector(
               onTap: () {
-                if (!widget.crossOutLessonsInPast ||
-                    !currentFocusedScheduleWeek
-                        .startOfWeek()
-                        .add(Duration(
-                            days: widget.schedule.metadata.workdays[dayIndex]))
-                        .isBefore(DateTime.now())) {
-                  widget.onLessonSelection(
-                      lesson,
-                      currentFocusedScheduleWeek.startOfWeek().add(Duration(
-                          days: widget.schedule.metadata.workdays[dayIndex])));
+                if (!widget.crossOutLessonsInPast || !isCrossedOut) {
+                  widget.onLessonSelection(lesson, lessonDate);
                 }
               },
               onLongPressStart: (details) {
@@ -495,6 +525,8 @@ class _ScheduleGridViewState extends State<ScheduleGridView> {
                 }
               },
               child: LessonBox(
+                specialIndicatorColor: specialIndicatorColor,
+                subContent: subContent,
                 location: lesson.location,
                 teacherName: lesson.teacher.name,
                 title: lesson.name,
@@ -505,12 +537,7 @@ class _ScheduleGridViewState extends State<ScheduleGridView> {
                         _pixelHeightPerMinute)
                     .toDouble(),
                 width: _widthPerDay + 16,
-                crossedOut: (widget.crossOutLessonsInPast &&
-                    currentFocusedScheduleWeek
-                        .startOfWeek()
-                        .add(Duration(
-                            days: widget.schedule.metadata.workdays[dayIndex]))
-                        .isBefore(DateTime.now())),
+                crossedOut: isCrossedOut,
               ),
             ),
           );

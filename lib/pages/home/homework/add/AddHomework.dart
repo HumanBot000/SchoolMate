@@ -153,11 +153,11 @@ class _AddHomeworkPageState extends State<AddHomeworkPage> {
                     content: Text("Added Homework successfully!"),
                   ),
                 ));
-        await updateHomeworkNotifications(await fetchHomeworks());
         // ensure page reload
         Navigator.of(context).pushReplacement(MaterialPageRoute(
           builder: (context) => const HomeworkPage(),
         ));
+        await updateHomeworkNotifications(await fetchHomeworks());
       } catch (e) {
         WidgetsBinding.instance.addPostFrameCallback((_) =>
             ScaffoldMessenger.of(context).showSnackBar(

@@ -36,6 +36,7 @@ class HomeworkSubjectChooser extends StatelessWidget {
                 schedule: schedule,
                 onLessonSelection: onLessonSelection,
                 crossOutPastLessons: true,
+                showBottomNavBar: false,
               ),
             ));
           }

@@ -14,6 +14,8 @@ class LessonBox extends StatelessWidget {
   final String? location;
   final String? teacherName;
   final bool crossedOut;
+  final Color? specialIndicatorColor;
+  final Container? subContent;
 
   const LessonBox({
     super.key,
@@ -27,6 +29,8 @@ class LessonBox extends StatelessWidget {
     this.location,
     this.teacherName,
     this.crossedOut = false,
+    this.specialIndicatorColor,
+    this.subContent,
   });
 
   DateTime _startTime() {
@@ -93,7 +97,13 @@ class LessonBox extends StatelessWidget {
                             ),
                       ),
                     ),
-                  if (teacherName != null)
+                  if (specialIndicatorColor != null)
+                    Icon(
+                      Icons.circle,
+                      color: specialIndicatorColor,
+                      size: 20,
+                    ),
+                  if (teacherName != null && specialIndicatorColor == null)
                     FittedBox(
                       fit: BoxFit.scaleDown,
                       child: Text(
@@ -106,6 +116,7 @@ class LessonBox extends StatelessWidget {
                             ),
                       ),
                     ),
+                  if (subContent != null) subContent!,
                 ],
               ),
             ),

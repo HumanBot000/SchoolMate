@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:school_mate/API/supabase/schedule/lessons.dart';
 import 'package:school_mate/API/supabase/schedule/schedule.dart'
     as fetch_schedule;
+import 'package:school_mate/Classes/homeworks/Homework.dart';
 import 'package:school_mate/Classes/schedule/Lesson.dart';
 import 'package:school_mate/Classes/schedule/Schedule.dart';
 import 'package:school_mate/main.dart';
@@ -18,16 +19,19 @@ class SchedulePage extends StatelessWidget {
   final bool showLessonTapCallback;
   final Function(Lesson, DateTime) onLessonSelection;
   final bool crossOutPastLessons;
+  final List<Homework> homeworks;
+  final bool showBottomNavBar;
 
-  const SchedulePage({
-    super.key,
-    required this.schedule,
-    this.showBreaks = false,
-    this.onBreakSelection = _defaultBreakSelection,
-    this.showLessonTapCallback = true,
-    this.onLessonSelection = _defaultOnLessonSelection,
-    this.crossOutPastLessons = false,
-  });
+  const SchedulePage(
+      {super.key,
+      required this.schedule,
+      this.showBreaks = false,
+      this.onBreakSelection = _defaultBreakSelection,
+      this.showLessonTapCallback = true,
+      this.onLessonSelection = _defaultOnLessonSelection,
+      this.crossOutPastLessons = false,
+      this.homeworks = const [],
+      this.showBottomNavBar = true});
 
   // Just a static func that does nothing to pass as default for constructor
   static void _defaultBreakSelection(
@@ -71,9 +75,11 @@ class SchedulePage extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: const HomeNavBar(
-        currentIndex: 1,
-      ),
+      bottomNavigationBar: showBottomNavBar
+          ? const HomeNavBar(
+              currentIndex: 1,
+            )
+          : null,
       body: Stack(
         children: [
           ScheduleGridView(
@@ -83,6 +89,7 @@ class SchedulePage extends StatelessWidget {
             showLessonTapCallback: showLessonTapCallback,
             onLessonSelection: onLessonSelection,
             crossOutLessonsInPast: crossOutPastLessons,
+            homeworks: homeworks,
           ),
           Align(
             alignment: Alignment.bottomRight,
