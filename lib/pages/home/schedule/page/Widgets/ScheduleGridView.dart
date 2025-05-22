@@ -27,6 +27,7 @@ class ScheduleGridView extends StatefulWidget {
   final Function(Lesson, DateTime) onLessonSelection;
   final bool crossOutLessonsInPast;
   final List<Homework> homeworks;
+  final bool callbackForLessonsInPast;
 
   const ScheduleGridView(
       {super.key,
@@ -36,7 +37,8 @@ class ScheduleGridView extends StatefulWidget {
       required this.showLessonTapCallback,
       required this.onLessonSelection,
       required this.crossOutLessonsInPast,
-      this.homeworks = const []});
+      this.homeworks = const [],
+      this.callbackForLessonsInPast = false});
 
   @override
   State<ScheduleGridView> createState() => _ScheduleGridViewState();
@@ -515,8 +517,12 @@ class _ScheduleGridViewState extends State<ScheduleGridView> {
                     : 4 * dayIndex),
             child: GestureDetector(
               onTap: () {
-                if (!widget.crossOutLessonsInPast || !isCrossedOut) {
-                  widget.onLessonSelection(lesson, lessonDate);
+                if (!lessonDate.isBefore(DateTime.now()) ||
+                    (widget.callbackForLessonsInPast &&
+                        lessonDate.isBefore(DateTime.now()))) {
+                  if (!widget.crossOutLessonsInPast || !isCrossedOut) {
+                    widget.onLessonSelection(lesson, lessonDate);
+                  }
                 }
               },
               onLongPressStart: (details) {

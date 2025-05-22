@@ -18,10 +18,24 @@ class AddHomeworkPage extends StatefulWidget {
   final dynamic schedule;
   final Homework? task;
 
+  // Optional pre-fill parameters
+  final String? initialTitle;
+  final Subject? initialSubject;
+  final DateTime? initialDate;
+  final String? initialNote;
+  final bool? initialHandIn;
+  final TimeOfDay? initialHandInTime;
+
   const AddHomeworkPage({
     super.key,
     required this.schedule,
     this.task,
+    this.initialTitle,
+    this.initialSubject,
+    this.initialDate,
+    this.initialNote,
+    this.initialHandIn,
+    this.initialHandInTime,
   });
 
   @override
@@ -40,12 +54,17 @@ class _AddHomeworkPageState extends State<AddHomeworkPage> {
   @override
   void initState() {
     super.initState();
-    _titleController.text = widget.task?.title ?? '';
-    _additionalNoteController.text = widget.task?.note ?? '';
-    _selectedSubject = widget.task?.subject;
-    _selectedDate = widget.task?.dueDate;
-    _handInHomework = widget.task?.handIn ?? false;
-    _handInTime = widget.task?.dueDate?.toTimeOfDay();
+
+    // Priority: task data > initial parameters > defaults
+    _titleController.text = widget.task?.title ?? widget.initialTitle ?? '';
+    _additionalNoteController.text =
+        widget.task?.note ?? widget.initialNote ?? '';
+    _selectedSubject = widget.task?.subject ?? widget.initialSubject;
+    _selectedDate = widget.task?.dueDate ?? widget.initialDate;
+    _handInHomework = widget.task?.handIn ?? widget.initialHandIn ?? false;
+    _handInTime =
+        widget.task?.dueDate?.toTimeOfDay() ?? widget.initialHandInTime;
+
     setState(() {});
   }
 
