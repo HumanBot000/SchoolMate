@@ -263,7 +263,7 @@ class _ScheduleGridViewState extends State<ScheduleGridView> {
           _pixelHeightPerMinute);
 
       return Positioned(
-        top: topPosition,
+        top: topPosition - 30,
         left: 16, // Default margin
         child: LessonBox(
           title: (index + 1).toString(),
@@ -508,7 +508,8 @@ class _ScheduleGridViewState extends State<ScheduleGridView> {
             top: _tableHeaderRowRenderBox == null
                 ? 0
                 : _tableHeaderRowRenderBox!.localToGlobal(Offset.zero).dy +
-                    startTimeOffset,
+                    startTimeOffset -
+                    30,
             left: ((32 + _widthPerDay) * (dayIndex + 1)) -
                 (dayIndex ==
                         widget.schedule.metadata.workdays[
@@ -598,7 +599,8 @@ class _ScheduleGridViewState extends State<ScheduleGridView> {
           top: _tableHeaderRowRenderBox == null
               ? 0
               : _tableHeaderRowRenderBox!.localToGlobal(Offset.zero).dy +
-                  startTimeOffset,
+                  startTimeOffset -
+                  30,
           child: Container(
             height: 1, //stroke
             width: MediaQuery.of(context).size.width,
