@@ -186,7 +186,10 @@ class _MarksOverviewPageState extends State<MarksOverviewPage> {
                 padding: const EdgeInsets.all(20),
                 margin: const EdgeInsets.symmetric(horizontal: 20),
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .primary
+                      .withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Column(
@@ -229,7 +232,7 @@ class _MarksOverviewPageState extends State<MarksOverviewPage> {
                     color: Theme.of(context)
                         .colorScheme
                         .secondary
-                        .withOpacity(0.1),
+                        .withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Column(

@@ -28,7 +28,7 @@ class HandInHomeworkToggle extends StatelessWidget {
         borderRadius: BorderRadius.circular(12.0),
         boxShadow: [
           BoxShadow(
-            color: theme.shadowColor.withOpacity(0.1),
+            color: theme.shadowColor.withValues(alpha: 0.1),
             blurRadius: 8.0,
             offset: const Offset(0, 4),
           ),
@@ -89,7 +89,7 @@ class HandInHomeworkToggle extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8.0),
                     border: Border.all(
-                      color: theme.colorScheme.primary.withOpacity(0.5),
+                      color: theme.colorScheme.primary.withValues(alpha: 0.5),
                     ),
                     color: theme.colorScheme.primaryContainer,
                   ),

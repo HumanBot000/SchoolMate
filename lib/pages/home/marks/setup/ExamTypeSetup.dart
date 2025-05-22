@@ -271,7 +271,7 @@ class _ExamTypeSetupPageState extends State<ExamTypeSetupPage> {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16.0)),
             elevation: 4.0,
-            shadowColor: Colors.blueAccent.withOpacity(0.5),
+            shadowColor: Colors.blueAccent.withValues(alpha: 0.5),
             // Fixed the incorrect method
             child: Padding(
               padding: const EdgeInsets.all(16.0), // Increased padding

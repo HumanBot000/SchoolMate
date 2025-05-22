@@ -492,7 +492,7 @@ class _ScheduleGridViewState extends State<ScheduleGridView> {
           final subContent = matchingHomeworks.isEmpty
               ? null
               : Container(
-                  color: lesson.color.withOpacity(0.15),
+                  color: lesson.color.withValues(alpha: 0.15),
                   width: _widthPerDay,
                   child: Text(
                     matchingHomeworks.first.title,

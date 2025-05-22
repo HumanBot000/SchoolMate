@@ -97,7 +97,7 @@ class _AddMarkValidationPageState extends State<AddMarkValidationPage>
                 border: Border.all(color: Colors.grey.shade300),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.grey.withOpacity(0.2),
+                    color: Colors.grey.withValues(alpha: 0.2),
                     spreadRadius: 1,
                     blurRadius: 5,
                     offset: const Offset(0, 2),
@@ -121,7 +121,7 @@ class _AddMarkValidationPageState extends State<AddMarkValidationPage>
                             tag: 'subject-${widget.subject.id}',
                             child: CircleAvatar(
                               backgroundColor:
-                                  widget.subject.color.withOpacity(0.2),
+                                  widget.subject.color.withValues(alpha: 0.2),
                               child: Text(
                                 widget.subject.name
                                     .substring(0, 1)
@@ -154,10 +154,10 @@ class _AddMarkValidationPageState extends State<AddMarkValidationPage>
                     const SizedBox(height: 24),
                     Container(
                       decoration: BoxDecoration(
-                        color: markColor.withOpacity(0.1),
+                        color: markColor.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                          color: markColor.withOpacity(0.5),
+                          color: markColor.withValues(alpha: 0.5),
                           width: 2,
                         ),
                       ),
@@ -360,7 +360,7 @@ class _AddMarkValidationPageState extends State<AddMarkValidationPage>
                                   padding: const EdgeInsets.all(8),
                                   decoration: BoxDecoration(
                                     color: theme.colorScheme.primary
-                                        .withOpacity(0.1),
+                                        .withValues(alpha: 0.1),
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                   child: Icon(

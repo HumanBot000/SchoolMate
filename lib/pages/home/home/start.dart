@@ -101,7 +101,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(0xFF3A7BFF).withOpacity(0.3),
+                        color: const Color(0xFF3A7BFF).withValues(alpha: 0.3),
                         blurRadius: 10,
                         spreadRadius: 2,
                       ),
@@ -121,7 +121,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            const Color(0xFF3A7BFF).withOpacity(0.1),
+            const Color(0xFF3A7BFF).withValues(alpha: 0.1),
             Colors.transparent,
           ],
           begin: Alignment.topCenter,
@@ -129,7 +129,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         ),
         border: Border(
           bottom: BorderSide(
-            color: const Color(0xFF3A7BFF).withOpacity(0.3),
+            color: const Color(0xFF3A7BFF).withValues(alpha: 0.3),
             width: 1,
           ),
         ),
@@ -150,7 +150,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFF3A7BFF).withOpacity(0.3),
+                      color: const Color(0xFF3A7BFF).withValues(alpha: 0.3),
                       blurRadius: 15,
                       spreadRadius: 2,
                     ),
@@ -220,18 +220,18 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            const Color(0xFF3A7BFF).withOpacity(0.1),
-            const Color(0xFF00D4AA).withOpacity(0.1),
+            const Color(0xFF3A7BFF).withValues(alpha: 0.1),
+            const Color(0xFF00D4AA).withValues(alpha: 0.1),
           ],
         ),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: const Color(0xFF3A7BFF).withOpacity(0.3),
+          color: const Color(0xFF3A7BFF).withValues(alpha: 0.3),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF3A7BFF).withOpacity(0.1),
+            color: const Color(0xFF3A7BFF).withValues(alpha: 0.1),
             blurRadius: 20,
             spreadRadius: 5,
           ),
@@ -273,7 +273,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       'Ready for another productive day?',
                       style: TextStyle(
                         fontSize: 16,
-                        color: Colors.white.withOpacity(0.7),
+                        color: Colors.white.withValues(alpha: 0.7),
                       ),
                     ),
                   ],
@@ -291,18 +291,18 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            const Color(0xFF1A1F36).withOpacity(0.8),
-            const Color(0xFF2D3561).withOpacity(0.8),
+            const Color(0xFF1A1F36).withValues(alpha: 0.8),
+            const Color(0xFF2D3561).withValues(alpha: 0.8),
           ],
         ),
         borderRadius: BorderRadius.circular(25),
         border: Border.all(
-          color: const Color(0xFF3A7BFF).withOpacity(0.3),
+          color: const Color(0xFF3A7BFF).withValues(alpha: 0.3),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF3A7BFF).withOpacity(0.2),
+            color: const Color(0xFF3A7BFF).withValues(alpha: 0.2),
             blurRadius: 25,
             spreadRadius: 5,
           ),
@@ -326,18 +326,18 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            const Color(0xFF1A1F36).withOpacity(0.8),
-            const Color(0xFF2D3561).withOpacity(0.8),
+            const Color(0xFF1A1F36).withValues(alpha: 0.8),
+            const Color(0xFF2D3561).withValues(alpha: 0.8),
           ],
         ),
         borderRadius: BorderRadius.circular(25),
         border: Border.all(
-          color: const Color(0xFF00D4AA).withOpacity(0.3),
+          color: const Color(0xFF00D4AA).withValues(alpha: 0.3),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF00D4AA).withOpacity(0.1),
+            color: const Color(0xFF00D4AA).withValues(alpha: 0.1),
             blurRadius: 20,
             spreadRadius: 5,
           ),
@@ -354,7 +354,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0xFF00D4AA).withOpacity(0.3),
+                  color: const Color(0xFF00D4AA).withValues(alpha: 0.3),
                   blurRadius: 20,
                   spreadRadius: 5,
                 ),
@@ -380,7 +380,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             'Enjoy your free time!',
             style: TextStyle(
               fontSize: 16,
-              color: Colors.white.withOpacity(0.7),
+              color: Colors.white.withValues(alpha: 0.7),
             ),
           ),
         ],
@@ -393,18 +393,18 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            const Color(0xFF1A1F36).withOpacity(0.8),
-            const Color(0xFF2D3561).withOpacity(0.8),
+            const Color(0xFF1A1F36).withValues(alpha: 0.8),
+            const Color(0xFF2D3561).withValues(alpha: 0.8),
           ],
         ),
         borderRadius: BorderRadius.circular(25),
         border: Border.all(
-          color: const Color(0xFF3A7BFF).withOpacity(0.3),
+          color: const Color(0xFF3A7BFF).withValues(alpha: 0.3),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF3A7BFF).withOpacity(0.1),
+            color: const Color(0xFF3A7BFF).withValues(alpha: 0.1),
             blurRadius: 25,
             spreadRadius: 5,
           ),

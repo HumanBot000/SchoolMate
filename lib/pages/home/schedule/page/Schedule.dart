@@ -121,7 +121,7 @@ class _SchedulePageState extends State<SchedulePage>
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(0xFF3A7BFF).withOpacity(0.2),
+                        color: const Color(0xFF3A7BFF).withValues(alpha: 0.2),
                         blurRadius: 8,
                         spreadRadius: 1,
                       ),
@@ -141,7 +141,7 @@ class _SchedulePageState extends State<SchedulePage>
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            const Color(0xFF3A7BFF).withOpacity(0.15),
+            const Color(0xFF3A7BFF).withValues(alpha: 0.15),
             Colors.transparent,
           ],
           begin: Alignment.topCenter,
@@ -149,7 +149,7 @@ class _SchedulePageState extends State<SchedulePage>
         ),
         border: Border(
           bottom: BorderSide(
-            color: const Color(0xFF3A7BFF).withOpacity(0.3),
+            color: const Color(0xFF3A7BFF).withValues(alpha: 0.3),
             width: 1,
           ),
         ),
@@ -175,7 +175,8 @@ class _SchedulePageState extends State<SchedulePage>
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: [
                           BoxShadow(
-                            color: const Color(0xFF3A7BFF).withOpacity(0.3),
+                            color:
+                                const Color(0xFF3A7BFF).withValues(alpha: 0.3),
                             blurRadius: 15,
                             spreadRadius: 2,
                           ),
@@ -226,7 +227,7 @@ class _SchedulePageState extends State<SchedulePage>
               borderRadius: BorderRadius.circular(15),
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0xFF00D4AA).withOpacity(0.4),
+                  color: const Color(0xFF00D4AA).withValues(alpha: 0.4),
                   blurRadius: 15,
                   spreadRadius: 2,
                 ),
@@ -264,18 +265,18 @@ class _SchedulePageState extends State<SchedulePage>
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              const Color(0xFF1A1F36).withOpacity(0.3),
-              const Color(0xFF2D3561).withOpacity(0.3),
+              const Color(0xFF1A1F36).withValues(alpha: 0.3),
+              const Color(0xFF2D3561).withValues(alpha: 0.3),
             ],
           ),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: const Color(0xFF3A7BFF).withOpacity(0.2),
+            color: const Color(0xFF3A7BFF).withValues(alpha: 0.2),
             width: 1,
           ),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFF3A7BFF).withOpacity(0.1),
+              color: const Color(0xFF3A7BFF).withValues(alpha: 0.1),
               blurRadius: 20,
               spreadRadius: 5,
             ),
@@ -318,12 +319,12 @@ class _SchedulePageState extends State<SchedulePage>
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0xFF3A7BFF).withOpacity(0.4),
+                  color: const Color(0xFF3A7BFF).withValues(alpha: 0.4),
                   blurRadius: 20,
                   spreadRadius: 5,
                 ),
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.3),
+                  color: Colors.black.withValues(alpha: 0.3),
                   blurRadius: 10,
                   offset: const Offset(0, 5),
                 ),
@@ -355,7 +356,7 @@ class _SchedulePageState extends State<SchedulePage>
       context: context,
       barrierDismissible: true,
       barrierLabel: 'Add Assignment',
-      barrierColor: Colors.black.withOpacity(0.7),
+      barrierColor: Colors.black.withValues(alpha: 0.7),
       transitionDuration: const Duration(milliseconds: 300),
       pageBuilder: (context, animation, secondaryAnimation) {
         return ScaleTransition(
@@ -378,17 +379,17 @@ class _SchedulePageState extends State<SchedulePage>
                   ),
                   borderRadius: BorderRadius.circular(25),
                   border: Border.all(
-                    color: const Color(0xFF3A7BFF).withOpacity(0.4),
+                    color: const Color(0xFF3A7BFF).withValues(alpha: 0.4),
                     width: 2,
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFF3A7BFF).withOpacity(0.3),
+                      color: const Color(0xFF3A7BFF).withValues(alpha: 0.3),
                       blurRadius: 30,
                       spreadRadius: 10,
                     ),
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.5),
+                      color: Colors.black.withValues(alpha: 0.5),
                       blurRadius: 20,
                       offset: const Offset(0, 10),
                     ),
@@ -424,13 +425,13 @@ class _SchedulePageState extends State<SchedulePage>
             shape: BoxShape.circle,
             gradient: RadialGradient(
               colors: [
-                const Color(0xFF3A7BFF).withOpacity(0.4),
-                const Color(0xFF3A7BFF).withOpacity(0.1),
+                const Color(0xFF3A7BFF).withValues(alpha: 0.4),
+                const Color(0xFF3A7BFF).withValues(alpha: 0.1),
               ],
             ),
             boxShadow: [
               BoxShadow(
-                color: const Color(0xFF3A7BFF).withOpacity(0.3),
+                color: const Color(0xFF3A7BFF).withValues(alpha: 0.3),
                 blurRadius: 20,
                 spreadRadius: 5,
               ),
@@ -484,18 +485,18 @@ class _SchedulePageState extends State<SchedulePage>
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            const Color(0xFF3A7BFF).withOpacity(0.2),
-            const Color(0xFF00D4AA).withOpacity(0.2),
+            const Color(0xFF3A7BFF).withValues(alpha: 0.2),
+            const Color(0xFF00D4AA).withValues(alpha: 0.2),
           ],
         ),
         borderRadius: BorderRadius.circular(18),
         border: Border.all(
-          color: const Color(0xFF3A7BFF).withOpacity(0.5),
+          color: const Color(0xFF3A7BFF).withValues(alpha: 0.5),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF3A7BFF).withOpacity(0.2),
+            color: const Color(0xFF3A7BFF).withValues(alpha: 0.2),
             blurRadius: 15,
             spreadRadius: 3,
           ),
@@ -551,7 +552,7 @@ class _SchedulePageState extends State<SchedulePage>
                       Text(
                         'Create assignment for this lesson',
                         style: TextStyle(
-                          color: Colors.white.withOpacity(0.7),
+                          color: Colors.white.withValues(alpha: 0.7),
                           fontSize: 14,
                           letterSpacing: 0.3,
                         ),
@@ -561,7 +562,7 @@ class _SchedulePageState extends State<SchedulePage>
                 ),
                 Icon(
                   Icons.arrow_forward_ios_rounded,
-                  color: const Color(0xFF3A7BFF).withOpacity(0.8),
+                  color: const Color(0xFF3A7BFF).withValues(alpha: 0.8),
                   size: 18,
                 ),
               ],
@@ -577,7 +578,7 @@ class _SchedulePageState extends State<SchedulePage>
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
         border: Border.all(
-          color: Colors.white.withOpacity(0.2),
+          color: Colors.white.withValues(alpha: 0.2),
           width: 1,
         ),
       ),
@@ -592,7 +593,7 @@ class _SchedulePageState extends State<SchedulePage>
         child: Text(
           'Cancel',
           style: TextStyle(
-            color: Colors.white.withOpacity(0.8),
+            color: Colors.white.withValues(alpha: 0.8),
             fontSize: 16,
             fontWeight: FontWeight.w500,
             letterSpacing: 0.5,

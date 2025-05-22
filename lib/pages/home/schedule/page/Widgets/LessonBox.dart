@@ -51,8 +51,8 @@ class LessonBox extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       color: color.computeLuminance() >= 0.5
-          ? color.withOpacity(0.1)
-          : Colors.white.withOpacity(0.1),
+          ? color.withValues(alpha: 0.1)
+          : Colors.white.withValues(alpha: 0.1),
       child: Stack(
         children: [
           Container(

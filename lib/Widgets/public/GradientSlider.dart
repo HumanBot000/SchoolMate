@@ -39,7 +39,7 @@ class GradientSlider extends StatelessWidget {
           Container(
             height: 8,
             decoration: BoxDecoration(
-              color: inactiveColor.withOpacity(0.2),
+              color: inactiveColor.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(sliderRadius),
             ),
           ),
@@ -231,7 +231,7 @@ class CircleThumbShape extends SliderComponentShape {
         circleOffset,
         thumbRadius + 2,
         Paint()
-          ..color = Colors.black.withOpacity(0.2)
+          ..color = Colors.black.withValues(alpha: 0.2)
           ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 3));
 
     // Draw circle
