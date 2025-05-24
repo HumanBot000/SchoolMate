@@ -221,6 +221,8 @@ class _ScheduleGridViewState extends State<ScheduleGridView> {
     if (height != null) {
       height -= 16; // Bottom margin
     }
+
+    // idk... just works
     if (!widget.navBarVisible && height != null) {
       height -= (MediaQuery.of(context).size.height * 0.05).toInt();
     }
