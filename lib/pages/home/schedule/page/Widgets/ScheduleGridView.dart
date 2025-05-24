@@ -215,12 +215,14 @@ class _ScheduleGridViewState extends State<ScheduleGridView> {
     // It took me 5+ Hours to figure out that the BottomNavBar is laid over the Scaffold via a stack and I need to subtract its height
     int? height = _buildAreaKey.currentContext?.size?.height.toInt();
     if (height != null &&
-        widget.navBarVisible &&
         bottomNavBarKey.currentContext?.size?.height != null) {
       height -= bottomNavBarKey.currentContext!.size!.height.floor();
     }
     if (height != null) {
       height -= 16; // Bottom margin
+    }
+    if (!widget.navBarVisible && height != null) {
+      height -= (MediaQuery.of(context).size.height * 0.05).toInt();
     }
     if (height != null) {
       setState(() {
@@ -229,6 +231,7 @@ class _ScheduleGridViewState extends State<ScheduleGridView> {
             _tableHeaderRowKey.currentContext?.findRenderObject() as RenderBox;
       });
     }
+    logger.d(height);
   }
 
   /// Handles swiping to change the week
