@@ -55,7 +55,6 @@ jobs:
         with:
           fetch-depth: 0
 
-
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
@@ -105,12 +104,17 @@ jobs:
           echo "----------------------" >> release_notes.txt
           git log ${{ needs.version-check.outputs.previous_version }}..HEAD --no-merges --pretty=format:"- %s" >> release_notes.txt
 
+      - name: Copy APK to root directory
+        run: |
+          cp build/app/outputs/flutter-apk/app-release.apk ./app-release.apk
+          ls -la *.apk
+
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: flutter-release
           path: |
-            build/app/outputs/flutter-apk/app-release.apk
+            app-release.apk
             release_notes.txt
 
   release:
@@ -126,6 +130,11 @@ jobs:
         with:
           name: flutter-release
           path: ./artifacts
+
+      - name: List downloaded artifacts
+        run: |
+          echo "Contents of ./artifacts:"
+          ls -la ./artifacts/
 
       - name: Create git tag
         run: |

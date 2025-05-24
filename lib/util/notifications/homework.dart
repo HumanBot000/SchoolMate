@@ -110,9 +110,8 @@ Future<void> clearAllHomeworkNotifications() async {
 
 Future<void> updateHomeworkNotifications(List<Homework> homeworks) async {
   await initNotificationPlugin();
-  await clearAllHomeworkNotifications();
   await requestExactAlarmPermission();
-
+  await clearAllHomeworkNotifications();
   for (Homework homework in homeworks.where((hw) => !hw.isCompleted)) {
     DateTime dueDate = homework.dueDate!;
     // If the task is a handIn task, it's exact time will be already set.

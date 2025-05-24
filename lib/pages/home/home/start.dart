@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:school_mate/API/supabase/schedule/schedule.dart';
 import 'package:school_mate/Classes/schedule/Schedule.dart';
+import 'package:school_mate/Widgets/specialThemes/futuristic.dart';
 import 'package:school_mate/pages/home/Widgets/BottomNavBar.dart';
 import 'package:school_mate/pages/home/home/Widgets/DayProgressBar.dart';
 import 'package:school_mate/pages/home/home/Widgets/HomeDrawer.dart';
@@ -63,125 +64,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     _fadeController.dispose();
     _slideController.dispose();
     super.dispose();
-  }
-
-  Widget _buildGradientBackground() {
-    return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Color(0xFF0A0E27),
-            Color(0xFF1A1F36),
-            Color(0xFF2D3561),
-          ],
-          stops: [0.0, 0.5, 1.0],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildFloatingParticles() {
-    return Stack(
-      children: List.generate(15, (index) {
-        return AnimatedBuilder(
-          animation: _fadeController,
-          builder: (context, child) {
-            return Positioned(
-              left: (index * 50.0) % MediaQuery.of(context).size.width,
-              top: (index * 80.0) % MediaQuery.of(context).size.height,
-              child: Opacity(
-                opacity: 0.1 * _fadeAnimation.value,
-                child: Container(
-                  width: 4 + (index % 3) * 2,
-                  height: 4 + (index % 3) * 2,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF3A7BFF),
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xFF3A7BFF).withValues(alpha: 0.3),
-                        blurRadius: 10,
-                        spreadRadius: 2,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          },
-        );
-      }),
-    );
-  }
-
-  Widget _buildNeonAppBar() {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            const Color(0xFF3A7BFF).withValues(alpha: 0.1),
-            Colors.transparent,
-          ],
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-        ),
-        border: Border(
-          bottom: BorderSide(
-            color: const Color(0xFF3A7BFF).withValues(alpha: 0.3),
-            width: 1,
-          ),
-        ),
-      ),
-      child: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: FadeTransition(
-          opacity: _fadeAnimation,
-          child: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFF3A7BFF), Color(0xFF00D4AA)],
-                  ),
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: const Color(0xFF3A7BFF).withValues(alpha: 0.3),
-                      blurRadius: 15,
-                      spreadRadius: 2,
-                    ),
-                  ],
-                ),
-                child: const Icon(
-                  Icons.home_rounded,
-                  color: Colors.white,
-                  size: 20,
-                ),
-              ),
-              const SizedBox(width: 12),
-              ShaderMask(
-                shaderCallback: (bounds) => const LinearGradient(
-                  colors: [Color(0xFF3A7BFF), Color(0xFF00D4AA)],
-                ).createShader(bounds),
-                child: const Text(
-                  'Home',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        iconTheme: const IconThemeData(color: Color(0xFF3A7BFF)),
-      ),
-    );
   }
 
   Widget _buildMainContent() {
@@ -447,11 +329,20 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       extendBodyBehindAppBar: true,
       body: Stack(
         children: [
-          _buildGradientBackground(),
-          _buildFloatingParticles(),
+          buildGradientBackground(),
+          buildFloatingParticles(_fadeController, _fadeAnimation),
           Column(
             children: [
-              _buildNeonAppBar(),
+              futuristicAppBar(
+                  context,
+                  "Home",
+                  const Icon(
+                    Icons.home_rounded,
+                    color: Colors.white,
+                    size: 20,
+                  ),
+                  _fadeAnimation,
+                  _fadeController),
               Expanded(child: _buildMainContent()),
             ],
           ),

@@ -5,6 +5,7 @@ import 'package:school_mate/API/supabase/schedule/schedule.dart'
 import 'package:school_mate/Classes/homeworks/Homework.dart';
 import 'package:school_mate/Classes/schedule/Lesson.dart';
 import 'package:school_mate/Classes/schedule/Schedule.dart';
+import 'package:school_mate/Widgets/specialThemes/futuristic.dart';
 import 'package:school_mate/main.dart';
 import 'package:school_mate/pages/home/Widgets/BottomNavBar.dart';
 import 'package:school_mate/pages/home/homework/add/AddHomework.dart';
@@ -85,134 +86,6 @@ class _SchedulePageState extends State<SchedulePage>
     super.dispose();
   }
 
-  Widget _buildGradientBackground() {
-    return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Color(0xFF0A0E27),
-            Color(0xFF1A1F36),
-            Color(0xFF2D3561),
-          ],
-          stops: [0.0, 0.5, 1.0],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildFloatingParticles() {
-    return Stack(
-      children: List.generate(20, (index) {
-        return AnimatedBuilder(
-          animation: _fadeController,
-          builder: (context, child) {
-            return Positioned(
-              left: (index * 60.0) % MediaQuery.of(context).size.width,
-              top: (index * 100.0) % MediaQuery.of(context).size.height,
-              child: Opacity(
-                opacity: 0.08 * _fadeAnimation.value,
-                child: Container(
-                  width: 3 + (index % 4),
-                  height: 3 + (index % 4),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF3A7BFF),
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xFF3A7BFF).withValues(alpha: 0.2),
-                        blurRadius: 8,
-                        spreadRadius: 1,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          },
-        );
-      }),
-    );
-  }
-
-  Widget _buildFuturisticAppBar() {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            const Color(0xFF3A7BFF).withValues(alpha: 0.15),
-            Colors.transparent,
-          ],
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-        ),
-        border: Border(
-          bottom: BorderSide(
-            color: const Color(0xFF3A7BFF).withValues(alpha: 0.3),
-            width: 1,
-          ),
-        ),
-      ),
-      child: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        automaticallyImplyLeading: false,
-        title: FadeTransition(
-          opacity: _fadeAnimation,
-          child: Row(
-            children: [
-              Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          colors: [Color(0xFF3A7BFF), Color(0xFF00D4AA)],
-                        ),
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(
-                            color:
-                                const Color(0xFF3A7BFF).withValues(alpha: 0.3),
-                            blurRadius: 15,
-                            spreadRadius: 2,
-                          ),
-                        ],
-                      ),
-                      child: const Icon(
-                        Icons.calendar_month_outlined,
-                        color: Colors.white,
-                        size: 20,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    ShaderMask(
-                      shaderCallback: (bounds) => const LinearGradient(
-                        colors: [Color(0xFF3A7BFF), Color(0xFF00D4AA)],
-                      ).createShader(bounds),
-                      child: const Text(
-                        'Schedule',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              _buildTimeButton(),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget _buildTimeButton() {
     return AnimatedBuilder(
       animation: _pulseAnimation,
@@ -236,6 +109,7 @@ class _SchedulePageState extends State<SchedulePage>
             child: IconButton(
               tooltip: "Back to Present",
               onPressed: () {
+                // We need to reset the page because the currentSelectedWeek var is handled internally
                 Navigator.of(context).pushReplacement(MaterialPageRoute(
                   builder: (context) => SchedulePage(
                     schedule: widget.schedule,
@@ -662,22 +536,35 @@ class _SchedulePageState extends State<SchedulePage>
       bottomNavigationBar:
           widget.showBottomNavBar ? const HomeNavBar(currentIndex: 1) : null,
       extendBodyBehindAppBar: true,
-      body: Stack(
-        children: [
-          _buildGradientBackground(),
-          _buildFloatingParticles(),
-          Column(
-            children: [
-              _buildFuturisticAppBar(),
-              Expanded(child: _buildEnhancedScheduleGrid()),
-            ],
-          ),
-          Positioned(
-            bottom: widget.showBottomNavBar ? 100 : 20,
-            right: 0,
-            child: _buildFloatingActionButton(),
-          ),
-        ],
+      body: SafeArea(
+        child: Stack(
+          children: [
+            buildGradientBackground(),
+            buildFloatingParticles(_fadeController, _fadeAnimation),
+            Column(
+              children: [
+                futuristicAppBar(
+                    context,
+                    'Schedule',
+                    const Icon(
+                      Icons.calendar_month_outlined,
+                      color: Colors.white,
+                      size: 20,
+                    ),
+                    _fadeAnimation,
+                    _fadeController,
+                    trailing: _buildTimeButton(),
+                    showBackButtonInstead: !widget.showBottomNavBar),
+                Expanded(child: _buildEnhancedScheduleGrid()),
+              ],
+            ),
+            Positioned(
+              bottom: MediaQuery.of(context).size.height * 0.00125,
+              right: 0,
+              child: _buildFloatingActionButton(),
+            ),
+          ],
+        ),
       ),
     );
   }
