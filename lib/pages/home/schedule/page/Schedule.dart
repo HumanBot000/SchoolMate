@@ -19,7 +19,7 @@ class SchedulePage extends StatefulWidget {
   final bool showBreaks;
   final Function(TimeOfDay, TimeOfDay, int) onBreakSelection;
   final bool showLessonTapCallback;
-  final Function(Lesson, DateTime) onLessonSelection;
+  final Function(Lesson, DateTime)? onLessonSelection;
   final bool crossOutPastLessons;
   final List<Homework> homeworks;
   final bool showBottomNavBar;
@@ -30,7 +30,7 @@ class SchedulePage extends StatefulWidget {
     this.showBreaks = false,
     this.onBreakSelection = _defaultBreakSelection,
     this.showLessonTapCallback = true,
-    this.onLessonSelection = _defaultOnLessonSelection,
+    this.onLessonSelection,
     this.crossOutPastLessons = false,
     this.homeworks = const [],
     this.showBottomNavBar = true,
@@ -38,8 +38,6 @@ class SchedulePage extends StatefulWidget {
 
   static void _defaultBreakSelection(
       TimeOfDay start, TimeOfDay end, int weekdays) {}
-
-  static void _defaultOnLessonSelection(Lesson lesson, DateTime date) {}
 
   @override
   State<SchedulePage> createState() => _SchedulePageState();
@@ -164,12 +162,10 @@ class _SchedulePageState extends State<SchedulePage>
             showBreaks: widget.showBreaks,
             showLessonTapCallback: widget.showLessonTapCallback,
             callbackForLessonsInPast: false,
-            onLessonSelection: widget.onLessonSelection ==
-                    SchedulePage._defaultOnLessonSelection
-                ? (lesson, time) => _showEnhancedDialog(lesson, time)
-                : widget.onLessonSelection,
+            onLessonSelection: widget.onLessonSelection ?? _showEnhancedDialog,
             crossOutLessonsInPast: widget.crossOutPastLessons,
             homeworks: widget.homeworks,
+            navBarVisible: widget.showBottomNavBar,
           ),
         ),
       ),
@@ -533,34 +529,49 @@ class _SchedulePageState extends State<SchedulePage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar:
-          widget.showBottomNavBar ? const HomeNavBar(currentIndex: 1) : null,
+      bottomNavigationBar: widget.showBottomNavBar
+          ? HomeNavBar(
+              currentIndex: 1,
+              key: bottomNavBarKey,
+            )
+          : null,
       extendBodyBehindAppBar: true,
       body: SafeArea(
+        bottom: widget.showBottomNavBar, // Add this line
         child: Stack(
           children: [
             buildGradientBackground(),
-            buildFloatingParticles(_fadeController, _fadeAnimation),
+            const ParticleBackground(),
             Column(
               children: [
                 futuristicAppBar(
-                    context,
-                    'Schedule',
-                    const Icon(
-                      Icons.calendar_month_outlined,
-                      color: Colors.white,
-                      size: 20,
+                  context,
+                  'Schedule',
+                  const Icon(
+                    Icons.calendar_month_outlined,
+                    color: Colors.white,
+                    size: 20,
+                  ),
+                  _fadeAnimation,
+                  _fadeController,
+                  trailing: _buildTimeButton(),
+                  showBackButtonInstead: !widget.showBottomNavBar,
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                      bottom: widget.showBottomNavBar ? 0 : 80,
                     ),
-                    _fadeAnimation,
-                    _fadeController,
-                    trailing: _buildTimeButton(),
-                    showBackButtonInstead: !widget.showBottomNavBar),
-                Expanded(child: _buildEnhancedScheduleGrid()),
+                    child: _buildEnhancedScheduleGrid(),
+                  ),
+                ),
               ],
             ),
             Positioned(
-              bottom: MediaQuery.of(context).size.height * 0.00125,
-              right: 0,
+              bottom: widget.showBottomNavBar
+                  ? MediaQuery.of(context).size.height * 0.00125
+                  : 20, // Adjust FAB position
+              right: 20,
               child: _buildFloatingActionButton(),
             ),
           ],

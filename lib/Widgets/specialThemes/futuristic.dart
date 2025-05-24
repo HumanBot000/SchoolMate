@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 Widget buildGradientBackground() {
@@ -17,39 +19,88 @@ Widget buildGradientBackground() {
   );
 }
 
-Widget buildFloatingParticles(
-    AnimationController fadeController, Animation<double> fadeAnimation) {
-  return Stack(
-    children: List.generate(150, (index) {
-      return AnimatedBuilder(
-        animation: fadeController,
-        builder: (context, child) {
-          return Positioned(
-            left: (index * 50.0) % MediaQuery.of(context).size.width,
-            top: (index * 80.0) % MediaQuery.of(context).size.height,
-            child: Opacity(
-              opacity: 0.1 * fadeAnimation.value,
-              child: Container(
-                width: 4 + (index % 3) * 2,
-                height: 4 + (index % 3) * 2,
-                decoration: BoxDecoration(
-                  color: const Color(0xFF3A7BFF),
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: const Color(0xFF3A7BFF).withValues(alpha: 0.3),
-                      blurRadius: 10,
-                      spreadRadius: 2,
-                    ),
-                  ],
-                ),
-              ),
+class ParticleBackground extends StatefulWidget {
+  const ParticleBackground({Key? key}) : super(key: key);
+
+  @override
+  _ParticleBackgroundState createState() => _ParticleBackgroundState();
+}
+
+class _ParticleBackgroundState extends State<ParticleBackground>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+  final int particleCount = 15;
+  final List<Offset> positions = [];
+  final Random rnd = Random();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final size = MediaQuery.of(context).size;
+      for (int i = 0; i < particleCount; i++) {
+        positions.add(Offset(
+            rnd.nextDouble() * size.width, rnd.nextDouble() * size.height));
+      }
+      setState(() {});
+    });
+
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 5),
+    )..repeat(reverse: true);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return RepaintBoundary(
+      child: AnimatedBuilder(
+        animation: _controller,
+        builder: (context, _) {
+          return CustomPaint(
+            size: MediaQuery.of(context).size,
+            painter: _ParticlePainter(
+              positions: positions,
+              progress: _controller.value,
             ),
           );
         },
-      );
-    }),
-  );
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+}
+
+class _ParticlePainter extends CustomPainter {
+  final List<Offset> positions;
+  final double progress;
+
+  _ParticlePainter({
+    required this.positions,
+    required this.progress,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = const Color(0xFF3A7BFF).withOpacity(0.1 * progress)
+      ..style = PaintingStyle.fill
+      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 10);
+    for (int i = 0; i < positions.length; i++) {
+      final radius = 2.0 + (i % 3) * 1.0;
+      canvas.drawCircle(positions[i], radius, paint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _ParticlePainter old) {
+    return old.progress != progress;
+  }
 }
 
 Widget futuristicAppBar(BuildContext context, String title, Icon icon,

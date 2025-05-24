@@ -330,7 +330,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       body: Stack(
         children: [
           buildGradientBackground(),
-          buildFloatingParticles(_fadeController, _fadeAnimation),
+          ParticleBackground(),
           Column(
             children: [
               futuristicAppBar(

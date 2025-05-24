@@ -28,6 +28,7 @@ class ScheduleGridView extends StatefulWidget {
   final bool crossOutLessonsInPast;
   final List<Homework> homeworks;
   final bool callbackForLessonsInPast;
+  final bool navBarVisible;
 
   const ScheduleGridView(
       {super.key,
@@ -38,6 +39,7 @@ class ScheduleGridView extends StatefulWidget {
       required this.onLessonSelection,
       required this.crossOutLessonsInPast,
       this.homeworks = const [],
+      this.navBarVisible = true,
       this.callbackForLessonsInPast = false});
 
   @override
@@ -208,18 +210,18 @@ class _ScheduleGridViewState extends State<ScheduleGridView> {
     }).toList();
   }
 
-  /// Calculates pixel height per minute
+  /// Calculates pixel height per minute (
   void _calculatePixelHeight() {
     // It took me 5+ Hours to figure out that the BottomNavBar is laid over the Scaffold via a stack and I need to subtract its height
     int? height = _buildAreaKey.currentContext?.size?.height.toInt();
     if (height != null &&
+        widget.navBarVisible &&
         bottomNavBarKey.currentContext?.size?.height != null) {
       height -= bottomNavBarKey.currentContext!.size!.height.floor();
-      height -= 16; // Bottom margin
-    } else {
-      height = null;
     }
-
+    if (height != null) {
+      height -= 16; // Bottom margin
+    }
     if (height != null) {
       setState(() {
         _pixelHeightPerMinute = height! / _dailyWorkdayMinutes.toDouble();
