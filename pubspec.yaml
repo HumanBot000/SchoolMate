@@ -25,6 +25,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -50,6 +52,7 @@ dependencies:
   collection: ^1.17.0
   fl_chart: ^0.70.2
   postgrest: any
+  go_router: ^17.3.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -81,6 +84,7 @@ flutter_launcher_icons:
     background_color: "#050A30"
     theme_color: "#050A30"
 flutter:
+  generate: true
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

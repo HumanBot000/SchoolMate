@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:school_mate/API/supabase/auth/userData.dart';
 import 'package:school_mate/API/supabase/auth/userSettings.dart';
 import 'package:school_mate/Classes/geoPolitics/Country.dart';
@@ -6,6 +7,7 @@ import 'package:school_mate/Widgets/public/GradientButton.dart';
 
 import '../../main.dart';
 import 'Widgets/ResidenceSelector/SearchableResidenceSelector.dart';
+import 'Widgets/ResidenceSelector/StateSelector.dart';
 
 class SetupPage extends StatefulWidget {
   final MaterialPageRoute afterSelectionRoute;
@@ -119,8 +121,13 @@ class _SetupPageState extends State<SetupPage> {
                     await forceUpdateUserSettings(
                         residenceCountry: _selectedResidence,
                         residence: _exactSelectedResidence);
-                    Navigator.of(context)
-                        .pushReplacement(widget.afterSelectionRoute);
+                    if (context.mounted) {
+                      if (widget.isOnboarding) {
+                        context.go('/home');
+                      } else {
+                        Navigator.of(context).pop();
+                      }
+                    }
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,

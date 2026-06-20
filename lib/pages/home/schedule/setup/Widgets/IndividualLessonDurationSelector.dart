@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:school_mate/Widgets/public/GradientButton.dart';
 import 'package:school_mate/Widgets/public/TimePicker.dart';
 import 'package:school_mate/util/extensions/dates.dart';
+import 'package:school_mate/l10n/app_localizations.dart';
 
 class IndividualLessonDurationSelector extends StatefulWidget {
   final int activePage;
@@ -48,18 +49,20 @@ class _IndividualLessonDurationSelectorState
   }
 
   Widget _deactivatedPage() {
+    final l10n = AppLocalizations.of(context)!;
     return Row(
       children: [
         const Icon(Icons.access_time_filled, color: Colors.grey),
         Container(
             margin: const EdgeInsets.all(8),
             child:
-                Text("Each lesson is ${widget.lessonDuration} minutes long")),
+                Text(l10n.lessonDurationInfo(widget.lessonDuration.toString()))),
       ],
     );
   }
 
   Widget _visualIndividualLessonTimeSelector() {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       children: [
         ListView.builder(
@@ -129,7 +132,7 @@ class _IndividualLessonDurationSelectorState
                                       widget.onVisualLessonTimesChange(
                                           updatedLessonTimes);
                                     },
-                                    headline: "When does this lesson start?",
+                                    headline: l10n.lessonStartPrompt,
                                   ),
                                 );
                               },
@@ -164,7 +167,7 @@ class _IndividualLessonDurationSelectorState
                                       widget.onVisualLessonTimesChange(
                                           updatedLessonTimes);
                                     },
-                                    headline: "When does this lesson end?",
+                                    headline: l10n.lessonEndPrompt,
                                     gradient: LinearGradient(
                                       colors: [
                                         Colors.red.shade300,
@@ -203,7 +206,7 @@ class _IndividualLessonDurationSelectorState
                                 .sublist(0, index), // remove last lesson
                           );
                         },
-                        tooltip: "Delete this lesson",
+                        tooltip: l10n.deleteLessonTooltip,
                       ),
                   ],
                 ),
@@ -237,13 +240,13 @@ class _IndividualLessonDurationSelectorState
                     ]);
                     widget.onVisualLessonTimesChange(updatedLessonTimes);
                   },
-                  headline: "When does this lesson start?",
+                  headline: l10n.lessonStartPrompt,
                 ),
               );
             },
-            child: const Text(
-              "Add a new lesson",
-              style: TextStyle(color: Colors.grey),
+            child: Text(
+              l10n.addLessonLabel,
+              style: const TextStyle(color: Colors.grey),
             ),
           ),
         ),
@@ -252,13 +255,14 @@ class _IndividualLessonDurationSelectorState
   }
 
   Widget _activatedPage() {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       children: [
         Wrap(
           alignment: WrapAlignment.center,
           children: [
             Text(
-              "You can change this later for each individual lesson.",
+              l10n.changeLessonDurationPrompt,
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 16,
@@ -272,7 +276,7 @@ class _IndividualLessonDurationSelectorState
           padding: const EdgeInsets.all(8.0),
           child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
             Text(
-              "45 minutes", // Default time -> not changeable
+              l10n.minutesValue("45"),
               style: TextStyle(
                 fontSize: 16,
                 color: Colors.grey[700],
@@ -315,7 +319,7 @@ class _IndividualLessonDurationSelectorState
             children: [
               const SizedBox(width: 10),
               Text(
-                "${widget.selectedCustomLessonDuration} minutes",
+                l10n.minutesValue(widget.selectedCustomLessonDuration.toString()),
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.grey[700],
@@ -330,11 +334,11 @@ class _IndividualLessonDurationSelectorState
                   onPressed: () => _showCustomLessonDurationSelectorDialog(),
                   borderRadius: BorderRadius.circular(16),
                   child: Text(
-                    "Custom",
+                    l10n.customLabel,
                     style: Theme.of(context)
-                        .textTheme
-                        .bodyMedium
-                        ?.copyWith(color: Colors.white),
+                      .textTheme
+                      .bodyMedium
+                      ?.copyWith(color: Colors.white),
                   ),
                 ),
               )
@@ -348,6 +352,7 @@ class _IndividualLessonDurationSelectorState
   }
 
   void _showCustomLessonDurationSelectorDialog() {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (context) => Dialog(
@@ -363,7 +368,7 @@ class _IndividualLessonDurationSelectorState
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    "How long are your lessons?",
+                    l10n.lessonDurationPrompt,
                     style: Theme.of(context)
                         .textTheme
                         .headlineSmall
@@ -381,7 +386,7 @@ class _IndividualLessonDurationSelectorState
                     ),
                     child: Center(
                       child: Text(
-                        "$_selectedCustomLessonDuration minutes",
+                        l10n.minutesValue(_selectedCustomLessonDuration.toString()),
                         style: Theme.of(context)
                             .textTheme
                             .headlineMedium
@@ -396,9 +401,9 @@ class _IndividualLessonDurationSelectorState
                       Expanded(
                         child: Column(
                           children: [
-                            const Text(
-                              "Minutes",
-                              style: TextStyle(
+                            Text(
+                              l10n.minutesLabel,
+                              style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -448,7 +453,7 @@ class _IndividualLessonDurationSelectorState
                               _selectedCustomLessonDuration);
                         },
                         child: Text(
-                          "Confirm",
+                          l10n.confirm,
                           style: Theme.of(context)
                               .textTheme
                               .bodyMedium

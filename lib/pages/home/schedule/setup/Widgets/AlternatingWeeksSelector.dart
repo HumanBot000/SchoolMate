@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:school_mate/Widgets/public/GradientButton.dart';
+import 'package:school_mate/l10n/app_localizations.dart';
 import 'package:school_mate/util/dates.dart';
 
 class AlternatingWeeksSelector extends StatefulWidget {
@@ -23,6 +24,7 @@ class AlternatingWeeksSelector extends StatefulWidget {
 }
 
 class _AlternatingWeeksSelectorState extends State<AlternatingWeeksSelector> {
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
   late int _scrollViewSelectedWeek;
 
   @override
@@ -52,10 +54,10 @@ class _AlternatingWeeksSelectorState extends State<AlternatingWeeksSelector> {
                 color: widget.alternatingWeeksCount == 0
                     ? Colors.green
                     : Colors.grey),
-            child: const Row(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                FittedBox(fit: BoxFit.scaleDown, child: Text("A Weeks")),
+                FittedBox(fit: BoxFit.scaleDown, child: Text(l10n.aWeeks)),
               ],
             ),
           ),
@@ -81,7 +83,7 @@ class _AlternatingWeeksSelectorState extends State<AlternatingWeeksSelector> {
             child: FittedBox(
               fit: BoxFit.scaleDown,
               child: Text(
-                "A/B Weeks",
+                l10n.abWeeks,
                 style: widget.alternatingWeeksCount == 1
                     ? Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: Colors
@@ -113,7 +115,7 @@ class _AlternatingWeeksSelectorState extends State<AlternatingWeeksSelector> {
                 alignment: Alignment.center,
                 fit: BoxFit.scaleDown,
                 child: Text(
-                  "A/B/C Weeks",
+                  l10n.abcWeeks,
                   style: Theme.of(context).textTheme.bodyMedium,
                 )),
           ),
@@ -134,7 +136,7 @@ class _AlternatingWeeksSelectorState extends State<AlternatingWeeksSelector> {
                   padding: const EdgeInsets.all(16.0),
                   child: Column(mainAxisSize: MainAxisSize.min, children: [
                     Text(
-                      "What type of week is the current one?",
+                      l10n.currentWeekPrompt,
                       style: Theme.of(context)
                           .textTheme
                           .headlineSmall
@@ -143,8 +145,8 @@ class _AlternatingWeeksSelectorState extends State<AlternatingWeeksSelector> {
                     const SizedBox(height: 16),
                     Column(
                       children: [
-                        const Text("Week",
-                            style: TextStyle(
+                        Text(l10n.weekLabel,
+                            style: const TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.bold)),
                         SizedBox(
                           height: 120,
@@ -186,7 +188,7 @@ class _AlternatingWeeksSelectorState extends State<AlternatingWeeksSelector> {
                           onPressed: () {
                             Navigator.of(context).pop();
                           },
-                          child: const Text("Cancel"),
+                          child: Text(l10n.cancel),
                         ),
                         ElevatedButton(
                           onPressed: () {
@@ -194,7 +196,7 @@ class _AlternatingWeeksSelectorState extends State<AlternatingWeeksSelector> {
                             widget.onWeekChange(widget.alternatingWeeksCount,
                                 _scrollViewSelectedWeek);
                           },
-                          child: const Text("Select"),
+                          child: Text(l10n.selectLabel),
                         ),
                       ],
                     ),
@@ -220,10 +222,10 @@ class _AlternatingWeeksSelectorState extends State<AlternatingWeeksSelector> {
     return Column(
       children: [
         Text(
-          "Which week is today?",
+          l10n.whichWeekToday,
           style: Theme.of(context).textTheme.bodyLarge,
         ),
-        const Text("We will calculate the following weeks for you!"),
+        Text(l10n.weWillCalculateWeeks),
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: ElevatedGradientButton(
@@ -233,7 +235,7 @@ class _AlternatingWeeksSelectorState extends State<AlternatingWeeksSelector> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "Select",
+                    l10n.selectLabel,
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         color: Colors.white, fontWeight: FontWeight.bold),
                   ),

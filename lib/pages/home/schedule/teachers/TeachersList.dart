@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:school_mate/l10n/app_localizations.dart';
 import 'package:school_mate/API/supabase/schedule/teachers.dart';
 import 'package:school_mate/Classes/persons/Teacher.dart';
 import 'package:school_mate/Widgets/public/PreviousPage.dart';
@@ -17,6 +18,7 @@ class TeacherSelector extends StatefulWidget {
 }
 
 class _TeacherSelectorState extends State<TeacherSelector> {
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
   late List<Teacher> _teachers = [];
 
   @override
@@ -38,10 +40,10 @@ class _TeacherSelectorState extends State<TeacherSelector> {
           ),
           Container(
             margin: EdgeInsets.all(MediaQuery.of(context).size.width * 0.1),
-            child: const Text(
-              "You haven't setup any teachers yet",
+            child: Text(
+              l10n.noTeachersSetup,
               // Configure is probably more suitable for persons instead of create or add :)
-              style: TextStyle(fontSize: 20, color: Colors.grey),
+              style: const TextStyle(fontSize: 20, color: Colors.grey),
             ),
           )
         ],
@@ -83,7 +85,7 @@ class _TeacherSelectorState extends State<TeacherSelector> {
                         ));
                       },
                       icon: const Icon(Icons.edit),
-                      label: const Text("Edit"),
+                      label: Text(l10n.edit),
                     ),
                     TextButton.icon(
                       onPressed: () async {
@@ -97,7 +99,7 @@ class _TeacherSelectorState extends State<TeacherSelector> {
                         widget.onSelect(null);
                       },
                       icon: const Icon(Icons.delete),
-                      label: const Text("Delete"),
+                      label: Text(l10n.delete),
                     ),
                   ],
                 ),
@@ -143,7 +145,7 @@ class _TeacherSelectorState extends State<TeacherSelector> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text("Select a teacher",
+          title: Text(l10n.selectTeacher,
               style: Theme.of(context)
                   .appBarTheme
                   .titleTextStyle
@@ -157,7 +159,7 @@ class _TeacherSelectorState extends State<TeacherSelector> {
             child: Container(
               margin: const EdgeInsets.fromLTRB(0, 0, 16, 32),
               child: IconButton(
-                  tooltip: "Configure a Teacher",
+                  tooltip: l10n.configureTeacher,
                   onPressed: () => Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => TeacherConfigurationPage(
                           onChange: (teacher) async {

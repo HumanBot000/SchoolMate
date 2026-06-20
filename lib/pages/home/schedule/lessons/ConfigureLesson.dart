@@ -9,6 +9,7 @@ import 'package:school_mate/Widgets/public/TimePicker.dart';
 import 'package:school_mate/pages/home/schedule/page/Schedule.dart';
 import 'package:school_mate/util/dates.dart';
 import 'package:school_mate/util/extensions/dates.dart';
+import 'package:school_mate/l10n/app_localizations.dart';
 
 class LessonConfigurationPage extends StatefulWidget {
   final Subject subject;
@@ -68,10 +69,11 @@ class _LessonConfigurationPageState extends State<LessonConfigurationPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: Text("Create a Subject", style: TextStyle(color: _textColor)),
+        title: Text(l10n.configureLessonTitle, style: TextStyle(color: _textColor)),
         leading: PreviousPage(iconColor: _textColor),
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -94,12 +96,12 @@ class _LessonConfigurationPageState extends State<LessonConfigurationPage> {
                 _buildDayAndWeekSelector(),
                 if (_selectedAlternatingWeeks.isEmpty)
                   _buildErrorText(
-                      "Select at least one week type to add a lesson to!"),
+                      l10n.errorSelectAtLeastOneWeek),
                 if (_startTime == null || _endTime == null)
-                  _buildErrorText("Select when this lesson starts and ends!"),
+                  _buildErrorText(l10n.errorSelectStartEndTimes),
                 if ((_startTime != null && _endTime != null) &&
                     !_endTime!.isAfter(_startTime!))
-                  _buildErrorText("End time must be after start time!"),
+                  _buildErrorText(l10n.errorEndTimeAfterStartTime),
                 if ((_startTime != null && _endTime != null) &&
                     (!_startTime!.isBetween(
                             widget.schedule.metadata.firstLessonTime,
@@ -108,7 +110,7 @@ class _LessonConfigurationPageState extends State<LessonConfigurationPage> {
                             widget.schedule.metadata.firstLessonTime,
                             widget.schedule.metadata.lastLessonTime)))
                   _buildErrorText(
-                      "Start and end times must be within the school day!"),
+                      l10n.errorTimesWithinSchoolDay),
                 if ((_startTime != null && _endTime != null) &&
                     widget.schedule.lessonOverlaps(_startTime!, _endTime!,
                         _selectedWeekDay, _selectedAlternatingWeeks,
@@ -116,7 +118,7 @@ class _LessonConfigurationPageState extends State<LessonConfigurationPage> {
                             ? []
                             : [widget.existingLesson!]))
                   _buildErrorText(
-                      "This lesson overlaps with another one!\nChange the length of the other lesson first!"),
+                      l10n.errorLessonOverlaps),
                 const SizedBox(height: 16),
                 Container(
                   padding: const EdgeInsets.all(16),
@@ -152,6 +154,7 @@ class _LessonConfigurationPageState extends State<LessonConfigurationPage> {
   }
 
   Widget _buildAddButton() {
+    final l10n = AppLocalizations.of(context)!;
     return ElevatedGradientButton(
         borderRadius: BorderRadius.circular(12),
         onPressed: () async {
@@ -161,7 +164,7 @@ class _LessonConfigurationPageState extends State<LessonConfigurationPage> {
                       SnackBar(
                         backgroundColor: Theme.of(context).colorScheme.error,
                         content: Text(
-                          "You haven't fixed all problems!",
+                          l10n.errorUnresolvedProblems,
                           style: Theme.of(context)
                               .textTheme
                               .bodyMedium
@@ -186,7 +189,7 @@ class _LessonConfigurationPageState extends State<LessonConfigurationPage> {
           children: [
             Icon(widget.existingLesson == null ? Icons.add : Icons.save,
                 color: Colors.white),
-            Text(widget.existingLesson == null ? "Add Lesson" : "Update Lesson",
+            Text(widget.existingLesson == null ? l10n.addLessonButton : l10n.updateLessonButton,
                 style: Theme.of(context)
                     .textTheme
                     .bodyMedium
@@ -242,6 +245,7 @@ class _LessonConfigurationPageState extends State<LessonConfigurationPage> {
   }
 
   Widget _buildRoomNumberSelector() {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 24),
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -249,11 +253,11 @@ class _LessonConfigurationPageState extends State<LessonConfigurationPage> {
         // Later we have to use the string because of leading zeros and letters (for buildings for example)
         controller: _roomNumberController,
         decoration: InputDecoration(
-          label: const Row(
+          label: Row(
             children: [
-              Icon(Icons.door_front_door),
-              SizedBox(width: 8),
-              Text("Room Number"),
+              const Icon(Icons.door_front_door),
+              const SizedBox(width: 8),
+              Text(l10n.roomNumberLabel),
             ],
           ),
           labelStyle: const TextStyle(fontSize: 16),
@@ -264,6 +268,7 @@ class _LessonConfigurationPageState extends State<LessonConfigurationPage> {
   }
 
   Widget _buildDayAndWeekSelector() {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.all(8.0),
       margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -315,7 +320,7 @@ class _LessonConfigurationPageState extends State<LessonConfigurationPage> {
                     color: Colors.white,
                   ),
                   Text(
-                    "Select from Schedule",
+                    l10n.selectFromSchedule,
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         color: Colors.white, fontWeight: FontWeight.bold),
                   )
@@ -352,7 +357,7 @@ class _LessonConfigurationPageState extends State<LessonConfigurationPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          weekdaysAbbreviations[i],
+                          DateFormat.E(Localizations.localeOf(context).languageCode).format(DateTime(2024, 1, 1 + i)),
                           style: Theme.of(context)
                               .textTheme
                               .bodyMedium
@@ -384,6 +389,7 @@ class _LessonConfigurationPageState extends State<LessonConfigurationPage> {
   }
 
   Widget _buildAlternatingWeekSelector() {
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
@@ -411,16 +417,16 @@ class _LessonConfigurationPageState extends State<LessonConfigurationPage> {
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: _selectedAlternatingWeeks.contains(alternatingWeek)
                       ? [
-                          BoxShadow(
-                            color: Colors.green.withValues(alpha: 0.5),
-                            blurRadius: 6,
-                            offset: const Offset(0, 3),
-                          ),
-                        ]
+                           BoxShadow(
+                             color: Colors.green.withValues(alpha: 0.5),
+                             blurRadius: 6,
+                             offset: const Offset(0, 3),
+                           ),
+                         ]
                       : [],
                 ),
                 child: Text(
-                  "${String.fromCharCode(65 + alternatingWeek)} Weeks",
+                  l10n.weekLabelWithLetter(String.fromCharCode(65 + alternatingWeek)),
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         fontSize:
                             _selectedAlternatingWeeks.contains(alternatingWeek)
@@ -442,16 +448,17 @@ class _LessonConfigurationPageState extends State<LessonConfigurationPage> {
   }
 
   Widget _buildTimeSelectors() {
+    final l10n = AppLocalizations.of(context)!;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         _buildTimeButton(
           gradient: const LinearGradient(colors: [Colors.cyan, Colors.indigo]),
           label: _startTime == null
-              ? "Select start time"
+              ? l10n.selectStartTime
               : DateFormat("HH:mm").format(_startTime!.toDateTime()),
           onPressed: () => _selectTime(
-            "When does this lesson start?",
+            l10n.lessonStartPrompt,
             _startTime ?? widget.schedule.metadata.firstLessonTime,
             (time) => setState(() {
               _startTime = time;
@@ -463,7 +470,7 @@ class _LessonConfigurationPageState extends State<LessonConfigurationPage> {
         ),
         const Icon(Icons.arrow_right_alt),
         Text(
-          "${_calculateLessonDuration()} min",
+          l10n.minutesValueShort(_calculateLessonDuration().toString()),
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -471,10 +478,10 @@ class _LessonConfigurationPageState extends State<LessonConfigurationPage> {
         const Icon(Icons.arrow_right_alt),
         _buildTimeButton(
           label: _endTime == null
-              ? "Select end time"
+              ? l10n.selectEndTime
               : DateFormat("HH:mm").format(_endTime!.toDateTime()),
           onPressed: () => _selectTime(
-            "When does this lesson end?",
+            l10n.lessonEndPrompt,
             _endTime ?? TimeOfDay.now(),
             (time) => setState(() => _endTime = time),
           ),

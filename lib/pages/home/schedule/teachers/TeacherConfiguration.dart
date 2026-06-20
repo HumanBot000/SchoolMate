@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:school_mate/l10n/app_localizations.dart';
 import 'package:school_mate/API/supabase/schedule/teachers.dart';
 import 'package:school_mate/Classes/persons/Gender.dart';
 import 'package:school_mate/Classes/persons/Teacher.dart';
@@ -24,6 +25,7 @@ class TeacherConfigurationPage extends StatefulWidget {
 }
 
 class _TeacherConfigurationPageState extends State<TeacherConfigurationPage> {
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
   final TextEditingController _teacherNameController = TextEditingController();
   final TextEditingController _teacherAddressController =
       TextEditingController();
@@ -54,8 +56,8 @@ class _TeacherConfigurationPageState extends State<TeacherConfigurationPage> {
       WidgetsBinding.instance.addPostFrameCallback(
           (_) => ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: const Text(
-                      "Please provide a valid name and form of address for this teacher."),
+                  content: Text(
+                      l10n.teacherValidationAlert),
                   backgroundColor: Theme.of(context).colorScheme.error,
                 ),
               ));
@@ -92,7 +94,7 @@ class _TeacherConfigurationPageState extends State<TeacherConfigurationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Configure a Teacher"),
+        title: Text(l10n.configureTeacher),
         leading: const PreviousPage(),
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -105,8 +107,8 @@ class _TeacherConfigurationPageState extends State<TeacherConfigurationPage> {
             TextFormField(
               controller: _teacherNameController,
               decoration: InputDecoration(
-                hintText: "Enter the teacher's name",
-                labelText: "Name",
+                hintText: l10n.enterTeacherName,
+                labelText: l10n.name,
                 prefixIcon: const Icon(Icons.person),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12.0),
@@ -129,16 +131,16 @@ class _TeacherConfigurationPageState extends State<TeacherConfigurationPage> {
             ),
             const SizedBox(height: 16),
             Text(
-              "Gender",
+              l10n.gender,
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 12),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildGenderButton("Male", "M", Colors.green),
-                _buildGenderButton("Female", "F", Colors.pink),
-                _buildGenderButton("Diverse", "D", Colors.grey),
+                _buildGenderButton(l10n.male, "M", Colors.green),
+                _buildGenderButton(l10n.female, "F", Colors.pink),
+                _buildGenderButton(l10n.diverse, "D", Colors.grey),
               ],
             ),
             const SizedBox(height: 24),
@@ -150,8 +152,8 @@ class _TeacherConfigurationPageState extends State<TeacherConfigurationPage> {
             TextFormField(
               controller: _teacherAddressController,
               decoration: InputDecoration(
-                hintText: "Enter the form of address",
-                labelText: "Form of Address",
+                hintText: l10n.enterFormOfAddress,
+                labelText: l10n.formOfAddress,
                 prefixIcon: const Icon(Icons.quick_contacts_mail),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12.0),
@@ -176,9 +178,9 @@ class _TeacherConfigurationPageState extends State<TeacherConfigurationPage> {
                   borderRadius: BorderRadius.circular(12.0),
                 ),
               ),
-              child: const Row(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [Icon(Icons.save), SizedBox(width: 8), Text("Save")],
+                children: [const Icon(Icons.save), const SizedBox(width: 8), Text(l10n.save)],
               ),
             ),
           ],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:school_mate/l10n/app_localizations.dart';
 import 'package:school_mate/API/supabase/schedule/MetadataCRUD.dart'
     as metadata;
 import 'package:school_mate/API/supabase/schedule/schedule.dart'
@@ -17,20 +18,20 @@ import 'package:school_mate/util/extensions/dates.dart';
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 
 class ScheduleSetupPage extends StatefulWidget {
-  final String headerTitle;
+  final String? headerTitle;
   final Schedule? existingSchedule;
 
   const ScheduleSetupPage(
       {super.key,
       this.existingSchedule,
-      this.headerTitle =
-          "Before you can start using the schedule, we need to know some last details about your day."});
+      this.headerTitle});
 
   @override
   State<ScheduleSetupPage> createState() => _ScheduleSetupPageState();
 }
 
 class _ScheduleSetupPageState extends State<ScheduleSetupPage> {
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
   // Don't make these vars public and manipulate in child widgets because of single source of truth -> easier debugging
   int _activePage = 0;
   TimeOfDay _startTime = const TimeOfDay(hour: 08, minute: 00);
@@ -114,8 +115,8 @@ class _ScheduleSetupPageState extends State<ScheduleSetupPage> {
       WidgetsBinding.instance.addPostFrameCallback(
           (_) => ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: const Text(
-                      "The current week type must be included in the number of weeks"),
+                  content: Text(
+                      l10n.currentWeekTypeRequired),
                   backgroundColor: Theme.of(context).colorScheme.error,
                 ),
               ));
@@ -149,7 +150,7 @@ class _ScheduleSetupPageState extends State<ScheduleSetupPage> {
           (_) => ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   backgroundColor: Theme.of(context).colorScheme.error,
-                  content: const Text("Please fill in all required fields"),
+                   content: Text(l10n.fillAllRequiredFields),
                 ),
               ));
       return false;
@@ -159,8 +160,8 @@ class _ScheduleSetupPageState extends State<ScheduleSetupPage> {
           (_) => ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   backgroundColor: Theme.of(context).colorScheme.error,
-                  content: const Text(
-                      "The provided lesson times may not overlap each other"),
+                   content: Text(
+                      l10n.lessonTimesOverlap),
                 ),
               ));
       return false;
@@ -186,7 +187,7 @@ class _ScheduleSetupPageState extends State<ScheduleSetupPage> {
       if (e is PostgrestException &&
           e.message == "last_lesson must be after first_lesson") {
         errorMessage =
-            "Your last lesson must end after your first lesson starts.";
+            l10n.lastLessonAfterFirst;
       } else {
         errorMessage = e.toString();
       }
@@ -214,7 +215,7 @@ class _ScheduleSetupPageState extends State<ScheduleSetupPage> {
               return SchedulePage(schedule: snapshot.data!);
             } else {
               logger.w("Couldn't find a schedule after creating it.");
-              return const Text('No data available.');
+              return Text(l10n.noDataAvailable);
             }
           },
         ),
@@ -226,8 +227,8 @@ class _ScheduleSetupPageState extends State<ScheduleSetupPage> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final firstSnackBar = scaffoldMessenger.showSnackBar(
-        const SnackBar(
-          content: Text("Updated Schedule Successfully!"),
+        SnackBar(
+          content: Text(l10n.updatedScheduleSuccess),
           backgroundColor: Colors.green,
         ),
       );
@@ -236,10 +237,10 @@ class _ScheduleSetupPageState extends State<ScheduleSetupPage> {
       await firstSnackBar.closed;
 
       scaffoldMessenger.showSnackBar(
-        const SnackBar(
+        SnackBar(
           backgroundColor: Colors.yellow,
           content: Text(
-            "Please note, that this might corrupt your current schedule. We highly encourage you to clear all lessons.",
+            l10n.scheduleCorruptionWarning,
           ),
         ),
       );
@@ -268,7 +269,7 @@ class _ScheduleSetupPageState extends State<ScheduleSetupPage> {
                   children: [
                     Center(
                       child: Text(
-                        _isEdit ? "Edit Schedule" : "Schedule Setup",
+                        _isEdit ? l10n.editSchedule : l10n.scheduleSetup,
                         style: Theme.of(context)
                             .textTheme
                             .headlineMedium
@@ -277,7 +278,7 @@ class _ScheduleSetupPageState extends State<ScheduleSetupPage> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      widget.headerTitle,
+                      widget.headerTitle ?? l10n.defaultScheduleSetupHeader,
                       style: Theme.of(context).textTheme.bodyMedium,
                       textAlign: TextAlign.center,
                     ),
@@ -290,12 +291,12 @@ class _ScheduleSetupPageState extends State<ScheduleSetupPage> {
                     Wrap(
                       children: [
                         RichText(
-                          text: const TextSpan(
+                          text: TextSpan(
                             // Ensures that the * is always at the end of the last line of the text and not in a separate line
                             text:
-                                "Please enter the maximum start and end times.\n You can change this later for each individual day. ",
+                                l10n.enterStartEndTimesPrompt,
                             children: [
-                              TextSpan(
+                              const TextSpan(
                                 text: "*",
                                 style:
                                     TextStyle(color: Colors.red, fontSize: 32),
@@ -314,8 +315,8 @@ class _ScheduleSetupPageState extends State<ScheduleSetupPage> {
                       thickness: 1.5,
                     ),
                     const SizedBox(height: 16),
-                    const Text(
-                      "Please select the days you have lessons.",
+                    Text(
+                      l10n.selectLessonDaysPrompt,
                     ),
                     WorkDaysSelector(
                         workdays: _workdays,
@@ -327,8 +328,8 @@ class _ScheduleSetupPageState extends State<ScheduleSetupPage> {
                       thickness: 1.5,
                     ),
                     const SizedBox(height: 16),
-                    const Text(
-                      "Does your schedule change every x weeks?",
+                    Text(
+                      l10n.scheduleChangeWeeksPrompt,
                     ),
                     AlternatingWeeksSelector(
                         alternatingWeeksCount: _alternatingWeeksCount,
@@ -341,8 +342,8 @@ class _ScheduleSetupPageState extends State<ScheduleSetupPage> {
                       thickness: 1.5,
                     ),
                     const SizedBox(height: 16),
-                    const Text(
-                      "How long are your lessons?",
+                    Text(
+                      l10n.lessonDurationPrompt,
                     ),
                     IndividualLessonDurationSelector(
                       activePage: _activePage,
@@ -370,7 +371,7 @@ class _ScheduleSetupPageState extends State<ScheduleSetupPage> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Text(_isEdit ? "Update" : "Confirm",
+                                 Text(_isEdit ? l10n.update : l10n.confirm,
                                     style: Theme.of(context)
                                         .textTheme
                                         .bodyLarge
@@ -379,12 +380,12 @@ class _ScheduleSetupPageState extends State<ScheduleSetupPage> {
                                             color: Colors.white)),
                               ],
                             ))),
-                    const Row(
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          "* Required fields",
-                          style: TextStyle(color: Colors.red),
+                         Text(
+                          l10n.requiredFields,
+                          style: const TextStyle(color: Colors.red),
                         ),
                       ],
                     ),

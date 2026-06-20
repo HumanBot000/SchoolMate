@@ -101,7 +101,9 @@ class Mark {
     final max = isReversed ? best : worst;
     // Clamp value
     final clamped = value.clamp(min, max);
-    final t = (clamped - min) / (max - min);
+    final rangeDiff = max - min;
+    final tNormal = rangeDiff == 0 ? 0.0 : (clamped - min) / rangeDiff;
+    final t = isReversed ? (1.0 - tNormal) : tNormal;
     Color lerp(Color a, Color b, double t) => Color.lerp(a, b, t)!;
     if (t < 0.5) {
       // Green to Yellow

@@ -4,41 +4,35 @@ import 'package:school_mate/API/externalAPIClients/OpenHolidaysAPI.dart'
     as holiday_api;
 import 'package:school_mate/API/supabase/auth/userSettings.dart' as settings;
 import 'package:school_mate/Classes/schedule/SchoolHoliday.dart';
+import 'package:school_mate/l10n/app_localizations.dart';
 import 'package:school_mate/main.dart';
 
 Widget _upcomingHolidaysTextData(
-    String residenceCountry, String localResidenceCode,
-    {String language = "en"}) {
+    BuildContext context, String residenceCountry, String localResidenceCode) {
+  final l10n = AppLocalizations.of(context)!;
+  final currentLanguage = Localizations.localeOf(context).languageCode;
   return FutureBuilder<SchoolHoliday>(
     future: holiday_api.getUpcomingHolidays(
         residenceCountry, localResidenceCode,
-        language: language),
+        language: currentLanguage),
     builder: (context, snapshot) {
       if (snapshot.connectionState == ConnectionState.waiting) {
         return const CircularProgressIndicator();
       } else if (snapshot.hasError) {
         logger.i(snapshot.error);
-        return const Text('No upcoming holidays found for your location.');
+        return Text(l10n.noHolidaysForLocation);
       } else if (snapshot.hasData) {
         final holiday = snapshot.data!;
-        return Row(children: [
-          Text(
-            holiday.name,
-            style: Theme.of(context)
-                .textTheme
-                .bodyMedium
-                ?.copyWith(fontWeight: FontWeight.bold),
-          ),
-          const Text(": In "),
-          Text(holiday.daysLeft.toString(),
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyMedium
-                  ?.copyWith(fontWeight: FontWeight.bold)),
-          const Text(" days 📆"),
-        ]);
+        return Text(
+          l10n.holidayInDays(holiday.name, holiday.daysLeft.toString()),
+          style: Theme.of(context)
+              .textTheme
+              .bodyMedium
+              ?.copyWith(fontWeight: FontWeight.bold),
+          textAlign: TextAlign.center,
+        );
       } else {
-        return const Text('No upcoming holidays found.');
+        return Text(l10n.noUpcomingHolidays);
       }
     },
   );
@@ -56,7 +50,8 @@ class UpcomingHolidaysCard extends StatelessWidget {
           return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
           logger.e(snapshot.error);
-          return Text('Error loading user settings: ${snapshot.error}');
+          final l10n = AppLocalizations.of(context)!;
+          return Text(l10n.errorLoadingSettings(snapshot.error.toString()));
         } else if (snapshot.hasData) {
           final userSettings = snapshot.data!;
           final residenceCountry = userSettings['residence_country'];
@@ -89,7 +84,7 @@ class UpcomingHolidaysCard extends StatelessWidget {
                     ),
                     Center(
                       child: _upcomingHolidaysTextData(
-                          residenceCountry, localResidenceCode),
+                          context, residenceCountry, localResidenceCode),
                     ),
                   ],
                 ),
@@ -97,7 +92,8 @@ class UpcomingHolidaysCard extends StatelessWidget {
             ),
           );
         } else {
-          return const Text('No user settings found.');
+          final l10n = AppLocalizations.of(context)!;
+          return Text(l10n.noUserSettings);
         }
       },
     );

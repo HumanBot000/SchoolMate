@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:school_mate/l10n/app_localizations.dart';
 import 'package:school_mate/API/supabase/homeworks/tasks.dart';
 import 'package:school_mate/API/supabase/schedule/schedule.dart';
 import 'package:school_mate/Classes/homeworks/Homework.dart';
@@ -48,7 +49,7 @@ FutureBuilder scheduleExistsNavigation(BuildContext context) => FutureBuilder(
               (_) => ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content:
-                          const Text("Something went wrong. Please try again."),
+                          Text(AppLocalizations.of(context)!.somethingWentWrong),
                       backgroundColor: Theme.of(context).colorScheme.error,
                     ),
                   ));

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:school_mate/l10n/app_localizations.dart';
 import 'package:school_mate/Widgets/public/PreviousPage.dart';
 import 'package:school_mate/pages/settings/Widgets/NotificationSettingsPage.dart';
 import 'package:school_mate/pages/settings/Widgets/OtherSettingsPage.dart';
@@ -13,20 +14,21 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return DefaultTabController(
         length: 2,
         child: Scaffold(
           appBar: AppBar(
-            title: const Text("Settings"),
+            title: Text(l10n.settingsTitle),
             leading: const PreviousPage(),
-            bottom: const TabBar(tabs: [
+            bottom: TabBar(tabs: [
               Tab(
-                icon: Icon(Icons.settings),
-                child: Text("General"),
+                icon: const Icon(Icons.settings),
+                child: Text(l10n.generalTab),
               ),
               Tab(
-                icon: Icon(Icons.notifications),
-                child: Text("Notifications"),
+                icon: const Icon(Icons.notifications),
+                child: Text(l10n.notificationsTab),
               ),
             ]),
           ),

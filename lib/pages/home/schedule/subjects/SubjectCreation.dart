@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:school_mate/l10n/app_localizations.dart';
 import 'package:school_mate/API/supabase/schedule/teachers.dart';
 import 'package:school_mate/Classes/persons/Teacher.dart';
 import 'package:school_mate/Widgets/public/PreviousPage.dart';
@@ -25,6 +26,7 @@ class SubjectConfigurationPage extends StatefulWidget {
 }
 
 class _SubjectConfigurationPageState extends State<SubjectConfigurationPage> {
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
   Color _selectedColor = const Color(0xFF3A7BD5);
   Teacher? _selectedTeacher;
   final TextEditingController _subjectNameController = TextEditingController();
@@ -129,7 +131,7 @@ class _SubjectConfigurationPageState extends State<SubjectConfigurationPage> {
             children: [
               Text(
                 _subjectNameController.text.isEmpty
-                    ? "Enter Subject Name"
+                    ? l10n.enterSubjectNameHint
                     : _subjectNameController.text,
                 style: TextStyle(
                   color: textColor,
@@ -232,7 +234,7 @@ class _SubjectConfigurationPageState extends State<SubjectConfigurationPage> {
                       color: Theme.of(context).colorScheme.onPrimary),
                   const SizedBox(width: 8),
                   Text(
-                    "Continue",
+                    l10n.continueLabel,
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         color: Theme.of(context).colorScheme.onPrimary),
                   ),
@@ -255,7 +257,7 @@ class _SubjectConfigurationPageState extends State<SubjectConfigurationPage> {
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         title: Text(
-          "Create a Subject",
+          l10n.createSubjectTitle,
           style: TextStyle(color: textColor),
         ),
         leading: PreviousPage(
@@ -274,13 +276,13 @@ class _SubjectConfigurationPageState extends State<SubjectConfigurationPage> {
             child: TextFormField(
               controller: _subjectNameController,
               decoration: InputDecoration(
-                hintText: "Subject Name",
-                label: const Row(
+                hintText: l10n.subjectNameLabel,
+                label: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Icon(Icons.menu_book),
-                    SizedBox(width: 8),
-                    Text("Enter the name of the subject")
+                    const Icon(Icons.menu_book),
+                    const SizedBox(width: 8),
+                    Text(l10n.enterSubjectNameInstruction)
                   ],
                 ),
                 labelStyle: const TextStyle(fontSize: 16),
@@ -301,12 +303,12 @@ class _SubjectConfigurationPageState extends State<SubjectConfigurationPage> {
                 enabled: false,
                 controller: _teacherNameController,
                 decoration: InputDecoration(
-                  label: const Row(
+                  label: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Icon(Icons.person),
-                      SizedBox(width: 8),
-                      Text("Teacher")
+                      const Icon(Icons.person),
+                      const SizedBox(width: 8),
+                      Text(l10n.teacherLabel)
                     ],
                   ),
                   labelStyle: const TextStyle(fontSize: 16),
@@ -325,7 +327,7 @@ class _SubjectConfigurationPageState extends State<SubjectConfigurationPage> {
               style: ButtonStyle(
                 backgroundColor: WidgetStateProperty.all(_selectedColor),
               ),
-              child: Text("Change Color",
+              child: Text(l10n.changeColor,
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         color: textColor,
                       )),
@@ -342,8 +344,8 @@ class _SubjectConfigurationPageState extends State<SubjectConfigurationPage> {
                   WidgetsBinding.instance.addPostFrameCallback((_) =>
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: const Text(
-                              "Please provide a valid name and teacher for this subject."),
+                          content: Text(
+                              l10n.subjectValidationAlert),
                           backgroundColor: Theme.of(context).colorScheme.error,
                         ),
                       ));
@@ -362,9 +364,9 @@ class _SubjectConfigurationPageState extends State<SubjectConfigurationPage> {
                   borderRadius: BorderRadius.circular(12.0),
                 ),
               ),
-              child: const Row(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [Icon(Icons.save), SizedBox(width: 8), Text("Save")],
+                children: [const Icon(Icons.save), const SizedBox(width: 8), Text(l10n.save)],
               ),
             ),
           ),

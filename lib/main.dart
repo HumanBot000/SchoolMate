@@ -1,5 +1,7 @@
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:school_mate/l10n/app_localizations.dart';
 import 'package:logger/logger.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:school_mate/API/supabase/schedule/schedule.dart'
@@ -7,6 +9,7 @@ import 'package:school_mate/API/supabase/schedule/schedule.dart'
 import 'package:school_mate/API/supabase/setup.dart';
 import 'package:school_mate/pages/userAuth/userAuthentication.dart';
 import 'package:school_mate/util/NavigatorTree.dart';
+import 'package:school_mate/util/router.dart';
 import 'package:school_mate/util/notifications/homework.dart';
 import 'package:school_mate/util/notifications/schedule.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -85,10 +88,20 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
+      routerConfig: appRouter,
       title: 'SchoolMate',
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('en'),
+        Locale('de'),
+      ],
       themeMode: ThemeMode.dark,
-      navigatorObservers: [navigatorTreeObserver],
       darkTheme: ThemeData(
         useMaterial3: true,
         brightness: Brightness.dark,
@@ -111,7 +124,6 @@ class MyApp extends StatelessWidget {
         ),
         scaffoldBackgroundColor: const Color(0xFF2B2B2B),
       ),
-      home: const AuthenticationPage(),
     );
   }
 }

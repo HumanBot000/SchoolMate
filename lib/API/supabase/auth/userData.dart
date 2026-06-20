@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:school_mate/main.dart';
 import 'package:school_mate/pages/userAuth/userAuthentication.dart';
 
@@ -10,6 +11,5 @@ Future<String> getUserID() async => supabaseClient.client.auth.currentUser!.id;
 void signOut(BuildContext context) {
   logger.w("Signed out user (by user request)");
   supabaseClient.client.auth.signOut();
-  Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => const AuthenticationPage()));
+  context.go('/');
 }

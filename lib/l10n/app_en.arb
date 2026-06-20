@@ -1,0 +1,160 @@
+{
+  "@@locale": "en",
+  "abcWeeks": "A/B/C Weeks",
+  "abWeeks": "A/B Weeks",
+  "addHomeworkTooltip": "Add a Homework",
+  "addLessonButton": "Add Lesson",
+  "addLessonLabel": "Add a new lesson",
+  "addSubjectTooltip": "Add a Subject",
+  "appTitle": "SchoolMate",
+  "areYouSure": "Are you sure?",
+  "aWeeks": "A Weeks",
+  "cancel": "Cancel",
+  "changeColor": "Change Color",
+  "changeLessonDurationPrompt": "You can change this later for each individual lesson.",
+  "completedTab": "Completed",
+  "configureLessonTitle": "Configure a Lesson",
+  "configureScheduleSubtitle": "Configure your schedule to start tracking your lessons.",
+  "configureTeacher": "Configure a Teacher",
+  "confirm": "Confirm",
+  "continueLabel": "Continue",
+  "createSubjectTitle": "Create a Subject",
+  "currentWeekPrompt": "What type of week is the current one?",
+  "currentWeekTypeRequired": "The current week type must be included in the number of weeks",
+  "customLabel": "Custom",
+  "dangerZone": "Danger Zone",
+  "defaultScheduleSetupHeader": "Before you can start using the schedule, we need to know some last details about your day.",
+  "delete": "Delete",
+  "deleteLessonTooltip": "Delete this lesson",
+  "diverse": "Diverse",
+  "edit": "Edit",
+  "editSchedule": "Edit Schedule",
+  "enjoyFreeTime": "Enjoy your free time!",
+  "enterFormOfAddress": "Enter the form of address",
+  "enterStartEndTimesPrompt": "Please enter the maximum start and end times.\n You can change this later for each individual day. ",
+  "enterSubjectNameHint": "Enter Subject Name",
+  "enterSubjectNameInstruction": "Enter the name of the subject",
+  "enterTeacherName": "Enter the teacher's name",
+  "errorEndTimeAfterStartTime": "End time must be after start time!",
+  "errorLessonOverlaps": "This lesson overlaps with another one!\nChange the length of the other lesson first!",
+  "errorLoadingSettings": "Error loading user settings: {error}",
+  "@errorLoadingSettings": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errorSelectAtLeastOneWeek": "Select at least one week type to add a lesson to!",
+  "errorSelectStartEndTimes": "Select when this lesson starts and ends!",
+  "errorTimesWithinSchoolDay": "Start and end times must be within the school day!",
+  "errorUnresolvedProblems": "You haven't fixed all problems!",
+  "female": "Female",
+  "fillAllRequiredFields": "Please fill in all required fields",
+  "formOfAddress": "Form of Address",
+  "gender": "Gender",
+  "generalTab": "General",
+  "goodAfternoon": "Good afternoon",
+  "goodEvening": "Good evening",
+  "goodMorning": "Good morning",
+  "holidayInDays": "{holidayName}: In {days} days 📆",
+  "@holidayInDays": {
+    "placeholders": {
+      "holidayName": {
+        "type": "String"
+      },
+      "days": {
+        "type": "String"
+      }
+    }
+  },
+  "homeTitle": "Home",
+  "homeworkDeleted": "This homework has been deleted!",
+  "homeworkRemindersSubtitle": "Decide how often and when you want to get reminded about open homework",
+  "homeworkRemindersTitle": "Homework Reminders",
+  "homeworkTitle": "Homework",
+  "lastLessonAfterFirst": "Your last lesson must end after your first lesson starts.",
+  "lessonDurationInfo": "Each lesson is {minutes} minutes long",
+  "@lessonDurationInfo": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "lessonDurationPrompt": "How long are your lessons?",
+  "lessonEndPrompt": "When does this lesson end?",
+  "lessonStartPrompt": "When does this lesson start?",
+  "lessonTimesOverlap": "The provided lesson times may not overlap each other",
+  "logout": "Logout",
+  "logoutConfirmMessage": "You will be logged out of your account.",
+  "male": "Male",
+  "marksTitle": "Marks",
+  "minutesLabel": "Minutes",
+  "minutesValue": "{minutes} minutes",
+  "@minutesValue": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "minutesValueShort": "{minutes} min",
+  "@minutesValueShort": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "name": "Name",
+  "noClassesToday": "No Classes Today",
+  "noDataAvailable": "No data available.",
+  "noHolidaysForLocation": "No upcoming holidays found for your location.",
+  "noSubjectsCreated": "You haven't created any subjects yet",
+  "noTeachersSetup": "You haven't setup any teachers yet",
+  "notificationsTab": "Notifications",
+  "noUpcomingHolidays": "No upcoming holidays found.",
+  "noUserSettings": "No user settings found.",
+  "openTab": "Open",
+  "preLessonNotificationsSubtitle": "Get notified before a lesson so you don't have to look up the location",
+  "preLessonNotificationsTitle": "Pre-Lesson Notifications",
+  "profileTitle": "Profile",
+  "requiredFields": "* Required fields",
+  "residenceSubtitle": "Tell us where you live, so we can calculate the next school holidays.",
+  "residenceTitle": "Residence",
+  "roomNumberLabel": "Room Number",
+  "save": "Save",
+  "scheduleChangeWeeksPrompt": "Does your schedule change every x weeks?",
+  "scheduleCorruptionWarning": "Please note, that this might corrupt your current schedule. We highly encourage you to clear all lessons.",
+  "scheduleSetup": "Schedule Setup",
+  "scheduleSetupWarning": "Before you can add lessons and homeworks, please give us some details about your day. You don't have to add in your exact schedule in order to use these features.",
+  "scheduleTitle": "Schedule",
+  "selectEndTime": "Select end time",
+  "selectFromSchedule": "Select from Schedule",
+  "selectLabel": "Select",
+  "selectLessonDaysPrompt": "Please select the days you have lessons.",
+  "selectStartTime": "Select start time",
+  "selectTeacher": "Select a teacher",
+  "settingsTitle": "Settings",
+  "somethingWentWrong": "Something went wrong. Please try again.",
+  "subjectNameLabel": "Subject Name",
+  "subjectValidationAlert": "Please provide a valid name and teacher for this subject.",
+  "teacherLabel": "Teacher",
+  "teacherValidationAlert": "Please provide a valid name and form of address for this teacher.",
+  "update": "Update",
+  "updatedScheduleSuccess": "Updated Schedule Successfully!",
+  "updateLessonButton": "Update Lesson",
+  "weekLabel": "Week",
+  "weekLabelWithLetter": "{letter} Weeks",
+  "@weekLabelWithLetter": {
+    "placeholders": {
+      "letter": {
+        "type": "String"
+      }
+    }
+  },
+  "welcomeGreeting": "Ready for another productive day?",
+  "weWillCalculateWeeks": "We will calculate the following weeks for you!",
+  "whichWeekToday": "Which week is today?"
+}

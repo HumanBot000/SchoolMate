@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:school_mate/l10n/app_localizations.dart';
 import 'package:school_mate/API/supabase/schedule/subjects.dart';
 import 'package:school_mate/Classes/schedule/Subject.dart';
 import 'package:school_mate/main.dart';
@@ -20,6 +21,7 @@ class SubjectListWidget extends StatefulWidget {
 }
 
 class _SubjectListWidgetState extends State<SubjectListWidget> {
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
   late List<Subject> _subjects;
 
   @override
@@ -41,9 +43,9 @@ class _SubjectListWidgetState extends State<SubjectListWidget> {
           ),
           Container(
             margin: EdgeInsets.all(MediaQuery.of(context).size.width * 0.1),
-            child: const Text(
-              "You haven't created any subjects yet",
-              style: TextStyle(fontSize: 20, color: Colors.grey),
+            child: Text(
+              l10n.noSubjectsCreated,
+              style: const TextStyle(fontSize: 20, color: Colors.grey),
             ),
           )
         ],
@@ -92,7 +94,7 @@ class _SubjectListWidgetState extends State<SubjectListWidget> {
                         ));
                       },
                       icon: const Icon(Icons.edit),
-                      label: const Text("Edit"),
+                      label: Text(l10n.edit),
                     ),
                     TextButton.icon(
                       onPressed: () async {
@@ -103,7 +105,7 @@ class _SubjectListWidgetState extends State<SubjectListWidget> {
                         });
                       },
                       icon: const Icon(Icons.delete),
-                      label: const Text("Delete"),
+                      label: Text(l10n.delete),
                     ),
                   ],
                 ),
@@ -153,7 +155,7 @@ class _SubjectListWidgetState extends State<SubjectListWidget> {
         child: Container(
           margin: const EdgeInsets.fromLTRB(0, 0, 16, 32),
           child: IconButton(
-              tooltip: "Add a Subject",
+              tooltip: l10n.addSubjectTooltip,
               onPressed: () => Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => SubjectConfigurationPage(
                         onChange: (name, teacher, color) async {

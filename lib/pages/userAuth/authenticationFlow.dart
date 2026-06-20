@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:school_mate/API/supabase/auth/userSettings.dart';
 import 'package:school_mate/main.dart';
 import 'package:school_mate/pages/home/home/start.dart';
@@ -63,36 +64,33 @@ Future<void> _signUpHandler(Object response, BuildContext context) async {
     final username = response.user?.appMetadata['username'] as String?;
     await prefs.setString('pending_username',
         username.toString()); //Can only update after email verification
-    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) {
-      return EmailVerificationPage(email: response.user!.email!);
-    }));
+    if (context.mounted) {
+      context.go('/verify-email?email=${Uri.encodeComponent(response.user!.email!)}');
+    }
   }
 }
 
 Future<void> _signInHandler(Object response, BuildContext context) async {
   if (response is AuthResponse) {
     logger.i("Signed in user");
-    if (await getUserSettings() == null) {
-      Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (context) => SetupPage(
-          afterSelectionRoute: MaterialPageRoute(
-            builder: (context) => const HomePage(),
-          ),
-        ),
-      ));
-      return;
+    final isNewUser = await getUserSettings() == null;
+    if (context.mounted) {
+      if (isNewUser) {
+        context.go('/onboarding');
+      } else {
+        context.go('/home');
+      }
     }
-    Navigator.of(context).pushReplacement(MaterialPageRoute(
-      builder: (context) => const HomePage(),
-    ));
   } else {
     logger.e(response);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(response.toString()),
-        backgroundColor: Theme.of(context).colorScheme.error,
-      ),
-    );
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(response.toString()),
+          backgroundColor: Theme.of(context).colorScheme.error,
+        ),
+      );
+    }
   }
 }
 

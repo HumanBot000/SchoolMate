@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:school_mate/l10n/app_localizations.dart';
 import 'package:school_mate/API/supabase/schedule/schedule.dart';
 import 'package:school_mate/Classes/schedule/Schedule.dart';
 import 'package:school_mate/Widgets/specialThemes/futuristic.dart';
@@ -16,6 +17,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
   Schedule? _schedule;
   late AnimationController _fadeController;
   late AnimationController _slideController;
@@ -144,7 +146,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Good ${_getTimeOfDayGreeting()}!',
+                      '${_getTimeOfDayGreeting(l10n)}!',
                       style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -152,7 +154,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       ),
                     ),
                     Text(
-                      'Ready for another productive day?',
+                      l10n.welcomeGreeting,
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.white.withValues(alpha: 0.7),
@@ -249,9 +251,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             ),
           ),
           const SizedBox(height: 20),
-          const Text(
-            'No Classes Today',
-            style: TextStyle(
+          Text(
+            l10n.noClassesToday,
+            style: const TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
               color: Colors.white,
@@ -259,7 +261,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           ),
           const SizedBox(height: 8),
           Text(
-            'Enjoy your free time!',
+            l10n.enjoyFreeTime,
             style: TextStyle(
               fontSize: 16,
               color: Colors.white.withValues(alpha: 0.7),
@@ -314,11 +316,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         .toList();
   }
 
-  String _getTimeOfDayGreeting() {
+  String _getTimeOfDayGreeting(AppLocalizations l10n) {
     final hour = DateTime.now().hour;
-    if (hour < 12) return 'Morning';
-    if (hour < 17) return 'Afternoon';
-    return 'Evening';
+    if (hour < 12) return l10n.goodMorning;
+    if (hour < 17) return l10n.goodAfternoon;
+    return l10n.goodEvening;
   }
 
   @override
@@ -335,7 +337,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             children: [
               futuristicAppBar(
                   context,
-                  "Home",
+                  l10n.homeTitle,
                   const Icon(
                     Icons.home_rounded,
                     color: Colors.white,

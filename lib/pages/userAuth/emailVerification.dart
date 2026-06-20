@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:school_mate/main.dart';
@@ -70,13 +71,9 @@ class _EmailVerificationPageState extends State<EmailVerificationPage>
       data: {'display_name': username, "email_verified": true},
     ));
     logger.i("Set display name to $username");
-    Navigator.of(context).pushReplacement(MaterialPageRoute(
-      builder: (context) => SetupPage(
-        afterSelectionRoute: MaterialPageRoute(
-          builder: (context) => const HomePage(),
-        ),
-      ),
-    ));
+    if (context.mounted) {
+      context.go('/onboarding');
+    }
   }
 
   Future<bool> _validateOTP(value) async {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:school_mate/API/supabase/auth/userData.dart' as user;
 import 'package:school_mate/Widgets/public/GradientButton.dart';
+import 'package:school_mate/l10n/app_localizations.dart';
 import 'package:school_mate/pages/settings/SettingsPage.dart';
 import 'package:school_mate/pages/settings/schedule/ScheduleEditLogic.dart'
     as schedule_edit_logic;
@@ -16,10 +17,11 @@ class OtherSettingsPage extends StatefulWidget {
 class _OtherSettingsPageState extends State<OtherSettingsPage> {
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return ListView(
       children: [
         ListTile(
-          title: const Text('Residence'),
+          title: Text(l10n.residenceTitle),
           leading: const Icon(
             Icons.location_on,
           ),
@@ -27,7 +29,7 @@ class _OtherSettingsPageState extends State<OtherSettingsPage> {
             Icons.keyboard_arrow_right,
           ),
           subtitle: Text(
-            "Tell us where you live, so we can calculate the next school holidays.",
+            l10n.residenceSubtitle,
             style: Theme.of(context)
                 .textTheme
                 .bodySmall
@@ -42,7 +44,7 @@ class _OtherSettingsPageState extends State<OtherSettingsPage> {
           )),
         ),
         ListTile(
-            title: const Text('Schedule'),
+            title: Text(l10n.scheduleTitle),
             leading: const Icon(
               Icons.calendar_month_outlined,
             ),
@@ -50,7 +52,7 @@ class _OtherSettingsPageState extends State<OtherSettingsPage> {
               Icons.keyboard_arrow_right,
             ),
             subtitle: Text(
-              "Configure your schedule to start tracking your lessons.",
+              l10n.configureScheduleSubtitle,
               style: Theme.of(context)
                   .textTheme
                   .bodySmall
@@ -65,7 +67,7 @@ class _OtherSettingsPageState extends State<OtherSettingsPage> {
             padding: const EdgeInsets.all(8.0),
             child: Column(
               children: [
-                Text("Danger Zone",
+                Text(l10n.dangerZone,
                     style: Theme.of(context).textTheme.headlineSmall),
                 Padding(
                   padding: const EdgeInsets.all(16.0),
@@ -77,19 +79,18 @@ class _OtherSettingsPageState extends State<OtherSettingsPage> {
                       onPressed: () => showAdaptiveDialog(
                           context: context,
                           builder: (context) => AlertDialog(
-                                  title: const Text("Are you sure?"),
-                                  content: const Text(
-                                      "You will be logged out of your account."),
+                                  title: Text(l10n.areYouSure),
+                                  content: Text(l10n.logoutConfirmMessage),
                                   actions: [
                                     TextButton(
                                         onPressed: () => Navigator.pop(context),
-                                        child: const Text("Cancel")),
+                                        child: Text(l10n.cancel)),
                                     TextButton(
                                         onPressed: () {
                                           Navigator.pop(context);
                                           user.signOut(context);
                                         },
-                                        child: const Text("Logout")),
+                                        child: Text(l10n.logout)),
                                   ])),
                       child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -98,7 +99,7 @@ class _OtherSettingsPageState extends State<OtherSettingsPage> {
                               Icons.logout,
                               color: Colors.white,
                             ),
-                            Text("Logout",
+                            Text(l10n.logout,
                                 style: Theme.of(context).textTheme.bodyLarge),
                           ])),
                 )

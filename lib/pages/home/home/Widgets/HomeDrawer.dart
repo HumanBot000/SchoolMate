@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:school_mate/l10n/app_localizations.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:school_mate/pages/settings/SettingsPage.dart';
 
@@ -44,12 +45,12 @@ class _HomeDrawerState extends State<HomeDrawer> {
           ),
         ),
         ListTile(
-          title: const Text('Profile'),
+          title: Text(AppLocalizations.of(context)!.profileTitle),
           leading: const Icon(Icons.person),
           onTap: () {},
         ),
         ListTile(
-          title: const Text('Settings'),
+          title: Text(AppLocalizations.of(context)!.settingsTitle),
           leading: const Icon(Icons.settings),
           onTap: () {
             Navigator.of(context).push(MaterialPageRoute(

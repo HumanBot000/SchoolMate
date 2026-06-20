@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:school_mate/l10n/app_localizations.dart';
 import 'package:school_mate/pages/settings/notifications/PreLessonNotificationSetup.dart';
 
 import '../notifications/HomeworkReminderNotificationSetup.dart';
@@ -9,6 +10,7 @@ class NotificationSettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Stack(
       children: [
         Positioned.fill(
@@ -25,9 +27,9 @@ class NotificationSettingsPage extends StatelessWidget {
           children: [
             ListTile(
               leading: const Icon(Icons.menu_book),
-              title: const Text("Pre-Lesson Notifications"),
+              title: Text(l10n.preLessonNotificationsTitle),
               subtitle: Text(
-                "Get notified before a lesson yo you don't have to lookup the location",
+                l10n.preLessonNotificationsSubtitle,
                 style: Theme.of(context)
                     .textTheme
                     .bodySmall
@@ -42,9 +44,9 @@ class NotificationSettingsPage extends StatelessWidget {
             ),
             ListTile(
               leading: const Icon(Icons.assignment),
-              title: const Text("Homework Reminders"),
+              title: Text(l10n.homeworkRemindersTitle),
               subtitle: Text(
-                "Decide how often and when you want to get reminded about open homework",
+                l10n.homeworkRemindersSubtitle,
                 style: Theme.of(context)
                     .textTheme
                     .bodySmall

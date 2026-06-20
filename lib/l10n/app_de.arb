@@ -1,0 +1,160 @@
+{
+  "@@locale": "de",
+  "abcWeeks": "A/B/C-Wochen",
+  "abWeeks": "A/B-Wochen",
+  "addHomeworkTooltip": "Hausaufgabe hinzufügen",
+  "addLessonButton": "Stunde hinzufügen",
+  "addLessonLabel": "Neue Stunde hinzufügen",
+  "addSubjectTooltip": "Fach hinzufügen",
+  "appTitle": "SchoolMate",
+  "areYouSure": "Bist du dir sicher?",
+  "aWeeks": "A-Wochen",
+  "cancel": "Abbrechen",
+  "changeColor": "Farbe ändern",
+  "changeLessonDurationPrompt": "Du kannst dies später für jede einzelne Stunde ändern.",
+  "completedTab": "Erledigt",
+  "configureLessonTitle": "Stunde einrichten",
+  "configureScheduleSubtitle": "Konfiguriere deinen Stundenplan, um deine Stunden zu verfolgen.",
+  "configureTeacher": "Lehrkraft einrichten",
+  "confirm": "Bestätigen",
+  "continueLabel": "Weiter",
+  "createSubjectTitle": "Fach erstellen",
+  "currentWeekPrompt": "Welcher Wochentyp ist die aktuelle Woche?",
+  "currentWeekTypeRequired": "Der aktuelle Wochentyp muss in der Anzahl der Wochen enthalten sein",
+  "customLabel": "Benutzerdefiniert",
+  "dangerZone": "Gefahrenzone",
+  "defaultScheduleSetupHeader": "Bevor du den Stundenplan nutzen kannst, benötigen wir noch einige letzte Details über deinen Tag.",
+  "delete": "Löschen",
+  "deleteLessonTooltip": "Diese Stunde löschen",
+  "diverse": "Divers",
+  "edit": "Bearbeiten",
+  "editSchedule": "Stundenplan bearbeiten",
+  "enjoyFreeTime": "Genieße deine freie Zeit!",
+  "enterFormOfAddress": "Anrede eingeben",
+  "enterStartEndTimesPrompt": "Bitte gib die maximalen Start- und Endzeiten ein.\n Du kannst dies später für jeden einzelnen Tag ändern. ",
+  "enterSubjectNameHint": "Fachnamen eingeben",
+  "enterSubjectNameInstruction": "Gib den Namen des Fachs ein",
+  "enterTeacherName": "Namen der Lehrkraft eingeben",
+  "errorEndTimeAfterStartTime": "Die Endzeit muss nach der Startzeit liegen!",
+  "errorLessonOverlaps": "Diese Stunde überschneidet sich mit einer anderen!\nÄndere zuerst die Länge der anderen Stunde!",
+  "errorLoadingSettings": "Fehler beim Laden der Benutzereinstellungen: {error}",
+  "@errorLoadingSettings": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errorSelectAtLeastOneWeek": "Wähle mindestens einen Wochentyp aus, um eine Stunde hinzuzufügen!",
+  "errorSelectStartEndTimes": "Wähle aus, wann diese Stunde beginnt und endet!",
+  "errorTimesWithinSchoolDay": "Start- und Endzeit müssen innerhalb des Schultages liegen!",
+  "errorUnresolvedProblems": "Du hast noch nicht alle Probleme behoben!",
+  "female": "Weiblich",
+  "fillAllRequiredFields": "Bitte fülle alle erforderlichen Felder aus",
+  "formOfAddress": "Anrede",
+  "gender": "Geschlecht",
+  "generalTab": "Allgemein",
+  "goodAfternoon": "Guten Tag",
+  "goodEvening": "Guten Abend",
+  "goodMorning": "Guten Morgen",
+  "holidayInDays": "{holidayName}: In {days} Tagen 📆",
+  "@holidayInDays": {
+    "placeholders": {
+      "holidayName": {
+        "type": "String"
+      },
+      "days": {
+        "type": "String"
+      }
+    }
+  },
+  "homeTitle": "Start",
+  "homeworkDeleted": "Diese Hausaufgabe wurde gelöscht!",
+  "homeworkRemindersSubtitle": "Entscheide, wie oft und wann du an offene Hausaufgaben erinnert werden möchtest",
+  "homeworkRemindersTitle": "Hausaufgaben-Erinnerungen",
+  "homeworkTitle": "Hausaufgaben",
+  "lastLessonAfterFirst": "Deine letzte Stunde muss enden, nachdem deine erste Stunde beginnt.",
+  "lessonDurationInfo": "Jede Stunde dauert {minutes} Minuten",
+  "@lessonDurationInfo": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "lessonDurationPrompt": "Wie lange dauern deine Stunden?",
+  "lessonEndPrompt": "Wann endet diese Stunde?",
+  "lessonStartPrompt": "Wann beginnt diese Stunde?",
+  "lessonTimesOverlap": "Die angegebenen Unterrichtszeiten dürfen sich nicht überschneiden",
+  "logout": "Abmelden",
+  "logoutConfirmMessage": "Du wirst aus deinem Konto abgemeldet.",
+  "male": "Männlich",
+  "marksTitle": "Noten",
+  "minutesLabel": "Minuten",
+  "minutesValue": "{minutes} Minuten",
+  "@minutesValue": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "minutesValueShort": "{minutes} Min.",
+  "@minutesValueShort": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "name": "Name",
+  "noClassesToday": "Kein Unterricht heute",
+  "noDataAvailable": "Keine Daten verfügbar.",
+  "noHolidaysForLocation": "Keine anstehenden Ferien für deinen Wohnort gefunden.",
+  "noSubjectsCreated": "Du hast noch keine Fächer erstellt",
+  "noTeachersSetup": "Du hast noch keine Lehrkräfte eingerichtet",
+  "notificationsTab": "Benachrichtigungen",
+  "noUpcomingHolidays": "Keine anstehenden Ferien gefunden.",
+  "noUserSettings": "Keine Benutzereinstellungen gefunden.",
+  "openTab": "Offen",
+  "preLessonNotificationsSubtitle": "Lass dich vor einer Stunde benachrichtigen, damit du den Raum nicht nachschlagen musst",
+  "preLessonNotificationsTitle": "Benachrichtigungen vor dem Unterricht",
+  "profileTitle": "Profil",
+  "requiredFields": "* Erforderliche Felder",
+  "residenceSubtitle": "Teile uns deinen Wohnort mit, damit wir die nächsten Schulferien berechnen können.",
+  "residenceTitle": "Wohnort",
+  "roomNumberLabel": "Raumnummer",
+  "save": "Speichern",
+  "scheduleChangeWeeksPrompt": "Ändert sich dein Stundenplan alle x Wochen?",
+  "scheduleCorruptionWarning": "Bitte beachte, dass dies deinen aktuellen Stundenplan beschädigen könnte. Wir empfehlen dir dringend, alle Stunden zu löschen.",
+  "scheduleSetup": "Stundenplan-Einrichtung",
+  "scheduleSetupWarning": "Bevor du Stunden und Hausaufgaben hinzufügen kannst, teile uns bitte einige Details über deinen Tag mit. Du musst nicht deinen genauen Stundenplan angeben, um diese Funktionen zu nutzen.",
+  "scheduleTitle": "Stundenplan",
+  "selectEndTime": "Endzeit auswählen",
+  "selectFromSchedule": "Aus dem Stundenplan auswählen",
+  "selectLabel": "Auswählen",
+  "selectLessonDaysPrompt": "Bitte wähle die Tage aus, an denen du Unterricht hast.",
+  "selectStartTime": "Startzeit auswählen",
+  "selectTeacher": "Lehrkraft auswählen",
+  "settingsTitle": "Einstellungen",
+  "somethingWentWrong": "Etwas ist schiefgelaufen. Bitte versuche es erneut.",
+  "subjectNameLabel": "Fach",
+  "subjectValidationAlert": "Bitte gib einen gültigen Namen und eine Lehrkraft für dieses Fach an.",
+  "teacherLabel": "Lehrkraft",
+  "teacherValidationAlert": "Bitte gib einen gültigen Namen und eine Anrede für diesen Lehrer an.",
+  "update": "Aktualisieren",
+  "updatedScheduleSuccess": "Stundenplan erfolgreich aktualisiert!",
+  "updateLessonButton": "Stunde aktualisieren",
+  "weekLabel": "Woche",
+  "weekLabelWithLetter": "{letter}-Wochen",
+  "@weekLabelWithLetter": {
+    "placeholders": {
+      "letter": {
+        "type": "String"
+      }
+    }
+  },
+  "welcomeGreeting": "Bereit für einen produktiven Tag?",
+  "weWillCalculateWeeks": "Wir berechnen die folgenden Wochen für dich!",
+  "whichWeekToday": "Welche Woche ist heute?"
+}

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:school_mate/l10n/app_localizations.dart';
+import 'package:go_router/go_router.dart';
 import 'package:school_mate/pages/home/home/start.dart';
 import 'package:school_mate/pages/home/homework/Homework.dart';
 import 'package:school_mate/pages/home/marks/Grades.dart';
@@ -24,20 +26,27 @@ class _HomeNavBarState extends State<HomeNavBar> {
     _selectedPage = widget.currentIndex;
   }
 
-  void _setSelectedPage(int index) async {
+  void _setSelectedPage(int index) {
     if (index == _selectedPage) return;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {
         _selectedPage = index;
       });
-      // Clear nav history
-      Navigator.popUntil(context, (route) => route.isFirst);
-      Navigator.push(context, MaterialPageRoute(
-        builder: (context) {
-          return navigationBarDestinations[index];
-        },
-      ));
+      switch (index) {
+        case 0:
+          context.go('/home');
+          break;
+        case 1:
+          context.go('/schedule');
+          break;
+        case 2:
+          context.go('/homework');
+          break;
+        case 3:
+          context.go('/marks');
+          break;
+      }
     });
   }
 
@@ -48,36 +57,39 @@ class _HomeNavBarState extends State<HomeNavBar> {
     const MarksPage(),
   ];
 
-  List<NavigationDestination> navigationBarItems(BuildContext context) => [
-        NavigationDestination(
-          icon: Icon(Icons.home,
-              color: _selectedPage == 0
-                  ? Theme.of(context).colorScheme.primary
-                  : Colors.grey),
-          label: 'Home',
-        ),
-        NavigationDestination(
-          label: 'Schedule',
-          icon: Icon(Icons.calendar_month,
-              color: _selectedPage == 1
-                  ? Theme.of(context).colorScheme.primary
-                  : Colors.grey),
-        ),
-        NavigationDestination(
-          label: 'Homework',
-          icon: Icon(Icons.assignment,
-              color: _selectedPage == 2
-                  ? Theme.of(context).colorScheme.primary
-                  : Colors.grey),
-        ),
-        NavigationDestination(
-          label: 'Marks',
-          icon: Icon(Icons.show_chart,
-              color: _selectedPage == 3
-                  ? Theme.of(context).colorScheme.primary
-                  : Colors.grey),
-        ),
-      ];
+  List<NavigationDestination> navigationBarItems(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return [
+      NavigationDestination(
+        icon: Icon(Icons.home,
+            color: _selectedPage == 0
+                ? Theme.of(context).colorScheme.primary
+                : Colors.grey),
+        label: l10n.homeTitle,
+      ),
+      NavigationDestination(
+        label: l10n.scheduleTitle,
+        icon: Icon(Icons.calendar_month,
+            color: _selectedPage == 1
+                ? Theme.of(context).colorScheme.primary
+                : Colors.grey),
+      ),
+      NavigationDestination(
+        label: l10n.homeworkTitle,
+        icon: Icon(Icons.assignment,
+            color: _selectedPage == 2
+                ? Theme.of(context).colorScheme.primary
+                : Colors.grey),
+      ),
+      NavigationDestination(
+        label: l10n.marksTitle,
+        icon: Icon(Icons.show_chart,
+            color: _selectedPage == 3
+                ? Theme.of(context).colorScheme.primary
+                : Colors.grey),
+      ),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {

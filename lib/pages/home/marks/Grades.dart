@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:school_mate/l10n/app_localizations.dart';
 import 'package:school_mate/main.dart';
 import 'package:school_mate/pages/home/Widgets/BottomNavBar.dart';
 import 'package:school_mate/pages/home/marks/overview/MarksOverviewPage.dart';
@@ -21,9 +22,10 @@ class _MarksPageState extends State<MarksPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Marks"),
+        title: Text(l10n.marksTitle),
         automaticallyImplyLeading: false,
       ),
       bottomNavigationBar: const HomeNavBar(currentIndex: 3),
@@ -46,8 +48,8 @@ class _MarksPageState extends State<MarksPage> {
               }
               return MarksOverviewPage(gradingSystem: snapshot.data!);
             } else {
-              return const Center(
-                child: Text('No data available.'),
+              return Center(
+                child: Text(l10n.noDataAvailable),
               );
             }
           }),

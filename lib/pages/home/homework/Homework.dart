@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:school_mate/l10n/app_localizations.dart';
 import 'package:lottie/lottie.dart';
 import 'package:school_mate/API/supabase/homeworks/tasks.dart';
 import 'package:school_mate/API/supabase/schedule/schedule.dart';
@@ -18,6 +19,7 @@ class HomeworkPage extends StatefulWidget {
 
 class _HomeworkPageState extends State<HomeworkPage>
     with SingleTickerProviderStateMixin {
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
   late TabController _tabController;
   late List<Homework> tasks;
   bool isLoading = true;
@@ -91,10 +93,10 @@ class _HomeworkPageState extends State<HomeworkPage>
                         onPressed: () async {
                           WidgetsBinding.instance.addPostFrameCallback((_) =>
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
+                                SnackBar(
                                   backgroundColor: Colors.green,
                                   content:
-                                      Text("This homework has been deleted!"),
+                                      Text(l10n.homeworkDeleted),
                                 ),
                               ));
                           Navigator.of(context).pop();
@@ -107,7 +109,7 @@ class _HomeworkPageState extends State<HomeworkPage>
                           logger.i("Deleted a task");
                         },
                         icon: const Icon(Icons.delete),
-                        label: const Text("Delete"),
+                        label: Text(l10n.delete),
                       ),
                     ],
                   ),
@@ -132,9 +134,9 @@ class _HomeworkPageState extends State<HomeworkPage>
                             if (snapshot.hasData) {
                               if (snapshot.data is String &&
                                   snapshot.data!.isEmpty) {
-                                return const ScheduleSetupPage(
+                                return ScheduleSetupPage(
                                     headerTitle:
-                                        "Before you can add lessons and homeworks, please give us some details about your day. You don't have to add in your exact schedule in order to use these features.");
+                                        l10n.scheduleSetupWarning);
                               }
                               return AddHomeworkPage(
                                 schedule: snapshot.data!,
@@ -164,7 +166,7 @@ class _HomeworkPageState extends State<HomeworkPage>
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: IconButton(
-              tooltip: "Add a Homework",
+              tooltip: l10n.addHomeworkTooltip,
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
@@ -174,9 +176,9 @@ class _HomeworkPageState extends State<HomeworkPage>
                         if (snapshot.hasData) {
                           if (snapshot.data is String &&
                               snapshot.data!.isEmpty) {
-                            return const ScheduleSetupPage(
+                            return ScheduleSetupPage(
                                 headerTitle:
-                                    "Before you can add lessons and homeworks, please give us some details about your day. You don't have to add in your exact schedule in order to use these features.");
+                                    l10n.scheduleSetupWarning);
                           }
                           return AddHomeworkPage(schedule: snapshot.data!);
                         } else if (snapshot.hasError) {
@@ -210,17 +212,17 @@ class _HomeworkPageState extends State<HomeworkPage>
       child: Scaffold(
           appBar: AppBar(
             automaticallyImplyLeading: false,
-            title: const Text("Homework"),
+            title: Text(l10n.homeworkTitle),
             bottom: TabBar(
               controller: _tabController,
-              tabs: const [
+              tabs: [
                 Tab(
-                  icon: Icon(Icons.watch_later),
-                  child: Text("Open"),
+                  icon: const Icon(Icons.watch_later),
+                  child: Text(l10n.openTab),
                 ),
                 Tab(
-                  icon: Icon(Icons.check),
-                  child: Text("Completed"),
+                  icon: const Icon(Icons.check),
+                  child: Text(l10n.completedTab),
                 )
               ],
             ),
