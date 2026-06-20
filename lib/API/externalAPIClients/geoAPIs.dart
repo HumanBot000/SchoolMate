@@ -7,15 +7,30 @@ import 'package:school_mate/main.dart';
 
 Future<List<Country>> getCountries() async {
   final response = await http.get(
-      Uri.parse('https://restcountries.com/v3.1/all?fields=name,flags,cca2'));
+      Uri.parse('https://countriesnow.space/api/v0.1/countries/flag/images'));
   if (response.statusCode != 200) {
     throw Exception('Failed to fetch countries');
   }
-  final data = jsonDecode(response.body) as List<dynamic>;
+  final decoded = jsonDecode(response.body);
+  if (decoded['error'] == true) {
+    throw Exception('API returned error: ${decoded['msg']}');
+  }
+  final data = decoded['data'] as List<dynamic>;
   List<Country> countries = [];
   for (final country in data) {
-    countries.add(Country.fromJson(country));
+    final name = country['name'] as String?;
+    final code = country['iso2'] as String?;
+    final flag = country['flag'] as String?;
+    if (name != null && code != null && flag != null) {
+      final trimmedFlag = flag.trim();
+      if (trimmedFlag.startsWith('http://') ||
+          trimmedFlag.startsWith('https://')) {
+        countries
+            .add(Country(name.trim(), code.trim(), Uri.parse(trimmedFlag)));
+      }
+    }
   }
+
   countries.sort((Country a, Country b) => a.name.compareTo(b.name));
   return countries;
 }

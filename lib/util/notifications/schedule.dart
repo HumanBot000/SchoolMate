@@ -23,12 +23,17 @@ Future<void> clearAllScheduledNotifications() async {
 }
 
 Future<void> requestExactAlarmPermission() async {
-  flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>()
-      ?.requestNotificationsPermission();
-  if (await Permission.scheduleExactAlarm.isDenied) {
-    await Permission.scheduleExactAlarm.request();
+  try {
+    await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.requestNotificationsPermission();
+    if (await Permission.scheduleExactAlarm.isDenied) {
+      await Permission.scheduleExactAlarm.request();
+    }
+  } catch (e) {
+    logger.w("Failed to request notifications/exact-alarm permission: $e. "
+        "This is expected when executing in a background isolate.");
   }
 }
 
@@ -55,7 +60,15 @@ Future<void> schedulePreLessonNotificationsForCurrentDay({
   await initNotificationPlugin();
   await clearAllScheduledNotifications();
   await requestExactAlarmPermission();
-  Schedule schedule = await fetchSchedule();
+
+  final scheduleData = await fetchSchedule();
+  if (scheduleData is! Schedule) {
+    logger.i(
+        "No schedule setup found. Skipping pre-lesson notification scheduling.");
+    return;
+  }
+  Schedule schedule = scheduleData;
+
   List<List<dynamic>> preLessonNotifications =
       await preLessonNotificationsFetcher();
   if (kDebugMode) {

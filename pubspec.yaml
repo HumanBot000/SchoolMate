@@ -112,6 +112,12 @@ flutter:
     - assets/images/svg/flags/de/Saxony-Anhalt.svg
     - assets/images/svg/flags/de/Schleswig-Holstein.svg
     - assets/images/svg/flags/de/Thuringia.svg
+
+  fonts:
+    - family: SchoolMateIcons
+      fonts:
+        - asset: assets/fonts/icons/SchoolMateIcons.ttf
+
   # For details regarding adding assets from package dependencies, see
   # https://flutter.dev/assets-and-images/#from-packages
 

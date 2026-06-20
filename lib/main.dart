@@ -1,17 +1,16 @@
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:school_mate/l10n/app_localizations.dart';
 import 'package:logger/logger.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:school_mate/API/supabase/schedule/schedule.dart'
     as fetch_schedule;
 import 'package:school_mate/API/supabase/setup.dart';
-import 'package:school_mate/pages/userAuth/userAuthentication.dart';
+import 'package:school_mate/l10n/app_localizations.dart';
 import 'package:school_mate/util/NavigatorTree.dart';
-import 'package:school_mate/util/router.dart';
 import 'package:school_mate/util/notifications/homework.dart';
 import 'package:school_mate/util/notifications/schedule.dart';
+import 'package:school_mate/util/router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -25,27 +24,34 @@ final NavigationTreeObserver navigatorTreeObserver = NavigationTreeObserver();
 
 /// Callback function that will be executed at midnight
 @pragma('vm:entry-point')
-Future<void> scheduleTaskCallback(int id,
-    {bool reInitializeSupabase = false, bool isRerun = false}) async {
-  logger.d("Executing scheduled task");
-  if (reInitializeSupabase) {
-    await initializeSupabase();
-  }
+Future<void> scheduleTaskCallback(int id) async {
+  logger.d("Executing scheduled task in background isolate");
+
+  // 1. Initialize Supabase client for this isolate
   try {
-    await schedulePreLessonNotificationsForCurrentDay(
-      fetchSchedule: fetch_schedule.fetchSchedule,
-      preLessonNotificationsFetcher: fetchPreLessonNotifications,
-    );
-    await updateHomeworkNotifications(await fetchHomeworks());
+    await initializeSupabase();
   } catch (e) {
-    // 1 retry
-    if (!isRerun) {
-      await scheduleTaskCallback(id, reInitializeSupabase: true, isRerun: true);
-    } else {
-      logger.e("Error executing scheduled task: $e");
-    }
-    return;
+    logger.e("Failed to initialize Supabase in background: $e");
   }
+
+  // 2. Check if a user is logged in before fetching data
+  final currentUser = supabaseClient.client.auth.currentUser;
+  if (currentUser == null) {
+    logger.i("No user logged in. Skipping background scheduled task.");
+  } else {
+    try {
+      await schedulePreLessonNotificationsForCurrentDay(
+        fetchSchedule: fetch_schedule.fetchSchedule,
+        preLessonNotificationsFetcher: fetchPreLessonNotifications,
+      );
+      await updateHomeworkNotifications(await fetchHomeworks());
+      logger.i("Background scheduled task completed successfully.");
+    } catch (e) {
+      logger.e("Error executing scheduled task operations: $e");
+    }
+  }
+
+  // 3. Always schedule the next day's alarm to keep the cycle alive
   DateTime now = DateTime.now();
   DateTime nextMidnight = now.add(const Duration(days: 1)).subtract(Duration(
       hours: now.hour,
@@ -91,6 +97,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp.router(
       routerConfig: appRouter,
       title: 'SchoolMate',
+      debugShowCheckedModeBanner: false,
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,

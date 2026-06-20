@@ -3,6 +3,7 @@ import 'package:school_mate/API/supabase/auth/userSettings.dart' as settings;
 import 'package:school_mate/main.dart';
 import 'package:school_mate/pages/home/home/start.dart';
 import 'package:school_mate/pages/settings/setup.dart';
+import 'package:school_mate/pages/userAuth/usernameSetup.dart';
 
 import 'authenticationFlow.dart' as auth_ui;
 
@@ -36,6 +37,13 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
       return auth_ui.build(context);
     }
 
+    final userMetadata = supabaseClient.client.auth.currentUser?.userMetadata;
+    final hasUsername =
+        userMetadata != null && userMetadata['username'] != null;
+    if (!hasUsername) {
+      return const UsernameSetupPage();
+    }
+
     _userSettingsFuture ??= settings.getUserSettings();
 
     return FutureBuilder<Map<String, dynamic>?>(
@@ -58,11 +66,13 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.cloud_off, size: 64, color: Colors.redAccent),
+                    const Icon(Icons.cloud_off,
+                        size: 64, color: Colors.redAccent),
                     const SizedBox(height: 16),
                     const Text(
                       "Connection Error",
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 8),
                     const Text(

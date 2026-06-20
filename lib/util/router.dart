@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:school_mate/main.dart';
 import 'package:school_mate/pages/home/home/start.dart';
 import 'package:school_mate/pages/home/homework/Homework.dart';
 import 'package:school_mate/pages/home/marks/Grades.dart';
 import 'package:school_mate/pages/home/schedule/start.dart';
 import 'package:school_mate/pages/settings/SettingsPage.dart';
 import 'package:school_mate/pages/settings/setup.dart';
+import 'package:school_mate/pages/userAuth/authenticationFlow.dart' as auth_ui;
 import 'package:school_mate/pages/userAuth/emailVerification.dart';
 import 'package:school_mate/pages/userAuth/userAuthentication.dart';
-import 'package:school_mate/pages/userAuth/authenticationFlow.dart' as auth_ui;
-import 'package:school_mate/main.dart';
+import 'package:school_mate/pages/userAuth/usernameSetup.dart';
 
 final GoRouter appRouter = GoRouter(
   initialLocation: '/',
@@ -22,6 +23,10 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/login',
       builder: (context, state) => auth_ui.build(context),
+    ),
+    GoRoute(
+      path: '/setup-username',
+      builder: (context, state) => const UsernameSetupPage(),
     ),
     GoRoute(
       path: '/verify-email',
