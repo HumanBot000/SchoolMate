@@ -1,5 +1,5 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:school_mate/API/externalAPIClients/geoAPIs.dart' as geo_api;
 import 'package:school_mate/Classes/geoPolitics/Country.dart';
 import 'package:school_mate/main.dart';
@@ -135,11 +135,18 @@ List<Widget> getCountryWidgets(BuildContext context, List<Country> countries) {
             child: Stack(
               alignment: Alignment.center,
               children: [
-                SvgPicture.network(
-                  country.flag.toString(),
+                CachedNetworkImage(
+                  imageUrl: country.flag.toString(),
                   fit: BoxFit.cover,
                   width: double.infinity,
                   height: 150,
+                  placeholder: (context, url) => const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                  errorWidget: (context, url, error) => const Icon(
+                    Icons.error,
+                    color: Colors.red,
+                  ),
                 ),
                 Positioned(
                   bottom: 12,

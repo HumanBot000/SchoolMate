@@ -20,14 +20,10 @@ Future<List<Country>> getCountries() async {
   for (final country in data) {
     final name = country['name'] as String?;
     final code = country['iso2'] as String?;
-    final flag = country['flag'] as String?;
-    if (name != null && code != null && flag != null) {
-      final trimmedFlag = flag.trim();
-      if (trimmedFlag.startsWith('http://') ||
-          trimmedFlag.startsWith('https://')) {
-        countries
-            .add(Country(name.trim(), code.trim(), Uri.parse(trimmedFlag)));
-      }
+    if (name != null && code != null) {
+      final cleanCode = code.trim().toLowerCase();
+      final flagUrl = 'https://flagcdn.com/w320/$cleanCode.png';
+      countries.add(Country(name.trim(), code.trim(), Uri.parse(flagUrl)));
     }
   }
 

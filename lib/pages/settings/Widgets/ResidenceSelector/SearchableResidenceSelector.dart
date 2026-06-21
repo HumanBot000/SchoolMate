@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:school_mate/API/externalAPIClients/geoAPIs.dart' as geo_api;
@@ -196,9 +197,21 @@ class CountryListItem extends StatelessWidget {
                 SizedBox(
                   width: 60,
                   height: 40,
-                  child: SvgPicture.network(
-                    country.flag.toString(),
+                  child: CachedNetworkImage(
+                    imageUrl: country.flag.toString(),
                     fit: BoxFit.contain,
+                    placeholder: (context, url) => const Center(
+                      child: SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      ),
+                    ),
+                    errorWidget: (context, url, error) => const Icon(
+                      Icons.error,
+                      size: 20,
+                      color: Colors.red,
+                    ),
                   ),
                 ),
                 const SizedBox(width: 16),

@@ -6,8 +6,9 @@ class Country {
   Country(this.name, this.code, this.flag);
 
   factory Country.fromJson(Map<String, dynamic> json) {
-    return Country(
-        json['name']['common'], json['cca2'], Uri.parse(json['flags']['svg']));
+    final code = json['cca2'] as String;
+    return Country(json['name']['common'], code,
+        Uri.parse('https://flagcdn.com/w320/${code.toLowerCase()}.png'));
   }
 
   @override

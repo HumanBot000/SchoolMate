@@ -53,6 +53,7 @@ dependencies:
   fl_chart: ^0.70.2
   postgrest: any
   go_router: ^17.3.0
+  cached_network_image: ^3.4.1
 dev_dependencies:
   flutter_test:
     sdk: flutter

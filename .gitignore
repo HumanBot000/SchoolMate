@@ -228,3 +228,7 @@ fabric.properties
 
 *.env
 /school_mate/
+/.idea/deviceManager.xml
+/.idea/discord.xml
+/.idea/inspectionProfiles/Project_Default.xml
+/.idea/markdown.xml
