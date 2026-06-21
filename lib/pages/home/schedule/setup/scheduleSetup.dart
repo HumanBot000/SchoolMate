@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:school_mate/l10n/app_localizations.dart';
 import 'package:school_mate/API/supabase/schedule/MetadataCRUD.dart'
     as metadata;
 import 'package:school_mate/API/supabase/schedule/schedule.dart'
     as fetch_schedule;
 import 'package:school_mate/Classes/schedule/Schedule.dart';
 import 'package:school_mate/Widgets/public/GradientButton.dart';
+import 'package:school_mate/Widgets/specialThemes/futuristic.dart';
+import 'package:school_mate/l10n/app_localizationsturistic.dart';
 import 'package:school_mate/main.dart';
 import 'package:school_mate/pages/home/Widgets/BottomNavBar.dart';
 import 'package:school_mate/pages/home/schedule/page/Schedule.dart';
@@ -21,10 +22,7 @@ class ScheduleSetupPage extends StatefulWidget {
   final String? headerTitle;
   final Schedule? existingSchedule;
 
-  const ScheduleSetupPage(
-      {super.key,
-      this.existingSchedule,
-      this.headerTitle});
+  const ScheduleSetupPage({super.key, this.existingSchedule, this.headerTitle});
 
   @override
   State<ScheduleSetupPage> createState() => _ScheduleSetupPageState();
@@ -32,6 +30,7 @@ class ScheduleSetupPage extends StatefulWidget {
 
 class _ScheduleSetupPageState extends State<ScheduleSetupPage> {
   AppLocalizations get l10n => AppLocalizations.of(context)!;
+
   // Don't make these vars public and manipulate in child widgets because of single source of truth -> easier debugging
   int _activePage = 0;
   TimeOfDay _startTime = const TimeOfDay(hour: 08, minute: 00);
@@ -115,8 +114,7 @@ class _ScheduleSetupPageState extends State<ScheduleSetupPage> {
       WidgetsBinding.instance.addPostFrameCallback(
           (_) => ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(
-                      l10n.currentWeekTypeRequired),
+                  content: Text(l10n.currentWeekTypeRequired),
                   backgroundColor: Theme.of(context).colorScheme.error,
                 ),
               ));
@@ -150,7 +148,7 @@ class _ScheduleSetupPageState extends State<ScheduleSetupPage> {
           (_) => ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   backgroundColor: Theme.of(context).colorScheme.error,
-                   content: Text(l10n.fillAllRequiredFields),
+                  content: Text(l10n.fillAllRequiredFields),
                 ),
               ));
       return false;
@@ -160,8 +158,7 @@ class _ScheduleSetupPageState extends State<ScheduleSetupPage> {
           (_) => ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   backgroundColor: Theme.of(context).colorScheme.error,
-                   content: Text(
-                      l10n.lessonTimesOverlap),
+                  content: Text(l10n.lessonTimesOverlap),
                 ),
               ));
       return false;
@@ -186,8 +183,7 @@ class _ScheduleSetupPageState extends State<ScheduleSetupPage> {
 
       if (e is PostgrestException &&
           e.message == "last_lesson must be after first_lesson") {
-        errorMessage =
-            l10n.lastLessonAfterFirst;
+        errorMessage = l10n.lastLessonAfterFirst;
       } else {
         errorMessage = e.toString();
       }
@@ -251,150 +247,189 @@ class _ScheduleSetupPageState extends State<ScheduleSetupPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        bottomNavigationBar: _isEdit ? null : const HomeNavBar(currentIndex: 1),
-        body: ListView(
-          padding: const EdgeInsets.all(16.0),
-          children: [
-            Card(
-              elevation: 4,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Center(
-                      child: Text(
-                        _isEdit ? l10n.editSchedule : l10n.scheduleSetup,
-                        style: Theme.of(context)
-                            .textTheme
-                            .headlineMedium
-                            ?.copyWith(fontWeight: FontWeight.bold),
-                      ),
+    return Scaffold(
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        title: Text(
+          _isEdit ? l10n.editSchedule : l10n.scheduleSetup,
+          style: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+            letterSpacing: 0.5,
+          ),
+        ),
+        centerTitle: true,
+        iconTheme: const IconThemeData(color: Colors.white),
+      ),
+      bottomNavigationBar: _isEdit ? null : const HomeNavBar(currentIndex: 1),
+      body: Stack(
+        children: [
+          buildGradientBackground(),
+          SafeArea(
+            child: ListView(
+              padding: const EdgeInsets.all(16.0),
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(20.0),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF1A1F36).withValues(alpha: 0.6),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: Colors.white.withValues(alpha: 0.08),
+                      width: 1,
                     ),
-                    const SizedBox(height: 8),
-                    Text(
-                      widget.headerTitle ?? l10n.defaultScheduleSetupHeader,
-                      style: Theme.of(context).textTheme.bodyMedium,
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 16),
-                    Divider(
-                      color: Theme.of(context).colorScheme.primary,
-                      thickness: 1.5,
-                    ),
-                    const SizedBox(height: 16),
-                    Wrap(
-                      children: [
-                        RichText(
-                          text: TextSpan(
-                            // Ensures that the * is always at the end of the last line of the text and not in a separate line
-                            text:
-                                l10n.enterStartEndTimesPrompt,
-                            children: [
-                              const TextSpan(
-                                text: "*",
-                                style:
-                                    TextStyle(color: Colors.red, fontSize: 32),
-                              ),
-                            ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Center(
+                        child: Text(
+                          widget.headerTitle ?? l10n.defaultScheduleSetupHeader,
+                          style: const TextStyle(
+                            color: Colors.white70,
+                            fontSize: 15,
                           ),
+                          textAlign: TextAlign.center,
                         ),
-                      ],
-                    ),
-                    LessonsTimeFrameSelector(
-                        startTime: _startTime,
-                        endTime: _endTime,
-                        onTimeChanged: _setLessonsTimeFrame),
-                    Divider(
-                      color: Theme.of(context).colorScheme.primary,
-                      thickness: 1.5,
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      l10n.selectLessonDaysPrompt,
-                    ),
-                    WorkDaysSelector(
-                        workdays: _workdays,
-                        onWorkdayChange: _updateWorkday,
-                        onActivePageChange: _onPageChanged,
-                        activePage: _activePage),
-                    Divider(
-                      color: Theme.of(context).colorScheme.primary,
-                      thickness: 1.5,
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      l10n.scheduleChangeWeeksPrompt,
-                    ),
-                    AlternatingWeeksSelector(
-                        alternatingWeeksCount: _alternatingWeeksCount,
+                      ),
+                      const SizedBox(height: 16),
+                      Divider(
+                        color: Colors.white.withValues(alpha: 0.1),
+                        thickness: 1,
+                      ),
+                      const SizedBox(height: 16),
+                      Wrap(
+                        children: [
+                          RichText(
+                            text: TextSpan(
+                              text: l10n.enterStartEndTimesPrompt,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                              ),
+                              children: const [
+                                TextSpan(
+                                  text: "*",
+                                  style: TextStyle(
+                                      color: Colors.red, fontSize: 24),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      LessonsTimeFrameSelector(
+                          startTime: _startTime,
+                          endTime: _endTime,
+                          onTimeChanged: _setLessonsTimeFrame),
+                      Divider(
+                        color: Colors.white.withValues(alpha: 0.1),
+                        thickness: 1,
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        l10n.selectLessonDaysPrompt,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      WorkDaysSelector(
+                          workdays: _workdays,
+                          onWorkdayChange: _updateWorkday,
+                          onActivePageChange: _onPageChanged,
+                          activePage: _activePage),
+                      Divider(
+                        color: Colors.white.withValues(alpha: 0.1),
+                        thickness: 1,
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        l10n.scheduleChangeWeeksPrompt,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      AlternatingWeeksSelector(
+                          alternatingWeeksCount: _alternatingWeeksCount,
+                          activePage: _activePage,
+                          onActivePageChange: _onPageChanged,
+                          selectedAlternatingWeek: _currentAlternatingWeek,
+                          onWeekChange: _updateAlternatingWeeks),
+                      Divider(
+                        color: Colors.white.withValues(alpha: 0.1),
+                        thickness: 1,
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        l10n.lessonDurationPrompt,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      IndividualLessonDurationSelector(
                         activePage: _activePage,
                         onActivePageChange: _onPageChanged,
-                        selectedAlternatingWeek: _currentAlternatingWeek,
-                        onWeekChange: _updateAlternatingWeeks),
-                    Divider(
-                      color: Theme.of(context).colorScheme.primary,
-                      thickness: 1.5,
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      l10n.lessonDurationPrompt,
-                    ),
-                    IndividualLessonDurationSelector(
-                      activePage: _activePage,
-                      onActivePageChange: _onPageChanged,
-                      lessonDuration: _lessonLength,
-                      onLessonDurationChange: _updateLessonLength,
-                      onCustomLessonDurationChange: _updateCustomLessonLength,
-                      selectedCustomLessonDuration: _customLessonLength,
-                      starOfDay: _startTime,
-                      visualLessonTimes: _visualLessonTimes,
-                      onVisualLessonTimesChange: _updateLessonTimes,
-                    ),
-                    Divider(
-                      color: Theme.of(context).colorScheme.primary,
-                      thickness: 1.5,
-                    ),
-                    const SizedBox(height: 16),
-                    Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ElevatedGradientButton(
-                            borderRadius: BorderRadius.circular(12),
-                            onPressed: () async {
-                              await _onSave();
-                            },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                 Text(_isEdit ? l10n.update : l10n.confirm,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyLarge
-                                        ?.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white)),
-                              ],
-                            ))),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                         Text(
-                          l10n.requiredFields,
-                          style: const TextStyle(color: Colors.red),
-                        ),
-                      ],
-                    ),
-                  ],
+                        lessonDuration: _lessonLength,
+                        onLessonDurationChange: _updateLessonLength,
+                        onCustomLessonDurationChange: _updateCustomLessonLength,
+                        selectedCustomLessonDuration: _customLessonLength,
+                        starOfDay: _startTime,
+                        visualLessonTimes: _visualLessonTimes,
+                        onVisualLessonTimesChange: _updateLessonTimes,
+                      ),
+                      Divider(
+                        color: Colors.white.withValues(alpha: 0.1),
+                        thickness: 1,
+                      ),
+                      const SizedBox(height: 16),
+                      Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ElevatedGradientButton(
+                              borderRadius: BorderRadius.circular(12),
+                              onPressed: () async {
+                                await _onSave();
+                              },
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(_isEdit ? l10n.update : l10n.confirm,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge
+                                          ?.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white)),
+                                ],
+                              ))),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            l10n.requiredFields,
+                            style: const TextStyle(color: Colors.red),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

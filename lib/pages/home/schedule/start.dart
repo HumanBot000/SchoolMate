@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:school_mate/l10n/app_localizations.dart';
 import 'package:school_mate/API/supabase/homeworks/tasks.dart';
 import 'package:school_mate/API/supabase/schedule/schedule.dart';
 import 'package:school_mate/Classes/homeworks/Homework.dart';
+import 'package:school_mate/l10n/app_localizations.dart';
 import 'package:school_mate/pages/home/Widgets/BottomNavBar.dart';
 import 'package:school_mate/pages/home/schedule/page/Schedule.dart';
 import 'package:school_mate/pages/home/schedule/setup/scheduleSetup.dart'
@@ -22,9 +22,7 @@ FutureBuilder scheduleExistsNavigation(BuildContext context) => FutureBuilder(
         fetchHomeworks(),
       ]),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasData) {
+        if (snapshot.hasData) {
           final schedule = snapshot.data![0];
           final homeworks = snapshot.data![1] as List<Homework>;
 
@@ -45,20 +43,20 @@ FutureBuilder scheduleExistsNavigation(BuildContext context) => FutureBuilder(
             });
           }
         } else if (snapshot.hasError) {
-          WidgetsBinding.instance.addPostFrameCallback(
-              (_) => ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content:
-                          Text(AppLocalizations.of(context)!.somethingWentWrong),
-                      backgroundColor: Theme.of(context).colorScheme.error,
-                    ),
-                  ));
+          WidgetsBinding.instance.addPostFrameCallback((_) =>
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content:
+                      Text(AppLocalizations.of(context)!.somethingWentWrong),
+                  backgroundColor: Theme.of(context).colorScheme.error,
+                ),
+              ));
           throw snapshot.error is Exception
               ? snapshot.error as Exception
               : Exception(snapshot.error.toString());
         }
 
-        return const Placeholder();
+        return const Center(child: CircularProgressIndicator());
       },
     );
 
