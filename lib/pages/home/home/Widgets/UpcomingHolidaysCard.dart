@@ -20,19 +20,34 @@ Widget _upcomingHolidaysTextData(
         return const CircularProgressIndicator();
       } else if (snapshot.hasError) {
         logger.i(snapshot.error);
-        return Text(l10n.noHolidaysForLocation);
+        return Text(
+          l10n.noHolidaysForLocation,
+          style: const TextStyle(
+            color: Colors.white70,
+            fontSize: 15,
+          ),
+          textAlign: TextAlign.center,
+        );
       } else if (snapshot.hasData) {
         final holiday = snapshot.data!;
         return Text(
           l10n.holidayInDays(holiday.name, holiday.daysLeft.toString()),
-          style: Theme.of(context)
-              .textTheme
-              .bodyMedium
-              ?.copyWith(fontWeight: FontWeight.bold),
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+          ),
           textAlign: TextAlign.center,
         );
       } else {
-        return Text(l10n.noUpcomingHolidays);
+        return Text(
+          l10n.noUpcomingHolidays,
+          style: const TextStyle(
+            color: Colors.white70,
+            fontSize: 15,
+          ),
+          textAlign: TextAlign.center,
+        );
       }
     },
   );
@@ -51,49 +66,55 @@ class UpcomingHolidaysCard extends StatelessWidget {
         } else if (snapshot.hasError) {
           logger.e(snapshot.error);
           final l10n = AppLocalizations.of(context)!;
-          return Text(l10n.errorLoadingSettings(snapshot.error.toString()));
+          return Center(
+            child: Text(
+              l10n.errorLoadingSettings(snapshot.error.toString()),
+              style: const TextStyle(color: Colors.white70),
+            ),
+          );
         } else if (snapshot.hasData) {
           final userSettings = snapshot.data!;
           final residenceCountry = userSettings['residence_country'];
           final localResidenceCode = userSettings['residence'];
           return Container(
-            decoration: const BoxDecoration(
-              shape: BoxShape.rectangle,
+            width: double.infinity,
+            height: 140,
+            padding: const EdgeInsets.all(24.0),
+            decoration: BoxDecoration(
+              color: const Color(0xFF1A1F36).withValues(alpha: 0.6),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: Colors.white.withValues(alpha: 0.08),
+                width: 1,
+              ),
             ),
-            height: MediaQuery.of(context).size.height * 0.2,
-            width: MediaQuery.of(context).size.width,
-            child: Card(
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
-              ),
-              margin: const EdgeInsets.symmetric(horizontal: 16),
-              elevation: 4.0,
-              child: Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: Stack(
-                  children: [
-                    Positioned.fill(
-                      child: Opacity(
-                        opacity: 0.1,
-                        child: Lottie.asset(
-                          'assets/animations/holidays.json',
-                          alignment: Alignment.topCenter,
-                          fit: BoxFit.contain,
-                        ),
-                      ),
+            child: Stack(
+              children: [
+                Positioned.fill(
+                  child: Opacity(
+                    opacity: 0.1,
+                    child: Lottie.asset(
+                      'assets/animations/holidays.json',
+                      alignment: Alignment.center,
+                      fit: BoxFit.contain,
                     ),
-                    Center(
-                      child: _upcomingHolidaysTextData(
-                          context, residenceCountry, localResidenceCode),
-                    ),
-                  ],
+                  ),
                 ),
-              ),
+                Center(
+                  child: _upcomingHolidaysTextData(
+                      context, residenceCountry, localResidenceCode),
+                ),
+              ],
             ),
           );
         } else {
           final l10n = AppLocalizations.of(context)!;
-          return Text(l10n.noUserSettings);
+          return Center(
+            child: Text(
+              l10n.noUserSettings,
+              style: const TextStyle(color: Colors.white70),
+            ),
+          );
         }
       },
     );

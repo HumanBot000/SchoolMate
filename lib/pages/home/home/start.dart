@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:school_mate/l10n/app_localizations.dart';
 import 'package:school_mate/API/supabase/schedule/schedule.dart';
 import 'package:school_mate/Classes/schedule/Schedule.dart';
 import 'package:school_mate/Widgets/specialThemes/futuristic.dart';
+import 'package:school_mate/l10n/app_localizations.dart';
 import 'package:school_mate/pages/home/Widgets/BottomNavBar.dart';
 import 'package:school_mate/pages/home/home/Widgets/DayProgressBar.dart';
 import 'package:school_mate/pages/home/home/Widgets/HomeDrawer.dart';
@@ -69,6 +69,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   Widget _buildMainContent() {
+    final topPadding = MediaQuery.of(context).padding.top + kToolbarHeight;
     return SlideTransition(
       position: _slideAnimation,
       child: FadeTransition(
@@ -76,19 +77,25 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: EdgeInsets.only(
+              left: 16,
+              right: 16,
+              top: topPadding + 16,
+              bottom: 100,
+            ),
             child: Column(
               children: [
-                const SizedBox(height: 20),
                 _buildWelcomeSection(),
-                const SizedBox(height: 30),
-                if (_schedule != null && _hasTodayLessons())
+                const SizedBox(height: 20),
+                if (_schedule != null && _hasTodayLessons()) ...[
                   _buildEnhancedProgressSection(),
-                if (_schedule == null || !_hasTodayLessons())
+                  const SizedBox(height: 20),
+                ],
+                if (_schedule == null || !_hasTodayLessons()) ...[
                   _buildNoLessonsCard(),
-                const SizedBox(height: 30),
-                _buildEnhancedHolidaysSection(),
-                const SizedBox(height: 100),
+                  const SizedBox(height: 20),
+                ],
+                const UpcomingHolidaysCard(),
               ],
             ),
           ),
@@ -102,68 +109,43 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       width: double.infinity,
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            const Color(0xFF3A7BFF).withValues(alpha: 0.1),
-            const Color(0xFF00D4AA).withValues(alpha: 0.1),
-          ],
-        ),
-        borderRadius: BorderRadius.circular(20),
+        color: const Color(0xFF1A1F36).withValues(alpha: 0.6),
+        borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: const Color(0xFF3A7BFF).withValues(alpha: 0.3),
+          color: Colors.white.withValues(alpha: 0.08),
           width: 1,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF3A7BFF).withValues(alpha: 0.1),
-            blurRadius: 20,
-            spreadRadius: 5,
-          ),
-        ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
         children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFF3A7BFF), Color(0xFF00D4AA)],
+          const Icon(
+            Icons.wb_sunny_rounded,
+            color: Color(0xFF3A7BFF),
+            size: 28,
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '${_getTimeOfDayGreeting(l10n)}!',
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
                   ),
-                  borderRadius: BorderRadius.circular(15),
                 ),
-                child: const Icon(
-                  Icons.wb_sunny_rounded,
-                  color: Colors.white,
-                  size: 24,
+                const SizedBox(height: 4),
+                Text(
+                  l10n.welcomeGreeting,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.white.withValues(alpha: 0.7),
+                  ),
                 ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '${_getTimeOfDayGreeting(l10n)}!',
-                      style: const TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                    Text(
-                      l10n.welcomeGreeting,
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.white.withValues(alpha: 0.7),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),
@@ -173,27 +155,15 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   Widget _buildEnhancedProgressSection() {
     return Container(
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            const Color(0xFF1A1F36).withValues(alpha: 0.8),
-            const Color(0xFF2D3561).withValues(alpha: 0.8),
-          ],
-        ),
-        borderRadius: BorderRadius.circular(25),
+        color: const Color(0xFF1A1F36).withValues(alpha: 0.6),
+        borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: const Color(0xFF3A7BFF).withValues(alpha: 0.3),
+          color: Colors.white.withValues(alpha: 0.08),
           width: 1,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF3A7BFF).withValues(alpha: 0.2),
-            blurRadius: 25,
-            spreadRadius: 5,
-          ),
-        ],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(25),
+        borderRadius: BorderRadius.circular(16),
         child: DayProgressBar(
           startTime: _getTodayLessons().first.temporalData.startTime,
           endTime: _getTodayLessons().last.temporalData.endTime,
@@ -208,95 +178,38 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       width: double.infinity,
       padding: const EdgeInsets.all(32),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            const Color(0xFF1A1F36).withValues(alpha: 0.8),
-            const Color(0xFF2D3561).withValues(alpha: 0.8),
-          ],
-        ),
-        borderRadius: BorderRadius.circular(25),
+        color: const Color(0xFF1A1F36).withValues(alpha: 0.6),
+        borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: const Color(0xFF00D4AA).withValues(alpha: 0.3),
+          color: Colors.white.withValues(alpha: 0.08),
           width: 1,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF00D4AA).withValues(alpha: 0.1),
-            blurRadius: 20,
-            spreadRadius: 5,
-          ),
-        ],
       ),
       child: Column(
         children: [
-          Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [Color(0xFF00D4AA), Color(0xFF3A7BFF)],
-              ),
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: const Color(0xFF00D4AA).withValues(alpha: 0.3),
-                  blurRadius: 20,
-                  spreadRadius: 5,
-                ),
-              ],
-            ),
-            child: const Icon(
-              Icons.free_breakfast_rounded,
-              color: Colors.white,
-              size: 40,
-            ),
+          const Icon(
+            Icons.free_breakfast_rounded,
+            color: Color(0xFF00D4AA),
+            size: 40,
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 16),
           Text(
             l10n.noClassesToday,
             style: const TextStyle(
-              fontSize: 24,
+              fontSize: 20,
               fontWeight: FontWeight.bold,
               color: Colors.white,
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 6),
           Text(
             l10n.enjoyFreeTime,
             style: TextStyle(
-              fontSize: 16,
+              fontSize: 14,
               color: Colors.white.withValues(alpha: 0.7),
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildEnhancedHolidaysSection() {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            const Color(0xFF1A1F36).withValues(alpha: 0.8),
-            const Color(0xFF2D3561).withValues(alpha: 0.8),
-          ],
-        ),
-        borderRadius: BorderRadius.circular(25),
-        border: Border.all(
-          color: const Color(0xFF3A7BFF).withValues(alpha: 0.3),
-          width: 1,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF3A7BFF).withValues(alpha: 0.1),
-            blurRadius: 25,
-            spreadRadius: 5,
-          ),
-        ],
-      ),
-      child: const ClipRRect(
-        borderRadius: BorderRadius.all(Radius.circular(25)),
-        child: UpcomingHolidaysCard(),
       ),
     );
   }
@@ -329,25 +242,30 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       drawer: const HomeDrawer(),
       bottomNavigationBar: const HomeNavBar(currentIndex: 0),
       extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        title: FadeTransition(
+          opacity: _fadeAnimation,
+          child: Text(
+            l10n.homeTitle,
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+              letterSpacing: 0.5,
+            ),
+          ),
+        ),
+        centerTitle: true,
+        iconTheme: const IconThemeData(color: Colors.white),
+      ),
       body: Stack(
         children: [
           buildGradientBackground(),
-          ParticleBackground(),
-          Column(
-            children: [
-              futuristicAppBar(
-                  context,
-                  l10n.homeTitle,
-                  const Icon(
-                    Icons.home_rounded,
-                    color: Colors.white,
-                    size: 20,
-                  ),
-                  _fadeAnimation,
-                  _fadeController),
-              Expanded(child: _buildMainContent()),
-            ],
-          ),
+          const ParticleBackground(),
+          _buildMainContent(),
         ],
       ),
     );
