@@ -6,7 +6,7 @@ import 'package:school_mate/API/supabase/schedule/schedule.dart'
 import 'package:school_mate/Classes/schedule/Schedule.dart';
 import 'package:school_mate/Widgets/public/GradientButton.dart';
 import 'package:school_mate/Widgets/specialThemes/futuristic.dart';
-import 'package:school_mate/l10n/app_localizationsturistic.dart';
+import 'package:school_mate/l10n/app_localizations.dart';
 import 'package:school_mate/main.dart';
 import 'package:school_mate/pages/home/Widgets/BottomNavBar.dart';
 import 'package:school_mate/pages/home/schedule/page/Schedule.dart';
