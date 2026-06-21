@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:school_mate/API/supabase/auth/userSettings.dart';
 import 'package:school_mate/main.dart';
+import 'package:school_mate/util/extensions/string.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class UsernameSetupPage extends StatefulWidget {
@@ -33,18 +34,7 @@ class _UsernameSetupPageState extends State<UsernameSetupPage> {
     if (user == null) return '';
     final metadata = user.userMetadata;
     if (metadata != null) {
-      if (metadata['full_name'] != null && metadata['full_name'] is String) {
-        return (metadata['full_name'] as String)
-            .trim()
-            .replaceAll(' ', '_')
-            .toLowerCase();
-      }
-      if (metadata['name'] != null && metadata['name'] is String) {
-        return (metadata['name'] as String).replaceAll(' ', '_').toLowerCase();
-      }
-    }
-    if (user.email != null) {
-      return user.email!.split('@').first;
+      return metadata["full_name"].toString().trim().split(" ")[0].capitalize();
     }
     return '';
   }
@@ -123,7 +113,7 @@ class _UsernameSetupPageState extends State<UsernameSetupPage> {
                       ),
                       const SizedBox(height: 12),
                       Text(
-                        "Please choose a username to continue. We've prefilled it with a suggestion from your account.",
+                        "Please choose a username to continue.",
                         style: theme.textTheme.bodyMedium?.copyWith(
                           color: theme.colorScheme.onSurface.withOpacity(0.7),
                         ),
