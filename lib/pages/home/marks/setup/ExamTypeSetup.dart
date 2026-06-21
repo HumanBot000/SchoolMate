@@ -372,7 +372,7 @@ class _ExamTypeSetupPageState extends State<ExamTypeSetupPage> {
                       labelText: l10n.baseExamTypeLabel,
                       border: const OutlineInputBorder(),
                     ),
-                    initialValue: widget.examTypes[index].evaluationData
+                    value: widget.examTypes[index].evaluationData
                         .multiplicationChildType,
                     items: List.generate(widget.examTypes.length, (int i) {
                       if (i != index) {

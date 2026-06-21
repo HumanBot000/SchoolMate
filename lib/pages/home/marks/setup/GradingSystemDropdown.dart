@@ -29,7 +29,7 @@ class GradingSystemDropdown extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
       child: DropdownButtonFormField<GradingSystem>(
-        initialValue: gradingSystems.firstWhere(
+        value: gradingSystems.firstWhere(
           (gs) =>
               gs.range == selectedGradingSystem?.range &&
               gs.modifiers == selectedGradingSystem?.modifiers,

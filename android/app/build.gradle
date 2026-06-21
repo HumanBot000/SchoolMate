@@ -27,7 +27,7 @@ android {
     namespace = "io.github.HumanBot000.school_mate"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
-    compileSdk 34
+    compileSdk 35
 
     compileOptions {
         coreLibraryDesugaringEnabled true
