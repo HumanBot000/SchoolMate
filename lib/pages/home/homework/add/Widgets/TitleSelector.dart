@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:school_mate/l10n/app_localizations.dart';
 
 class HomeworkTitleSelector extends StatelessWidget {
   final TextEditingController titleController;
@@ -9,6 +10,7 @@ class HomeworkTitleSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Stack(
       alignment: Alignment.topLeft,
       children: [
@@ -29,15 +31,15 @@ class HomeworkTitleSelector extends StatelessWidget {
                   fontWeight: FontWeight.w400,
                 ),
                 decoration: InputDecoration(
-                  hintText: "Enter Title (i.e. Book p. 5)",
+                  hintText: l10n.enterTitleHint,
                   hintStyle: TextStyle(
                     color: Colors.white,
                     fontSize: () {
                       // Looks complicated, but is just a workaround because hintText doesn't accept a FittedBox widget
                       final textPainter = TextPainter(
-                          text: const TextSpan(
-                              text: "Enter Title (i.e. Book p. 5)",
-                              style: TextStyle(fontSize: 22)),
+                          text: TextSpan(
+                              text: l10n.enterTitleHint,
+                              style: const TextStyle(fontSize: 22)),
                           maxLines: 1,
                           textScaler: MediaQuery.of(context).textScaler,
                           textDirection: TextDirection.ltr)

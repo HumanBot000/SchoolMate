@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:school_mate/Classes/schedule/Subject.dart';
 import 'package:school_mate/Widgets/public/PreviousPage.dart';
+import 'package:school_mate/l10n/app_localizations.dart';
 import 'package:school_mate/pages/home/schedule/subjects/SubjectListWidget.dart';
 
 class SubjectList extends StatefulWidget {
@@ -19,6 +20,7 @@ class SubjectList extends StatefulWidget {
 }
 
 class _SubjectListState extends State<SubjectList> {
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
   late List<Subject> _subjects;
 
   @override
@@ -31,7 +33,7 @@ class _SubjectListState extends State<SubjectList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text("Select a subject to add to the schedule",
+          title: Text(l10n.selectSubjectToAddToSchedule,
               style: Theme.of(context)
                   .appBarTheme
                   .titleTextStyle

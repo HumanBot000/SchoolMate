@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:school_mate/main.dart';
-import 'package:school_mate/pages/userAuth/userAuthentication.dart';
 
 String getUserName() =>
     supabaseClient.client.auth.currentUser!.userMetadata!['username'] as String;

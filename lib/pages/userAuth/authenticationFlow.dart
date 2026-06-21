@@ -7,6 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:school_mate/API/supabase/auth/userSettings.dart';
+import 'package:school_mate/l10n/app_localizations.dart';
 import 'package:school_mate/main.dart';
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 
@@ -17,6 +18,7 @@ const String googleIosClientId =
     '318847705955-dtojdt33njfd47b4l3p2n9ctvte9a52b.apps.googleusercontent.com';
 
 void _errorHandler(Object response, BuildContext context) {
+  final l10n = AppLocalizations.of(context)!;
   if (response is AuthException &&
       (response.statusCode.toString() == "422" ||
           response.message.toLowerCase().contains("already registered") ||
@@ -25,19 +27,18 @@ void _errorHandler(Object response, BuildContext context) {
     showAdaptiveDialog(
         context: context,
         builder: (context) => AlertDialog(
-              title: const Text("Account Conflict",
-                  style: TextStyle(fontWeight: FontWeight.bold)),
-              content: const Text(
-                "An account with this email is already registered.\n\n"
-                "If you originally registered with Google, please use 'Continue with Google'. Otherwise, try to log in using your password.",
-                style: TextStyle(fontSize: 15),
+              title: Text(l10n.accountConflictTitle,
+                  style: const TextStyle(fontWeight: FontWeight.bold)),
+              content: Text(
+                l10n.accountConflictMessageEmail,
+                style: const TextStyle(fontSize: 15),
               ),
               actions: [
                 TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: const Text("Ok"),
+                  child: Text(l10n.ok),
                 )
               ],
             ));
@@ -45,8 +46,7 @@ void _errorHandler(Object response, BuildContext context) {
       response.code.toString() == "invalid_credentials") {
     logger.w("Invalid credentials");
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: const Text(
-          "Invalid credentials.\nIf you signed up with Google, try signing in with Google."),
+      content: Text(l10n.invalidCredentialsMessage),
       backgroundColor: Theme.of(context).colorScheme.error,
       duration: const Duration(seconds: 4),
     ));
@@ -62,6 +62,7 @@ void _errorHandler(Object response, BuildContext context) {
 }
 
 Future<void> _signUpHandler(Object response, BuildContext context) async {
+  final l10n = AppLocalizations.of(context)!;
   if (response is AuthResponse) {
     // Check if the user already exists with another provider (e.g. Google) but email confirmation is on.
     // If user's identity list is empty, Supabase returned a secure mock user signifying the email is in use.
@@ -71,17 +72,16 @@ Future<void> _signUpHandler(Object response, BuildContext context) async {
       showAdaptiveDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text("Account Conflict",
-              style: TextStyle(fontWeight: FontWeight.bold)),
-          content: const Text(
-            "This email is already linked to another login provider (such as Google).\n\n"
-            "Please log in using 'Continue with Google'.",
-            style: TextStyle(fontSize: 15),
+          title: Text(l10n.accountConflictTitle,
+              style: const TextStyle(fontWeight: FontWeight.bold)),
+          content: Text(
+            l10n.accountConflictMessageProvider,
+            style: const TextStyle(fontSize: 15),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text("Ok"),
+              child: Text(l10n.ok),
             ),
           ],
         ),
@@ -90,8 +90,8 @@ Future<void> _signUpHandler(Object response, BuildContext context) async {
     }
 
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text("Sign up successful. Please check your email."),
+      SnackBar(
+        content: Text(l10n.signUpSuccessMessage),
       ),
     );
 
@@ -181,6 +181,7 @@ Future<void> _signInWithGoogle(BuildContext context) async {
   } catch (e) {
     logger.e("Google Sign-In failed", e);
     if (context.mounted) {
+      final l10n = AppLocalizations.of(context)!;
       if (e is AuthException &&
           (e.statusCode.toString() == "422" ||
               e.message.toLowerCase().contains("already registered") ||
@@ -188,17 +189,16 @@ Future<void> _signInWithGoogle(BuildContext context) async {
         showAdaptiveDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: const Text("Account Conflict",
-                style: TextStyle(fontWeight: FontWeight.bold)),
-            content: const Text(
-              "An account with this email already exists (registered with email and password).\n\n"
-              "Please sign in using your email and password instead.",
-              style: TextStyle(fontSize: 15),
+            title: Text(l10n.accountConflictTitle,
+                style: const TextStyle(fontWeight: FontWeight.bold)),
+            content: Text(
+              l10n.accountConflictMessageGoogle,
+              style: const TextStyle(fontSize: 15),
             ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: const Text("Ok"),
+                child: Text(l10n.ok),
               )
             ],
           ),
@@ -213,11 +213,12 @@ Future<void> _signInWithGoogle(BuildContext context) async {
 Scaffold build(BuildContext context) {
   final theme = Theme.of(context);
   final primaryColor = theme.colorScheme.primary;
+  final l10n = AppLocalizations.of(context)!;
 
   return Scaffold(
     appBar: AppBar(
       title: Text(
-        "Welcome to SchoolMate",
+        l10n.welcomeToSchoolMate,
         style: theme.textTheme.headlineLarge,
       ),
     ),
@@ -231,7 +232,7 @@ Scaffold build(BuildContext context) {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
               side: BorderSide(
-                color: theme.colorScheme.outline.withOpacity(0.12),
+                color: theme.colorScheme.outline.withValues(alpha: 0.12),
                 width: 1,
               ),
             ),
@@ -294,11 +295,11 @@ Scaffold build(BuildContext context) {
                         MetaDataField(
                           prefixIcon:
                               const Icon(Icons.person, color: Colors.blue),
-                          label: 'Username',
+                          label: l10n.usernameLabel,
                           key: 'username',
                           validator: (val) {
                             if (val == null || val.isEmpty) {
-                              return 'Please enter something';
+                              return l10n.pleaseEnterSomething;
                             }
                             return null;
                           },
@@ -312,10 +313,10 @@ Scaffold build(BuildContext context) {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16),
                           child: Text(
-                            "or",
+                            l10n.orLabel,
                             style: TextStyle(
-                              color:
-                                  theme.colorScheme.onSurface.withOpacity(0.5),
+                              color: theme.colorScheme.onSurface
+                                  .withValues(alpha: 0.5),
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -346,6 +347,7 @@ class _GoogleSignInButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return OutlinedButton(
       onPressed: onPressed,
@@ -355,7 +357,7 @@ class _GoogleSignInButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
         ),
         side: BorderSide(
-          color: theme.colorScheme.outline.withOpacity(0.3),
+          color: theme.colorScheme.outline.withValues(alpha: 0.3),
           width: 1.2,
         ),
       ),
@@ -369,7 +371,7 @@ class _GoogleSignInButton extends StatelessWidget {
           ),
           const SizedBox(width: 12),
           Text(
-            "Continue with Google",
+            l10n.continueWithGoogle,
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,

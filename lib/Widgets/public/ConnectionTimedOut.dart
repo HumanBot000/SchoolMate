@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:school_mate/l10n/app_localizations.dart';
 
 class ConnectionTimedOutPage extends StatelessWidget {
   final Function() onTryAgain;
@@ -7,6 +8,7 @@ class ConnectionTimedOutPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -20,10 +22,10 @@ class ConnectionTimedOutPage extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             // Error message
-            const Text(
-              "We couldn't connect to the servers.",
+            Text(
+              l10n.couldNotConnectToServers,
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
                 color: Colors.black87,
@@ -32,7 +34,7 @@ class ConnectionTimedOutPage extends StatelessWidget {
             const SizedBox(height: 10),
             // Subtitle
             Text(
-              "Please check your connection and try again.",
+              l10n.checkConnectionAndTry,
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 16,
@@ -44,7 +46,7 @@ class ConnectionTimedOutPage extends StatelessWidget {
             ElevatedButton.icon(
               onPressed: onTryAgain,
               icon: const Icon(Icons.refresh),
-              label: const Text("Try Again"),
+              label: Text(l10n.tryAgain),
               style: ElevatedButton.styleFrom(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 24, vertical: 12),

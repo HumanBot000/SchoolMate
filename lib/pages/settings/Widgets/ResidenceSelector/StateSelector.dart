@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:school_mate/API/externalAPIClients/geoAPIs.dart' as geo_api;
+import 'package:school_mate/l10n/app_localizations.dart';
 import 'package:school_mate/main.dart';
 
 /// ISO codes for German states (used to load local SVG flags)
@@ -168,6 +169,7 @@ class LocalResidenceSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final countryCode = selectedCountry.toUpperCase();
 
     return Card(
@@ -239,8 +241,7 @@ class LocalResidenceSelector extends StatelessWidget {
                                   onChange("unset");
                                 }
                               });
-                              return const Center(
-                                  child: Text('No data available.'));
+                              return Center(child: Text(l10n.noDataAvailable));
                             }
                           },
                         ),

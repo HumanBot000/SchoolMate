@@ -110,11 +110,59 @@ abstract class AppLocalizations {
   /// **'A/B Weeks'**
   String get abWeeks;
 
+  /// No description provided for @accountConflictMessageEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'An account with this email is already registered.\n\nIf you originally registered with Google, please use \'Continue with Google\'. Otherwise, try to log in using your password.'**
+  String get accountConflictMessageEmail;
+
+  /// No description provided for @accountConflictMessageGoogle.
+  ///
+  /// In en, this message translates to:
+  /// **'An account with this email already exists (registered with email and password).\n\nPlease sign in using your email and password instead.'**
+  String get accountConflictMessageGoogle;
+
+  /// No description provided for @accountConflictMessageProvider.
+  ///
+  /// In en, this message translates to:
+  /// **'This email is already linked to another login provider (such as Google).\n\nPlease log in using \'Continue with Google\'.'**
+  String get accountConflictMessageProvider;
+
+  /// No description provided for @accountConflictTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Account Conflict'**
+  String get accountConflictTitle;
+
+  /// No description provided for @add.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get add;
+
+  /// No description provided for @addedHomeworkSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Added Homework successfully!'**
+  String get addedHomeworkSuccessfully;
+
+  /// No description provided for @addExamTypeTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a new Exam Type'**
+  String get addExamTypeTooltip;
+
   /// No description provided for @addHomeworkTooltip.
   ///
   /// In en, this message translates to:
   /// **'Add a Homework'**
   String get addHomeworkTooltip;
+
+  /// No description provided for @additionalNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Additional Note'**
+  String get additionalNote;
 
   /// No description provided for @addLessonButton.
   ///
@@ -127,6 +175,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Add a new lesson'**
   String get addLessonLabel;
+
+  /// No description provided for @addMarkDetailsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Add details about this mark...'**
+  String get addMarkDetailsHint;
+
+  /// No description provided for @addMarkTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a Mark to a subject'**
+  String get addMarkTooltip;
 
   /// No description provided for @addSubjectTooltip.
   ///
@@ -152,6 +212,18 @@ abstract class AppLocalizations {
   /// **'A Weeks'**
   String get aWeeks;
 
+  /// No description provided for @backToPresentTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to Present'**
+  String get backToPresentTooltip;
+
+  /// No description provided for @baseExamTypeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Base Exam Type'**
+  String get baseExamTypeLabel;
+
   /// No description provided for @cancel.
   ///
   /// In en, this message translates to:
@@ -169,6 +241,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You can change this later for each individual lesson.'**
   String get changeLessonDurationPrompt;
+
+  /// No description provided for @checkConnectionAndTry.
+  ///
+  /// In en, this message translates to:
+  /// **'Please check your connection and try again.'**
+  String get checkConnectionAndTry;
+
+  /// No description provided for @chooseUsernameTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a Username'**
+  String get chooseUsernameTitle;
 
   /// No description provided for @completedTab.
   ///
@@ -200,11 +284,35 @@ abstract class AppLocalizations {
   /// **'Confirm'**
   String get confirm;
 
+  /// No description provided for @connectionError.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection Error'**
+  String get connectionError;
+
   /// No description provided for @continueLabel.
   ///
   /// In en, this message translates to:
   /// **'Continue'**
   String get continueLabel;
+
+  /// No description provided for @continueWithGoogle.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with Google'**
+  String get continueWithGoogle;
+
+  /// No description provided for @couldNotConnectToServers.
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t connect to the servers.'**
+  String get couldNotConnectToServers;
+
+  /// No description provided for @createSubjectsToTrackMarks.
+  ///
+  /// In en, this message translates to:
+  /// **'Create some subjects via the schedule page to start tracking marks!'**
+  String get createSubjectsToTrackMarks;
 
   /// No description provided for @createSubjectTitle.
   ///
@@ -236,6 +344,24 @@ abstract class AppLocalizations {
   /// **'Danger Zone'**
   String get dangerZone;
 
+  /// No description provided for @dateAtTime.
+  ///
+  /// In en, this message translates to:
+  /// **'{date} at {time}'**
+  String dateAtTime(String date, String time);
+
+  /// No description provided for @days.
+  ///
+  /// In en, this message translates to:
+  /// **'Days'**
+  String get days;
+
+  /// No description provided for @defaultExamTypeNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'This is the default Exam Type'**
+  String get defaultExamTypeNotice;
+
   /// No description provided for @defaultScheduleSetupHeader.
   ///
   /// In en, this message translates to:
@@ -254,6 +380,24 @@ abstract class AppLocalizations {
   /// **'Delete this lesson'**
   String get deleteLessonTooltip;
 
+  /// No description provided for @deleteMark.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Mark'**
+  String get deleteMark;
+
+  /// No description provided for @deleteMarkConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this mark?'**
+  String get deleteMarkConfirm;
+
+  /// No description provided for @deleteMarkExplanation.
+  ///
+  /// In en, this message translates to:
+  /// **'If your semester ended, you can mark this for all marks in the app settings. We\'ll hide them from view but keep them internally for statistics on how you\'ve improved over time.'**
+  String get deleteMarkExplanation;
+
   /// No description provided for @diverse.
   ///
   /// In en, this message translates to:
@@ -271,6 +415,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Edit Schedule'**
   String get editSchedule;
+
+  /// No description provided for @enabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Enabled'**
+  String get enabled;
 
   /// No description provided for @enjoyFreeTime.
   ///
@@ -308,6 +458,24 @@ abstract class AppLocalizations {
   /// **'Enter the teacher\'s name'**
   String get enterTeacherName;
 
+  /// No description provided for @enterTitleHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Title (e.g. Book p. 5)'**
+  String get enterTitleHint;
+
+  /// No description provided for @enterUsernameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your username'**
+  String get enterUsernameHint;
+
+  /// No description provided for @enterValidNonNegativeNumberError.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid non-negative full number'**
+  String get enterValidNonNegativeNumberError;
+
   /// No description provided for @errorEndTimeAfterStartTime.
   ///
   /// In en, this message translates to:
@@ -325,6 +493,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Error loading user settings: {error}'**
   String errorLoadingSettings(String error);
+
+  /// No description provided for @errorPrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Error'**
+  String get errorPrefix;
 
   /// No description provided for @errorSelectAtLeastOneWeek.
   ///
@@ -349,6 +523,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You haven\'t fixed all problems!'**
   String get errorUnresolvedProblems;
+
+  /// No description provided for @examFactorNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'Every exam in this group is worth {factor}x as much as a exam of the {childType} type'**
+  String examFactorNotice(String factor, String childType);
+
+  /// No description provided for @examGroupPercentageNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'This Exam Group is worth {percentage}%'**
+  String examGroupPercentageNotice(String percentage);
+
+  /// No description provided for @examsPercentageContributionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'These exams will contribute to your final grade, accounting for'**
+  String get examsPercentageContributionLabel;
+
+  /// No description provided for @examsWorthLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'The exams with this type are worth:'**
+  String get examsWorthLabel;
+
+  /// No description provided for @examType.
+  ///
+  /// In en, this message translates to:
+  /// **'Exam Type'**
+  String get examType;
+
+  /// No description provided for @examTypeNameEmptyError.
+  ///
+  /// In en, this message translates to:
+  /// **'Exam type name cannot be empty'**
+  String get examTypeNameEmptyError;
+
+  /// No description provided for @examTypeNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Exam Type Name'**
+  String get examTypeNameLabel;
+
+  /// No description provided for @factorLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Factor'**
+  String get factorLabel;
+
+  /// No description provided for @factorPositiveIntegerError.
+  ///
+  /// In en, this message translates to:
+  /// **'Factor must be a positive integer'**
+  String get factorPositiveIntegerError;
+
+  /// No description provided for @failedToSaveUsername.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to save username: {error}'**
+  String failedToSaveUsername(String error);
 
   /// No description provided for @female.
   ///
@@ -398,6 +632,18 @@ abstract class AppLocalizations {
   /// **'Good morning'**
   String get goodMorning;
 
+  /// No description provided for @gradingSetupSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Before we start, we need details about your grading system.'**
+  String get gradingSetupSubtitle;
+
+  /// No description provided for @gradingSetupTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Grading Setup'**
+  String get gradingSetupTitle;
+
   /// No description provided for @holidayInDays.
   ///
   /// In en, this message translates to:
@@ -433,6 +679,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Homework'**
   String get homeworkTitle;
+
+  /// No description provided for @hours.
+  ///
+  /// In en, this message translates to:
+  /// **'Hours'**
+  String get hours;
+
+  /// No description provided for @invalidCredentialsMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid credentials.\nIf you signed up with Google, try signing in with Google.'**
+  String get invalidCredentialsMessage;
+
+  /// No description provided for @isBaseExamType.
+  ///
+  /// In en, this message translates to:
+  /// **'This is the base exam type'**
+  String get isBaseExamType;
 
   /// No description provided for @lastLessonAfterFirst.
   ///
@@ -488,11 +752,29 @@ abstract class AppLocalizations {
   /// **'Male'**
   String get male;
 
+  /// No description provided for @mark.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark'**
+  String get mark;
+
+  /// No description provided for @markDeletedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark deleted successfully!'**
+  String get markDeletedSuccessfully;
+
   /// No description provided for @marksTitle.
   ///
   /// In en, this message translates to:
   /// **'Marks'**
   String get marksTitle;
+
+  /// No description provided for @minutes.
+  ///
+  /// In en, this message translates to:
+  /// **'Minutes'**
+  String get minutes;
 
   /// No description provided for @minutesLabel.
   ///
@@ -542,6 +824,12 @@ abstract class AppLocalizations {
   /// **'You haven\'t created any subjects yet'**
   String get noSubjectsCreated;
 
+  /// No description provided for @noSubjectsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'You have no subjects'**
+  String get noSubjectsTitle;
+
   /// No description provided for @noTeachersSetup.
   ///
   /// In en, this message translates to:
@@ -566,11 +854,71 @@ abstract class AppLocalizations {
   /// **'No user settings found.'**
   String get noUserSettings;
 
+  /// No description provided for @ok.
+  ///
+  /// In en, this message translates to:
+  /// **'Ok'**
+  String get ok;
+
   /// No description provided for @openTab.
   ///
   /// In en, this message translates to:
   /// **'Open'**
   String get openTab;
+
+  /// No description provided for @orLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'or'**
+  String get orLabel;
+
+  /// No description provided for @percentageMustBeNumberError.
+  ///
+  /// In en, this message translates to:
+  /// **'Percentage must be a number'**
+  String get percentageMustBeNumberError;
+
+  /// No description provided for @percentageRangeError.
+  ///
+  /// In en, this message translates to:
+  /// **'Percentage must be > 0 and < 100'**
+  String get percentageRangeError;
+
+  /// No description provided for @pleaseChooseUsername.
+  ///
+  /// In en, this message translates to:
+  /// **'Please choose a username to continue.'**
+  String get pleaseChooseUsername;
+
+  /// No description provided for @pleaseEnterSomething.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter something'**
+  String get pleaseEnterSomething;
+
+  /// No description provided for @pleaseEnterUsername.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a username'**
+  String get pleaseEnterUsername;
+
+  /// No description provided for @pleaseProvideTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Please provide a title'**
+  String get pleaseProvideTitle;
+
+  /// No description provided for @pleaseSelectHandInTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a hand in time!'**
+  String get pleaseSelectHandInTime;
+
+  /// No description provided for @pleaseSelectSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a subject for this homework!'**
+  String get pleaseSelectSubject;
 
   /// No description provided for @preLessonNotificationsSubtitle.
   ///
@@ -584,11 +932,29 @@ abstract class AppLocalizations {
   /// **'Pre-Lesson Notifications'**
   String get preLessonNotificationsTitle;
 
+  /// No description provided for @profileSetUpTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile Set Up'**
+  String get profileSetUpTitle;
+
   /// No description provided for @profileTitle.
   ///
   /// In en, this message translates to:
   /// **'Profile'**
   String get profileTitle;
+
+  /// No description provided for @recentMarks.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent marks:'**
+  String get recentMarks;
+
+  /// No description provided for @remainingTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Remaining: {time}'**
+  String remainingTime(String time);
 
   /// No description provided for @requiredFields.
   ///
@@ -607,6 +973,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Residence'**
   String get residenceTitle;
+
+  /// No description provided for @retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retry;
 
   /// No description provided for @roomNumberLabel.
   ///
@@ -650,6 +1022,30 @@ abstract class AppLocalizations {
   /// **'Schedule'**
   String get scheduleTitle;
 
+  /// No description provided for @schoolDayProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'School Day Progress'**
+  String get schoolDayProgress;
+
+  /// No description provided for @searchCountryHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search for a country...'**
+  String get searchCountryHint;
+
+  /// No description provided for @searchStateHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search for a state...'**
+  String get searchStateHint;
+
+  /// No description provided for @seconds.
+  ///
+  /// In en, this message translates to:
+  /// **'Seconds'**
+  String get seconds;
+
   /// No description provided for @selectEndTime.
   ///
   /// In en, this message translates to:
@@ -661,6 +1057,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Select from Schedule'**
   String get selectFromSchedule;
+
+  /// No description provided for @selectFutureDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a date in the future!'**
+  String get selectFutureDate;
+
+  /// No description provided for @selectGradingSystemHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Grading System'**
+  String get selectGradingSystemHint;
 
   /// No description provided for @selectLabel.
   ///
@@ -674,11 +1082,29 @@ abstract class AppLocalizations {
   /// **'Please select the days you have lessons.'**
   String get selectLessonDaysPrompt;
 
+  /// No description provided for @selectMark.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Mark'**
+  String get selectMark;
+
   /// No description provided for @selectStartTime.
   ///
   /// In en, this message translates to:
   /// **'Select start time'**
   String get selectStartTime;
+
+  /// No description provided for @selectStateProvince.
+  ///
+  /// In en, this message translates to:
+  /// **'Select your state/province'**
+  String get selectStateProvince;
+
+  /// No description provided for @selectSubjectToAddToSchedule.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a subject to add to the schedule'**
+  String get selectSubjectToAddToSchedule;
 
   /// No description provided for @selectTeacher.
   ///
@@ -686,17 +1112,41 @@ abstract class AppLocalizations {
   /// **'Select a teacher'**
   String get selectTeacher;
 
+  /// No description provided for @serverConnectionError.
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t connect to the server to check your settings. Please check your internet connection.'**
+  String get serverConnectionError;
+
+  /// No description provided for @setTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Set Time'**
+  String get setTime;
+
   /// No description provided for @settingsTitle.
   ///
   /// In en, this message translates to:
   /// **'Settings'**
   String get settingsTitle;
 
+  /// No description provided for @signUpSuccessMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign up successful. Please check your email.'**
+  String get signUpSuccessMessage;
+
   /// No description provided for @somethingWentWrong.
   ///
   /// In en, this message translates to:
   /// **'Something went wrong. Please try again.'**
   String get somethingWentWrong;
+
+  /// No description provided for @subject.
+  ///
+  /// In en, this message translates to:
+  /// **'Subject'**
+  String get subject;
 
   /// No description provided for @subjectNameLabel.
   ///
@@ -710,6 +1160,12 @@ abstract class AppLocalizations {
   /// **'Please provide a valid name and teacher for this subject.'**
   String get subjectValidationAlert;
 
+  /// No description provided for @takeMeThere.
+  ///
+  /// In en, this message translates to:
+  /// **'Take me there'**
+  String get takeMeThere;
+
   /// No description provided for @teacherLabel.
   ///
   /// In en, this message translates to:
@@ -722,11 +1178,35 @@ abstract class AppLocalizations {
   /// **'Please provide a valid name and form of address for this teacher.'**
   String get teacherValidationAlert;
 
+  /// No description provided for @timesAsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'times as'**
+  String get timesAsLabel;
+
+  /// No description provided for @tryAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Try Again'**
+  String get tryAgain;
+
   /// No description provided for @update.
   ///
   /// In en, this message translates to:
   /// **'Update'**
   String get update;
+
+  /// No description provided for @updatedHomeworkSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Updated Homework successfully!'**
+  String get updatedHomeworkSuccessfully;
+
+  /// No description provided for @updatedMarkSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Updated Mark successfully!'**
+  String get updatedMarkSuccessfully;
 
   /// No description provided for @updatedScheduleSuccess.
   ///
@@ -739,6 +1219,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Update Lesson'**
   String get updateLessonButton;
+
+  /// No description provided for @usernameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Username'**
+  String get usernameLabel;
+
+  /// No description provided for @usernameTooShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Username must be at least 3 characters long'**
+  String get usernameTooShort;
+
+  /// No description provided for @verificationCodeSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Verification code sent to {email}'**
+  String verificationCodeSent(String email);
 
   /// No description provided for @weekLabel.
   ///
@@ -758,17 +1256,41 @@ abstract class AppLocalizations {
   /// **'Ready for another productive day?'**
   String get welcomeGreeting;
 
+  /// No description provided for @welcomeToSchoolMate.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to SchoolMate'**
+  String get welcomeToSchoolMate;
+
   /// No description provided for @weWillCalculateWeeks.
   ///
   /// In en, this message translates to:
   /// **'We will calculate the following weeks for you!'**
   String get weWillCalculateWeeks;
 
+  /// No description provided for @whereDoYouLive.
+  ///
+  /// In en, this message translates to:
+  /// **'Where do you live?'**
+  String get whereDoYouLive;
+
+  /// No description provided for @whichSubjectHomeworkFor.
+  ///
+  /// In en, this message translates to:
+  /// **'Which subject is this homework for?'**
+  String get whichSubjectHomeworkFor;
+
   /// No description provided for @whichWeekToday.
   ///
   /// In en, this message translates to:
   /// **'Which week is today?'**
   String get whichWeekToday;
+
+  /// No description provided for @withDecimals.
+  ///
+  /// In en, this message translates to:
+  /// **'With Decimals'**
+  String get withDecimals;
 }
 
 class _AppLocalizationsDelegate

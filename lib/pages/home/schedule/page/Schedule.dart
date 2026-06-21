@@ -6,6 +6,7 @@ import 'package:school_mate/Classes/homeworks/Homework.dart';
 import 'package:school_mate/Classes/schedule/Lesson.dart';
 import 'package:school_mate/Classes/schedule/Schedule.dart';
 import 'package:school_mate/Widgets/specialThemes/futuristic.dart';
+import 'package:school_mate/l10n/app_localizations.dart';
 import 'package:school_mate/main.dart';
 import 'package:school_mate/pages/home/Widgets/BottomNavBar.dart';
 import 'package:school_mate/pages/home/homework/add/AddHomework.dart';
@@ -45,6 +46,7 @@ class SchedulePage extends StatefulWidget {
 
 class _SchedulePageState extends State<SchedulePage>
     with TickerProviderStateMixin {
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
   late AnimationController _fadeController;
   late AnimationController _pulseController;
   late Animation<double> _fadeAnimation;
@@ -105,7 +107,7 @@ class _SchedulePageState extends State<SchedulePage>
               ],
             ),
             child: IconButton(
-              tooltip: "Back to Present",
+              tooltip: l10n.backToPresentTooltip,
               onPressed: () {
                 // We need to reset the page because the currentSelectedWeek var is handled internally
                 Navigator.of(context).pushReplacement(MaterialPageRoute(
@@ -500,8 +502,9 @@ class _SchedulePageState extends State<SchedulePage>
                         } else if (snapshot.hasError) {
                           logger.e(snapshot.error);
                           return Scaffold(
-                            body:
-                                Center(child: Text('Error: ${snapshot.error}')),
+                            body: Center(
+                                child: Text(
+                                    '${l10n.errorPrefix}: ${snapshot.error}')),
                           );
                         } else if (snapshot.hasData) {
                           if (snapshot.data is String &&
@@ -510,8 +513,8 @@ class _SchedulePageState extends State<SchedulePage>
                           }
                           return SchedulePage(schedule: snapshot.data!);
                         } else {
-                          return const Scaffold(
-                            body: Center(child: Text('No data available.')),
+                          return Scaffold(
+                            body: Center(child: Text(l10n.noDataAvailable)),
                           );
                         }
                       },

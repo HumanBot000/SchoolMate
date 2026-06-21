@@ -9,6 +9,7 @@ import 'package:school_mate/Classes/marks/ExamType.dart';
 import 'package:school_mate/Classes/marks/GradingSystem.dart';
 import 'package:school_mate/Classes/marks/Mark.dart';
 import 'package:school_mate/Classes/schedule/Subject.dart';
+import 'package:school_mate/l10n/app_localizations.dart';
 import 'package:school_mate/main.dart';
 import 'package:school_mate/pages/home/marks/Utils.dart';
 import 'package:school_mate/pages/home/marks/add/AddMark.dart';
@@ -57,6 +58,8 @@ LinearGradient createMarkGradient({
 }
 
 class _MarksOverviewPageState extends State<MarksOverviewPage> {
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
+
   // Data state variables
   List<Subject> _subjects = [];
   Map<Subject, List<Mark>> _marks = {};
@@ -298,7 +301,7 @@ class _MarksOverviewPageState extends State<MarksOverviewPage> {
               });
               _loadData();
             },
-            child: const Text('Try Again'),
+            child: Text(l10n.tryAgain),
           ),
         ],
       ),
@@ -415,7 +418,7 @@ class _MarksOverviewPageState extends State<MarksOverviewPage> {
             child: Container(
               margin: const EdgeInsets.all(16),
               child: FloatingActionButton(
-                tooltip: "Add a Mark to a subject",
+                tooltip: l10n.addMarkTooltip,
                 onPressed: () => Navigator.of(context)
                     .push(
                   MaterialPageRoute(

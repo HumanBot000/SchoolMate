@@ -2,39 +2,77 @@
   "@@locale": "en",
   "abcWeeks": "A/B/C Weeks",
   "abWeeks": "A/B Weeks",
+  "accountConflictMessageEmail": "An account with this email is already registered.\n\nIf you originally registered with Google, please use 'Continue with Google'. Otherwise, try to log in using your password.",
+  "accountConflictMessageGoogle": "An account with this email already exists (registered with email and password).\n\nPlease sign in using your email and password instead.",
+  "accountConflictMessageProvider": "This email is already linked to another login provider (such as Google).\n\nPlease log in using 'Continue with Google'.",
+  "accountConflictTitle": "Account Conflict",
+  "add": "Add",
+  "addedHomeworkSuccessfully": "Added Homework successfully!",
+  "addExamTypeTooltip": "Add a new Exam Type",
   "addHomeworkTooltip": "Add a Homework",
+  "additionalNote": "Additional Note",
   "addLessonButton": "Add Lesson",
   "addLessonLabel": "Add a new lesson",
+  "addMarkDetailsHint": "Add details about this mark...",
+  "addMarkTooltip": "Add a Mark to a subject",
   "addSubjectTooltip": "Add a Subject",
   "appTitle": "SchoolMate",
   "areYouSure": "Are you sure?",
   "aWeeks": "A Weeks",
+  "backToPresentTooltip": "Back to Present",
+  "baseExamTypeLabel": "Base Exam Type",
   "cancel": "Cancel",
   "changeColor": "Change Color",
   "changeLessonDurationPrompt": "You can change this later for each individual lesson.",
+  "checkConnectionAndTry": "Please check your connection and try again.",
+  "chooseUsernameTitle": "Choose a Username",
   "completedTab": "Completed",
   "configureLessonTitle": "Configure a Lesson",
   "configureScheduleSubtitle": "Configure your schedule to start tracking your lessons.",
   "configureTeacher": "Configure a Teacher",
   "confirm": "Confirm",
+  "connectionError": "Connection Error",
   "continueLabel": "Continue",
+  "continueWithGoogle": "Continue with Google",
+  "couldNotConnectToServers": "We couldn't connect to the servers.",
+  "createSubjectsToTrackMarks": "Create some subjects via the schedule page to start tracking marks!",
   "createSubjectTitle": "Create a Subject",
   "currentWeekPrompt": "What type of week is the current one?",
   "currentWeekTypeRequired": "The current week type must be included in the number of weeks",
   "customLabel": "Custom",
   "dangerZone": "Danger Zone",
+  "dateAtTime": "{date} at {time}",
+  "@dateAtTime": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "days": "Days",
+  "defaultExamTypeNotice": "This is the default Exam Type",
   "defaultScheduleSetupHeader": "Before you can start using the schedule, we need to know some last details about your day.",
   "delete": "Delete",
   "deleteLessonTooltip": "Delete this lesson",
+  "deleteMark": "Delete Mark",
+  "deleteMarkConfirm": "Are you sure you want to delete this mark?",
+  "deleteMarkExplanation": "If your semester ended, you can mark this for all marks in the app settings. We'll hide them from view but keep them internally for statistics on how you've improved over time.",
   "diverse": "Diverse",
   "edit": "Edit",
   "editSchedule": "Edit Schedule",
+  "enabled": "Enabled",
   "enjoyFreeTime": "Enjoy your free time!",
   "enterFormOfAddress": "Enter the form of address",
   "enterStartEndTimesPrompt": "Please enter the maximum start and end times.\n You can change this later for each individual day. ",
   "enterSubjectNameHint": "Enter Subject Name",
   "enterSubjectNameInstruction": "Enter the name of the subject",
   "enterTeacherName": "Enter the teacher's name",
+  "enterTitleHint": "Enter Title (e.g. Book p. 5)",
+  "enterUsernameHint": "Enter your username",
+  "enterValidNonNegativeNumberError": "Enter a valid non-negative full number",
   "errorEndTimeAfterStartTime": "End time must be after start time!",
   "errorLessonOverlaps": "This lesson overlaps with another one!\nChange the length of the other lesson first!",
   "errorLoadingSettings": "Error loading user settings: {error}",
@@ -45,10 +83,45 @@
       }
     }
   },
+  "errorPrefix": "Error",
   "errorSelectAtLeastOneWeek": "Select at least one week type to add a lesson to!",
   "errorSelectStartEndTimes": "Select when this lesson starts and ends!",
   "errorTimesWithinSchoolDay": "Start and end times must be within the school day!",
   "errorUnresolvedProblems": "You haven't fixed all problems!",
+  "examFactorNotice": "Every exam in this group is worth {factor}x as much as a exam of the {childType} type",
+  "@examFactorNotice": {
+    "placeholders": {
+      "factor": {
+        "type": "String"
+      },
+      "childType": {
+        "type": "String"
+      }
+    }
+  },
+  "examGroupPercentageNotice": "This Exam Group is worth {percentage}%",
+  "@examGroupPercentageNotice": {
+    "placeholders": {
+      "percentage": {
+        "type": "String"
+      }
+    }
+  },
+  "examsPercentageContributionLabel": "These exams will contribute to your final grade, accounting for",
+  "examsWorthLabel": "The exams with this type are worth:",
+  "examType": "Exam Type",
+  "examTypeNameEmptyError": "Exam type name cannot be empty",
+  "examTypeNameLabel": "Exam Type Name",
+  "factorLabel": "Factor",
+  "factorPositiveIntegerError": "Factor must be a positive integer",
+  "failedToSaveUsername": "Failed to save username: {error}",
+  "@failedToSaveUsername": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
   "female": "Female",
   "fillAllRequiredFields": "Please fill in all required fields",
   "formOfAddress": "Form of Address",
@@ -57,6 +130,8 @@
   "goodAfternoon": "Good afternoon",
   "goodEvening": "Good evening",
   "goodMorning": "Good morning",
+  "gradingSetupSubtitle": "Before we start, we need details about your grading system.",
+  "gradingSetupTitle": "Grading Setup",
   "holidayInDays": "{holidayName}: In {days} days 📆",
   "@holidayInDays": {
     "placeholders": {
@@ -73,6 +148,9 @@
   "homeworkRemindersSubtitle": "Decide how often and when you want to get reminded about open homework",
   "homeworkRemindersTitle": "Homework Reminders",
   "homeworkTitle": "Homework",
+  "hours": "Hours",
+  "invalidCredentialsMessage": "Invalid credentials.\nIf you signed up with Google, try signing in with Google.",
+  "isBaseExamType": "This is the base exam type",
   "lastLessonAfterFirst": "Your last lesson must end after your first lesson starts.",
   "lessonDurationInfo": "Each lesson is {minutes} minutes long",
   "@lessonDurationInfo": {
@@ -89,7 +167,10 @@
   "logout": "Logout",
   "logoutConfirmMessage": "You will be logged out of your account.",
   "male": "Male",
+  "mark": "Mark",
+  "markDeletedSuccessfully": "Mark deleted successfully!",
   "marksTitle": "Marks",
+  "minutes": "Minutes",
   "minutesLabel": "Minutes",
   "minutesValue": "{minutes} minutes",
   "@minutesValue": {
@@ -112,17 +193,39 @@
   "noDataAvailable": "No data available.",
   "noHolidaysForLocation": "No upcoming holidays found for your location.",
   "noSubjectsCreated": "You haven't created any subjects yet",
+  "noSubjectsTitle": "You have no subjects",
   "noTeachersSetup": "You haven't setup any teachers yet",
   "notificationsTab": "Notifications",
   "noUpcomingHolidays": "No upcoming holidays found.",
   "noUserSettings": "No user settings found.",
+  "ok": "Ok",
   "openTab": "Open",
+  "orLabel": "or",
+  "percentageMustBeNumberError": "Percentage must be a number",
+  "percentageRangeError": "Percentage must be > 0 and < 100",
+  "pleaseChooseUsername": "Please choose a username to continue.",
+  "pleaseEnterSomething": "Please enter something",
+  "pleaseEnterUsername": "Please enter a username",
+  "pleaseProvideTitle": "Please provide a title",
+  "pleaseSelectHandInTime": "Please select a hand in time!",
+  "pleaseSelectSubject": "Please select a subject for this homework!",
   "preLessonNotificationsSubtitle": "Get notified before a lesson so you don't have to look up the location",
   "preLessonNotificationsTitle": "Pre-Lesson Notifications",
+  "profileSetUpTitle": "Profile Set Up",
   "profileTitle": "Profile",
+  "recentMarks": "Recent marks:",
+  "remainingTime": "Remaining: {time}",
+  "@remainingTime": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
   "requiredFields": "* Required fields",
   "residenceSubtitle": "Tell us where you live, so we can calculate the next school holidays.",
   "residenceTitle": "Residence",
+  "retry": "Retry",
   "roomNumberLabel": "Room Number",
   "save": "Save",
   "scheduleChangeWeeksPrompt": "Does your schedule change every x weeks?",
@@ -130,21 +233,49 @@
   "scheduleSetup": "Schedule Setup",
   "scheduleSetupWarning": "Before you can add lessons and homeworks, please give us some details about your day. You don't have to add in your exact schedule in order to use these features.",
   "scheduleTitle": "Schedule",
+  "schoolDayProgress": "School Day Progress",
+  "searchCountryHint": "Search for a country...",
+  "searchStateHint": "Search for a state...",
+  "seconds": "Seconds",
   "selectEndTime": "Select end time",
   "selectFromSchedule": "Select from Schedule",
+  "selectFutureDate": "Select a date in the future!",
+  "selectGradingSystemHint": "Select Grading System",
   "selectLabel": "Select",
   "selectLessonDaysPrompt": "Please select the days you have lessons.",
+  "selectMark": "Select Mark",
   "selectStartTime": "Select start time",
+  "selectStateProvince": "Select your state/province",
+  "selectSubjectToAddToSchedule": "Select a subject to add to the schedule",
   "selectTeacher": "Select a teacher",
+  "serverConnectionError": "We couldn't connect to the server to check your settings. Please check your internet connection.",
+  "setTime": "Set Time",
   "settingsTitle": "Settings",
+  "signUpSuccessMessage": "Sign up successful. Please check your email.",
   "somethingWentWrong": "Something went wrong. Please try again.",
+  "subject": "Subject",
   "subjectNameLabel": "Subject Name",
   "subjectValidationAlert": "Please provide a valid name and teacher for this subject.",
+  "takeMeThere": "Take me there",
   "teacherLabel": "Teacher",
   "teacherValidationAlert": "Please provide a valid name and form of address for this teacher.",
+  "timesAsLabel": "times as",
+  "tryAgain": "Try Again",
   "update": "Update",
+  "updatedHomeworkSuccessfully": "Updated Homework successfully!",
+  "updatedMarkSuccessfully": "Updated Mark successfully!",
   "updatedScheduleSuccess": "Updated Schedule Successfully!",
   "updateLessonButton": "Update Lesson",
+  "usernameLabel": "Username",
+  "usernameTooShort": "Username must be at least 3 characters long",
+  "verificationCodeSent": "Verification code sent to {email}",
+  "@verificationCodeSent": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
   "weekLabel": "Week",
   "weekLabelWithLetter": "{letter} Weeks",
   "@weekLabelWithLetter": {
@@ -155,6 +286,10 @@
     }
   },
   "welcomeGreeting": "Ready for another productive day?",
+  "welcomeToSchoolMate": "Welcome to SchoolMate",
   "weWillCalculateWeeks": "We will calculate the following weeks for you!",
-  "whichWeekToday": "Which week is today?"
+  "whereDoYouLive": "Where do you live?",
+  "whichSubjectHomeworkFor": "Which subject is this homework for?",
+  "whichWeekToday": "Which week is today?",
+  "withDecimals": "With Decimals"
 }

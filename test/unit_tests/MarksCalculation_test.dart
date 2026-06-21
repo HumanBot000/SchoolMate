@@ -133,8 +133,8 @@ void main() {
         isConsidered: true,
       );
 
-      expect(standardMarkBest.color.value, Colors.green.value);
-      expect(standardMarkWorst.color.value, Colors.red.value);
+      expect(standardMarkBest.color.toARGB32(), Colors.green.value);
+      expect(standardMarkWorst.color.toARGB32(), Colors.red.value);
 
       final pointsGradingSystem = GradingSystem(
         range: ["15", "0"],
@@ -163,8 +163,8 @@ void main() {
         isConsidered: true,
       );
 
-      expect(pointsMarkBest.color.value, Colors.green.value);
-      expect(pointsMarkWorst.color.value, Colors.red.value);
+      expect(pointsMarkBest.color.toARGB32(), Colors.green.value);
+      expect(pointsMarkWorst.color.toARGB32(), Colors.red.value);
     });
   });
 }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:school_mate/API/externalAPIClients/geoAPIs.dart' as geo_api;
 import 'package:school_mate/Classes/geoPolitics/Country.dart';
+import 'package:school_mate/l10n/app_localizations.dart';
 import 'package:school_mate/main.dart';
 
 import 'StateSelector.dart';
@@ -24,6 +25,7 @@ class SearchableResidenceSelector extends StatefulWidget {
 
 class _SearchableResidenceSelectorState
     extends State<SearchableResidenceSelector> {
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
   final TextEditingController _searchController = TextEditingController();
   List<Country> _allCountries = [];
   List<Country> _filteredCountries = [];
@@ -98,14 +100,14 @@ class _SearchableResidenceSelectorState
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              "Where do you live?",
+              l10n.whereDoYouLive,
               style: Theme.of(context).textTheme.headlineMedium,
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 8),
             SearchBar(
               controller: _searchController,
-              hintText: "Search for a country...",
+              hintText: l10n.searchCountryHint,
               leading: const Icon(Icons.search),
               trailing: [
                 if (_searchQuery.isNotEmpty)
@@ -258,6 +260,7 @@ class SearchableStateSelector extends StatefulWidget {
 }
 
 class _SearchableStateSelectorState extends State<SearchableStateSelector> {
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
   final TextEditingController _searchController = TextEditingController();
   List<dynamic> _allStates = [];
   List<dynamic> _filteredStates = [];
@@ -360,14 +363,14 @@ class _SearchableStateSelectorState extends State<SearchableStateSelector> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
-              "Select your state/province",
+              l10n.selectStateProvince,
               style: Theme.of(context).textTheme.headlineMedium,
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 8),
             SearchBar(
               controller: _searchController,
-              hintText: "Search for a state...",
+              hintText: l10n.searchStateHint,
               leading: const Icon(Icons.search),
               trailing: [
                 if (_searchQuery.isNotEmpty)
@@ -378,10 +381,10 @@ class _SearchableStateSelectorState extends State<SearchableStateSelector> {
                     },
                   ),
               ],
-              padding: MaterialStateProperty.all<EdgeInsets>(
+              padding: WidgetStateProperty.all<EdgeInsets>(
                 const EdgeInsets.symmetric(horizontal: 16.0),
               ),
-              elevation: MaterialStateProperty.all<double>(4.0),
+              elevation: WidgetStateProperty.all<double>(4.0),
             ),
             const SizedBox(height: 8),
             _isLoading

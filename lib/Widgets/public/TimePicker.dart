@@ -1,6 +1,7 @@
 // I had no clue in what direction I want to go, so I used AI for the first layout iteration
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:school_mate/l10n/app_localizations.dart';
 import 'package:school_mate/util/extensions/dates.dart';
 
 class CustomTimePicker extends StatelessWidget {
@@ -20,6 +21,7 @@ class CustomTimePicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     TimeOfDay selectedTime = initialTime;
 
     return Dialog(
@@ -54,14 +56,14 @@ class CustomTimePicker extends StatelessWidget {
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: const Text("Cancel"),
+                  child: Text(l10n.cancel),
                 ),
                 ElevatedButton(
                   onPressed: () {
                     onTimeSelected(selectedTime);
                     Navigator.of(context).pop();
                   },
-                  child: const Text("Set Time"),
+                  child: Text(l10n.setTime),
                 ),
               ],
             ),
@@ -121,6 +123,7 @@ class _TimePickerDialState extends State<_TimePickerDial> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       children: [
         Container(
@@ -144,9 +147,9 @@ class _TimePickerDialState extends State<_TimePickerDial> {
             Expanded(
               child: Column(
                 children: [
-                  const Text("Hours",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  Text(l10n.hours,
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.bold)),
                   SizedBox(
                     height: 120,
                     child: ListWheelScrollView.useDelegate(
@@ -178,9 +181,9 @@ class _TimePickerDialState extends State<_TimePickerDial> {
             Expanded(
               child: Column(
                 children: [
-                  const Text("Minutes",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  Text(l10n.minutes,
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.bold)),
                   SizedBox(
                     height: 120,
                     child: ListWheelScrollView.useDelegate(

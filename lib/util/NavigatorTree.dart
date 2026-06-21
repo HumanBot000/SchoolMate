@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:school_mate/main.dart';
 
-// Useful debugging tool
 class NavigationTreeObserver extends NavigatorObserver {
   List<String> routeHistory = [];
 
@@ -29,7 +28,6 @@ class NavigationTreeObserver extends NavigatorObserver {
     }
   }
 
-  // Utility function to get the class name of the widget being pushed
   String _getWidgetClassName(Route<dynamic> route) {
     if (route is MaterialPageRoute) {
       final widgetType = route.builder.runtimeType.toString();
@@ -43,7 +41,6 @@ class NavigationTreeObserver extends NavigatorObserver {
     for (String route in routeHistory) {
       historyString += "$route -> ";
     }
-    // Remove the trailing " -> " at the end
     if (historyString.isNotEmpty) {
       historyString = historyString.substring(0, historyString.length - 4);
     }

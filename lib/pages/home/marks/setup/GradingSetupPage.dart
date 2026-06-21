@@ -3,6 +3,7 @@ import 'package:school_mate/API/supabase/grades/gradingSystem.dart';
 import 'package:school_mate/Classes/marks/ExamType.dart';
 import 'package:school_mate/Classes/marks/GradingSystem.dart';
 import 'package:school_mate/Widgets/public/GradientButton.dart';
+import 'package:school_mate/l10n/app_localizations.dart';
 import 'package:school_mate/main.dart';
 import 'package:school_mate/pages/home/marks/Grades.dart';
 import 'package:school_mate/pages/home/marks/setup/ExamTypeSetup.dart';
@@ -18,6 +19,7 @@ class GradingSetupPage extends StatefulWidget {
 }
 
 class _GradingSetupPageState extends State<GradingSetupPage> {
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
   GradingSystem? _selectedGradingSystem;
   EvaluationMethod? _selectedEvaluationMethod;
   List<List<TextEditingController>> _examTypeTextControllers = [];
@@ -258,13 +260,12 @@ class _GradingSetupPageState extends State<GradingSetupPage> {
   Widget _buildHeader() {
     return Column(
       children: [
-        Text("Grading Setup",
+        Text(l10n.gradingSetupTitle,
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.headlineLarge),
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Text(
-              "Before we start, we need details about your grading system.",
+          child: Text(l10n.gradingSetupSubtitle,
               style: Theme.of(context).textTheme.bodyLarge),
         ),
       ],
@@ -282,7 +283,7 @@ class _GradingSetupPageState extends State<GradingSetupPage> {
           children: [
             const Icon(Icons.save, color: Colors.white),
             const SizedBox(width: 8),
-            Text("Save",
+            Text(l10n.save,
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     fontWeight: FontWeight.bold, color: Colors.white)),
           ],

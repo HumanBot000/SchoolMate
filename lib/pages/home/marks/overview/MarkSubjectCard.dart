@@ -3,6 +3,7 @@ import 'package:school_mate/API/supabase/grades/marks.dart';
 import 'package:school_mate/Classes/marks/GradingSystem.dart';
 import 'package:school_mate/Classes/marks/Mark.dart';
 import 'package:school_mate/Classes/schedule/Subject.dart';
+import 'package:school_mate/l10n/app_localizations.dart';
 import 'package:school_mate/pages/home/marks/Utils.dart';
 import 'package:school_mate/pages/home/marks/add/AddMark.dart';
 
@@ -14,6 +15,7 @@ Widget buildGradingSubjectCard(
     Map<Subject, double?> averageMarks,
     GradingSystem gradingSystem,
     List<Mark> recentMarks) {
+  final l10n = AppLocalizations.of(context)!;
   final recent = List.generate(
       recentMarks.length, (index) => recentMarks[index].toDisplayString());
 
@@ -66,7 +68,7 @@ Widget buildGradingSubjectCard(
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Recent marks:',
+              Text(l10n.recentMarks,
                   style: Theme.of(context)
                       .textTheme
                       .bodyMedium

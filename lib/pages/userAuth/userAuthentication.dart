@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:school_mate/API/supabase/auth/userSettings.dart' as settings;
+import 'package:school_mate/l10n/app_localizations.dart';
 import 'package:school_mate/main.dart';
 import 'package:school_mate/pages/home/home/start.dart';
 import 'package:school_mate/pages/settings/setup.dart';
@@ -15,6 +16,7 @@ class AuthenticationPage extends StatefulWidget {
 }
 
 class _AuthenticationPageState extends State<AuthenticationPage> {
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
   Future<Map<String, dynamic>?>? _userSettingsFuture;
 
   @override
@@ -69,22 +71,22 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
                     const Icon(Icons.cloud_off,
                         size: 64, color: Colors.redAccent),
                     const SizedBox(height: 16),
-                    const Text(
-                      "Connection Error",
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    Text(
+                      l10n.connectionError,
+                      style: const TextStyle(
+                          fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 8),
-                    const Text(
-                      "We couldn't connect to the server to check your settings. Please check your internet connection.",
+                    Text(
+                      l10n.serverConnectionError,
                       textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.grey),
+                      style: const TextStyle(color: Colors.grey),
                     ),
                     const SizedBox(height: 24),
                     ElevatedButton.icon(
                       onPressed: _retryLoadingSettings,
                       icon: const Icon(Icons.refresh),
-                      label: const Text("Retry"),
+                      label: Text(l10n.retry),
                     ),
                   ],
                 ),

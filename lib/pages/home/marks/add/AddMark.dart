@@ -4,6 +4,7 @@ import 'package:school_mate/Classes/marks/ExamType.dart';
 import 'package:school_mate/Classes/marks/GradingSystem.dart';
 import 'package:school_mate/Classes/schedule/Subject.dart';
 import 'package:school_mate/Widgets/public/MultipleStepPageIndicator.dart';
+import 'package:school_mate/l10n/app_localizations.dart';
 import 'package:school_mate/main.dart';
 import 'package:school_mate/pages/home/marks/Grades.dart';
 import 'package:school_mate/pages/home/marks/MarkSelection.dart';
@@ -39,6 +40,7 @@ class AddMarkPage extends StatefulWidget {
 }
 
 class _AddMarkPageState extends State<AddMarkPage> {
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
   late Subject? subject;
   late double? mark;
   late ExamType? selectedExamType;
@@ -137,8 +139,8 @@ class _AddMarkPageState extends State<AddMarkPage> {
             isConsidered: widget.oldMark!.isConsidered));
     WidgetsBinding.instance
         .addPostFrameCallback((_) => ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text("Updated Mark successfully!"),
+              SnackBar(
+                content: Text(l10n.updatedMarkSuccessfully),
                 backgroundColor: Colors.green,
               ),
             ));
@@ -161,11 +163,11 @@ class _AddMarkPageState extends State<AddMarkPage> {
                   child: MultipleStepPageIndicator(
                     stepCount: 4,
                     currentStep: currentPage,
-                    headTitles: const [
-                      "Subject",
-                      "Mark",
-                      "Exam Type",
-                      "Confirm"
+                    headTitles: [
+                      l10n.subject,
+                      l10n.mark,
+                      l10n.examType,
+                      l10n.confirm,
                     ],
                     backgroundColor: Theme.of(context).colorScheme.surface,
                     connectionLineThickness: 4,
@@ -199,8 +201,8 @@ class _AddMarkPageState extends State<AddMarkPage> {
   Future<void> _onDelete() async {
     await deleteMark(widget.oldMark!);
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text("Mark deleted successfully!"),
+      SnackBar(
+        content: Text(l10n.markDeletedSuccessfully),
         backgroundColor: Colors.green,
       ),
     );
@@ -217,7 +219,7 @@ class _AddMarkPageState extends State<AddMarkPage> {
       return MarkSelector(
         gradingSystem: widget.gradingSystem,
         onMarkSelected: _onMarkValueSelection,
-        title: "Select Mark",
+        title: l10n.selectMark,
       );
     } else if (currentPage == 3) {
       return ExamTypeSelector(

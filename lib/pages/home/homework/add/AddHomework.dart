@@ -4,6 +4,7 @@ import 'package:school_mate/Classes/homeworks/Homework.dart';
 import 'package:school_mate/Classes/schedule/Lesson.dart';
 import 'package:school_mate/Classes/schedule/Subject.dart';
 import 'package:school_mate/Widgets/public/GradientButton.dart';
+import 'package:school_mate/l10n/app_localizations.dart';
 import 'package:school_mate/main.dart';
 import 'package:school_mate/pages/home/homework/Homework.dart';
 import 'package:school_mate/pages/home/homework/add/Widgets/AdditionalHomeworkNote.dart';
@@ -43,6 +44,7 @@ class AddHomeworkPage extends StatefulWidget {
 }
 
 class _AddHomeworkPageState extends State<AddHomeworkPage> {
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _additionalNoteController =
       TextEditingController();
@@ -122,19 +124,19 @@ class _AddHomeworkPageState extends State<AddHomeworkPage> {
           (_) => ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   backgroundColor: Theme.of(context).colorScheme.error,
-                  content: const Text("Please provide a title"),
+                  content: Text(l10n.pleaseProvideTitle),
                 ),
               ));
       return;
     }
     if (_selectedSubject == null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) =>
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              backgroundColor: Theme.of(context).colorScheme.error,
-              content: const Text("Please select a subject for this homework!"),
-            ),
-          ));
+      WidgetsBinding.instance.addPostFrameCallback(
+          (_) => ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  backgroundColor: Theme.of(context).colorScheme.error,
+                  content: Text(l10n.pleaseSelectSubject),
+                ),
+              ));
       return;
     }
     if (_selectedDate != null && _selectedDate!.isBefore(DateTime.now())) {
@@ -142,7 +144,7 @@ class _AddHomeworkPageState extends State<AddHomeworkPage> {
           (_) => ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   backgroundColor: Theme.of(context).colorScheme.error,
-                  content: const Text("Select a date in the future!"),
+                  content: Text(l10n.selectFutureDate),
                 ),
               ));
       return;
@@ -152,7 +154,7 @@ class _AddHomeworkPageState extends State<AddHomeworkPage> {
           (_) => ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   backgroundColor: Theme.of(context).colorScheme.error,
-                  content: const Text("Please select a hand in time!"),
+                  content: Text(l10n.pleaseSelectHandInTime),
                 ),
               ));
       return;
@@ -167,9 +169,9 @@ class _AddHomeworkPageState extends State<AddHomeworkPage> {
         logger.i("Added a new homework");
         WidgetsBinding.instance.addPostFrameCallback(
             (_) => ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
+                  SnackBar(
                     backgroundColor: Colors.green,
-                    content: Text("Added Homework successfully!"),
+                    content: Text(l10n.addedHomeworkSuccessfully),
                   ),
                 ));
         // ensure page reload
@@ -178,13 +180,13 @@ class _AddHomeworkPageState extends State<AddHomeworkPage> {
         ));
         await updateHomeworkNotifications(await fetchHomeworks());
       } catch (e) {
-        WidgetsBinding.instance.addPostFrameCallback((_) =>
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                backgroundColor: Theme.of(context).colorScheme.error,
-                content: const Text("Something went wrong. Please try again."),
-              ),
-            ));
+        WidgetsBinding.instance.addPostFrameCallback(
+            (_) => ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    backgroundColor: Theme.of(context).colorScheme.error,
+                    content: Text(l10n.somethingWentWrong),
+                  ),
+                ));
         logger.e(e);
         rethrow;
       }
@@ -200,9 +202,9 @@ class _AddHomeworkPageState extends State<AddHomeworkPage> {
       logger.i("Updated a homework");
       WidgetsBinding.instance.addPostFrameCallback(
           (_) => ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
+                SnackBar(
                   backgroundColor: Colors.green,
-                  content: Text("Updated Homework successfully!"),
+                  content: Text(l10n.updatedHomeworkSuccessfully),
                 ),
               ));
       // ensure page reload
@@ -210,13 +212,13 @@ class _AddHomeworkPageState extends State<AddHomeworkPage> {
         builder: (context) => const HomeworkPage(),
       ));
     } catch (e) {
-      WidgetsBinding.instance.addPostFrameCallback((_) =>
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              backgroundColor: Theme.of(context).colorScheme.error,
-              content: const Text("Something went wrong. Please try again."),
-            ),
-          ));
+      WidgetsBinding.instance.addPostFrameCallback(
+          (_) => ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  backgroundColor: Theme.of(context).colorScheme.error,
+                  content: Text(l10n.somethingWentWrong),
+                ),
+              ));
       logger.e(e);
       rethrow;
     }

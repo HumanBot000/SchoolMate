@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:school_mate/l10n/app_localizations.dart';
 import 'package:school_mate/main.dart';
-import 'package:school_mate/pages/settings/setup.dart';
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
-
-import '../home/home/start.dart';
 
 class EmailVerificationPage extends StatefulWidget {
   final String email;
@@ -19,6 +17,7 @@ class EmailVerificationPage extends StatefulWidget {
 
 class _EmailVerificationPageState extends State<EmailVerificationPage>
     with SingleTickerProviderStateMixin {
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
   late AnimationController _pinAnimationController;
   bool _isCodeValid = false;
   int _resendCountdown = 120;
@@ -60,7 +59,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage>
     _startResendCountdown();
     supabaseClient.client.auth.resend(type: OtpType.email, email: widget.email);
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text("Verification code sent to ${widget.email}"),
+      content: Text(l10n.verificationCodeSent(widget.email)),
     ));
     logger.i("New OTP requested");
   }
@@ -98,7 +97,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Welcome to SchoolMate"),
+        title: Text(l10n.welcomeToSchoolMate),
       ),
       body: Stack(
         children: [

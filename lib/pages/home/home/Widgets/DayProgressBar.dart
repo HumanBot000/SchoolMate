@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:school_mate/l10n/app_localizations.dart';
 import 'package:school_mate/util/dates.dart';
 import 'package:school_mate/util/extensions/dates.dart';
 
@@ -23,6 +24,7 @@ class DayProgressBar extends StatefulWidget {
 
 class _DayProgressBarState extends State<DayProgressBar>
     with SingleTickerProviderStateMixin {
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
   double progress = 0.0;
   Timer? timer;
   late AnimationController _animationController;
@@ -152,7 +154,7 @@ class _DayProgressBarState extends State<DayProgressBar>
                 const Icon(Icons.schedule, size: 28, color: Colors.blueGrey),
                 const SizedBox(width: 8),
                 Text(
-                  "School Day Progress",
+                  l10n.schoolDayProgress,
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
               ],
@@ -178,7 +180,7 @@ class _DayProgressBarState extends State<DayProgressBar>
             ),
             const SizedBox(height: 16),
             Text(
-              "Remaining: ${_getRemainingTime()}",
+              l10n.remainingTime(_getRemainingTime()),
               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
             ),
           ],

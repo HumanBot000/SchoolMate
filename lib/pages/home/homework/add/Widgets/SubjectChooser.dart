@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:school_mate/Classes/schedule/Lesson.dart';
 import 'package:school_mate/Classes/schedule/Subject.dart';
+import 'package:school_mate/l10n/app_localizations.dart';
 import 'package:school_mate/pages/home/schedule/page/Schedule.dart';
 import 'package:school_mate/pages/home/schedule/subjects/SubjectsListPage.dart';
 
@@ -19,6 +20,7 @@ class HomeworkSubjectChooser extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.all(8.0),
       child: InkWell(
@@ -42,9 +44,9 @@ class HomeworkSubjectChooser extends StatelessWidget {
           }
         },
         child: ListTile(
-          title:
-              Text(selectedSubject == null ? "Subject" : selectedSubject!.name),
-          subtitle: const Text("Which subject is this homework for?"),
+          title: Text(
+              selectedSubject == null ? l10n.subject : selectedSubject!.name),
+          subtitle: Text(l10n.whichSubjectHomeworkFor),
           leading: selectedSubject == null
               ? const Icon(Icons.book_sharp)
               : selectedSubject!.avatar(context),

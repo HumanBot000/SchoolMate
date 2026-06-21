@@ -7,7 +7,6 @@ import 'package:school_mate/Widgets/public/GradientButton.dart';
 
 import '../../main.dart';
 import 'Widgets/ResidenceSelector/SearchableResidenceSelector.dart';
-import 'Widgets/ResidenceSelector/StateSelector.dart';
 
 class SetupPage extends StatefulWidget {
   final MaterialPageRoute afterSelectionRoute;

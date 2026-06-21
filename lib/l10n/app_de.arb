@@ -2,39 +2,77 @@
   "@@locale": "de",
   "abcWeeks": "A/B/C-Wochen",
   "abWeeks": "A/B-Wochen",
+  "accountConflictMessageEmail": "Ein Konto mit dieser E-Mail-Adresse ist bereits registriert.\n\nWenn du dich ursprünglich mit Google registriert hast, verwende bitte 'Mit Google fortfahren'. Versuche andernfalls, dich mit deinem Passwort anzumelden.",
+  "accountConflictMessageGoogle": "Ein Konto mit dieser E-Mail-Adresse existiert bereits (registriert mit E-Mail und Passwort).\n\nBitte melde dich stattdessen mit deiner E-Mail-Adresse und deinem Passwort an.",
+  "accountConflictMessageProvider": "Diese E-Mail-Adresse ist bereits mit einem anderen Login-Anbieter (wie Google) verknüpft.\n\nBitte melde dich über 'Mit Google fortfahren' an.",
+  "accountConflictTitle": "Kontokonflikt",
+  "add": "Hinzufügen",
+  "addedHomeworkSuccessfully": "Hausaufgabe erfolgreich hinzugefügt!",
+  "addExamTypeTooltip": "Einen neuen Arbeitstyp hinzufügen",
   "addHomeworkTooltip": "Hausaufgabe hinzufügen",
+  "additionalNote": "Zusätzliche Notiz",
   "addLessonButton": "Stunde hinzufügen",
   "addLessonLabel": "Neue Stunde hinzufügen",
+  "addMarkDetailsHint": "Details zu dieser Note hinzufügen...",
+  "addMarkTooltip": "Note zu einem Fach hinzufügen",
   "addSubjectTooltip": "Fach hinzufügen",
   "appTitle": "SchoolMate",
   "areYouSure": "Bist du dir sicher?",
   "aWeeks": "A-Wochen",
+  "backToPresentTooltip": "Zurück zur Gegenwart",
+  "baseExamTypeLabel": "Basis-Arbeitstyp",
   "cancel": "Abbrechen",
   "changeColor": "Farbe ändern",
   "changeLessonDurationPrompt": "Du kannst dies später für jede einzelne Stunde ändern.",
+  "checkConnectionAndTry": "Bitte überprüfe deine Verbindung und versuche es erneut.",
+  "chooseUsernameTitle": "Wähle einen Benutzernamen",
   "completedTab": "Erledigt",
   "configureLessonTitle": "Stunde einrichten",
   "configureScheduleSubtitle": "Konfiguriere deinen Stundenplan, um deine Stunden zu verfolgen.",
   "configureTeacher": "Lehrkraft einrichten",
   "confirm": "Bestätigen",
+  "connectionError": "Verbindungsfehler",
   "continueLabel": "Weiter",
+  "continueWithGoogle": "Mit Google fortfahren",
+  "couldNotConnectToServers": "Wir konnten keine Verbindung zu den Servern herstellen.",
+  "createSubjectsToTrackMarks": "Erstelle Fächer über den Stundenplan, um Noten einzutragen!",
   "createSubjectTitle": "Fach erstellen",
   "currentWeekPrompt": "Welcher Wochentyp ist die aktuelle Woche?",
   "currentWeekTypeRequired": "Der aktuelle Wochentyp muss in der Anzahl der Wochen enthalten sein",
   "customLabel": "Benutzerdefiniert",
   "dangerZone": "Gefahrenzone",
+  "dateAtTime": "{date} um {time}",
+  "@dateAtTime": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "days": "Tage",
+  "defaultExamTypeNotice": "Dies ist der Standard-Arbeitstyp",
   "defaultScheduleSetupHeader": "Bevor du den Stundenplan nutzen kannst, benötigen wir noch einige letzte Details über deinen Tag.",
   "delete": "Löschen",
   "deleteLessonTooltip": "Diese Stunde löschen",
+  "deleteMark": "Note löschen",
+  "deleteMarkConfirm": "Bist du sicher, dass du diese Note löschen möchtest?",
+  "deleteMarkExplanation": "Wenn dein Halbjahr zu Ende ist, kannst du dies für alle Noten in den App-Einstellungen markieren. Wir blenden sie aus der Ansicht aus, behalten sie jedoch intern für Statistiken darüber, wie du dich im Laufe der Zeit verbessert hast.",
   "diverse": "Divers",
   "edit": "Bearbeiten",
   "editSchedule": "Stundenplan bearbeiten",
+  "enabled": "Aktiviert",
   "enjoyFreeTime": "Genieße deine freie Zeit!",
   "enterFormOfAddress": "Anrede eingeben",
   "enterStartEndTimesPrompt": "Bitte gib die maximalen Start- und Endzeiten ein.\n Du kannst dies später für jeden einzelnen Tag ändern. ",
   "enterSubjectNameHint": "Fachnamen eingeben",
   "enterSubjectNameInstruction": "Gib den Namen des Fachs ein",
   "enterTeacherName": "Namen der Lehrkraft eingeben",
+  "enterTitleHint": "Titel eingeben (z. B. Buch S. 5)",
+  "enterUsernameHint": "Gib deinen Benutzernamen ein",
+  "enterValidNonNegativeNumberError": "Gib eine gültige nicht-negative ganze Zahl ein",
   "errorEndTimeAfterStartTime": "Die Endzeit muss nach der Startzeit liegen!",
   "errorLessonOverlaps": "Diese Stunde überschneidet sich mit einer anderen!\nÄndere zuerst die Länge der anderen Stunde!",
   "errorLoadingSettings": "Fehler beim Laden der Benutzereinstellungen: {error}",
@@ -45,10 +83,45 @@
       }
     }
   },
+  "errorPrefix": "Fehler",
   "errorSelectAtLeastOneWeek": "Wähle mindestens einen Wochentyp aus, um eine Stunde hinzuzufügen!",
   "errorSelectStartEndTimes": "Wähle aus, wann diese Stunde beginnt und endet!",
   "errorTimesWithinSchoolDay": "Start- und Endzeit müssen innerhalb des Schultages liegen!",
   "errorUnresolvedProblems": "Du hast noch nicht alle Probleme behoben!",
+  "examFactorNotice": "Jede Prüfung in dieser Gruppe zählt {factor}x so viel wie eine Prüfung vom Typ {childType}",
+  "@examFactorNotice": {
+    "placeholders": {
+      "factor": {
+        "type": "String"
+      },
+      "childType": {
+        "type": "String"
+      }
+    }
+  },
+  "examGroupPercentageNotice": "Diese Prüfungsgruppe zählt {percentage}%",
+  "@examGroupPercentageNotice": {
+    "placeholders": {
+      "percentage": {
+        "type": "String"
+      }
+    }
+  },
+  "examsPercentageContributionLabel": "Diese Arbeiten tragen zur Gesamtnote bei mit einem Anteil von",
+  "examsWorthLabel": "Klassenarbeiten dieses Typs zählen:",
+  "examType": "Arbeitstyp",
+  "examTypeNameEmptyError": "Der Name des Arbeitstyps darf nicht leer sein",
+  "examTypeNameLabel": "Name des Arbeitstyps",
+  "factorLabel": "Faktor",
+  "factorPositiveIntegerError": "Der Faktor muss eine positive ganze Zahl sein",
+  "failedToSaveUsername": "Fehler beim Speichern des Benutzernamens: {error}",
+  "@failedToSaveUsername": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
   "female": "Weiblich",
   "fillAllRequiredFields": "Bitte fülle alle erforderlichen Felder aus",
   "formOfAddress": "Anrede",
@@ -57,6 +130,8 @@
   "goodAfternoon": "Guten Tag",
   "goodEvening": "Guten Abend",
   "goodMorning": "Guten Morgen",
+  "gradingSetupSubtitle": "Bevor wir anfangen, benötigen wir Details über dein Notensystem.",
+  "gradingSetupTitle": "Noten-Einrichtung",
   "holidayInDays": "{holidayName}: In {days} Tagen 📆",
   "@holidayInDays": {
     "placeholders": {
@@ -73,6 +148,9 @@
   "homeworkRemindersSubtitle": "Entscheide, wie oft und wann du an offene Hausaufgaben erinnert werden möchtest",
   "homeworkRemindersTitle": "Hausaufgaben-Erinnerungen",
   "homeworkTitle": "Hausaufgaben",
+  "hours": "Stunden",
+  "invalidCredentialsMessage": "Ungültige Anmeldedaten.\nWenn du dich mit Google registriert hast, versuche dich mit Google anzumelden.",
+  "isBaseExamType": "Dies ist der Basis-Arbeitstyp",
   "lastLessonAfterFirst": "Deine letzte Stunde muss enden, nachdem deine erste Stunde beginnt.",
   "lessonDurationInfo": "Jede Stunde dauert {minutes} Minuten",
   "@lessonDurationInfo": {
@@ -89,7 +167,10 @@
   "logout": "Abmelden",
   "logoutConfirmMessage": "Du wirst aus deinem Konto abgemeldet.",
   "male": "Männlich",
+  "mark": "Note",
+  "markDeletedSuccessfully": "Note erfolgreich gelöscht!",
   "marksTitle": "Noten",
+  "minutes": "Minuten",
   "minutesLabel": "Minuten",
   "minutesValue": "{minutes} Minuten",
   "@minutesValue": {
@@ -112,17 +193,39 @@
   "noDataAvailable": "Keine Daten verfügbar.",
   "noHolidaysForLocation": "Keine anstehenden Ferien für deinen Wohnort gefunden.",
   "noSubjectsCreated": "Du hast noch keine Fächer erstellt",
+  "noSubjectsTitle": "Du hast keine Fächer",
   "noTeachersSetup": "Du hast noch keine Lehrkräfte eingerichtet",
   "notificationsTab": "Benachrichtigungen",
   "noUpcomingHolidays": "Keine anstehenden Ferien gefunden.",
   "noUserSettings": "Keine Benutzereinstellungen gefunden.",
+  "ok": "Ok",
   "openTab": "Offen",
+  "orLabel": "oder",
+  "percentageMustBeNumberError": "Der Prozentsatz muss eine Zahl sein",
+  "percentageRangeError": "Der Prozentsatz muss zwischen 0 und 100 liegen",
+  "pleaseChooseUsername": "Bitte wähle einen Benutzernamen, um fortzufahren.",
+  "pleaseEnterSomething": "Bitte gib etwas ein",
+  "pleaseEnterUsername": "Bitte gib einen Benutzernamen ein",
+  "pleaseProvideTitle": "Bitte gib einen Titel an",
+  "pleaseSelectHandInTime": "Bitte wähle einen Abgabezeitpunkt aus!",
+  "pleaseSelectSubject": "Bitte wähle ein Fach für diese Hausaufgabe aus!",
   "preLessonNotificationsSubtitle": "Lass dich vor einer Stunde benachrichtigen, damit du den Raum nicht nachschlagen musst",
   "preLessonNotificationsTitle": "Benachrichtigungen vor dem Unterricht",
+  "profileSetUpTitle": "Profil einrichten",
   "profileTitle": "Profil",
+  "recentMarks": "Aktuelle Noten:",
+  "remainingTime": "Verbleibend: {time}",
+  "@remainingTime": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
   "requiredFields": "* Erforderliche Felder",
   "residenceSubtitle": "Teile uns deinen Wohnort mit, damit wir die nächsten Schulferien berechnen können.",
   "residenceTitle": "Wohnort",
+  "retry": "Wiederholen",
   "roomNumberLabel": "Raumnummer",
   "save": "Speichern",
   "scheduleChangeWeeksPrompt": "Ändert sich dein Stundenplan alle x Wochen?",
@@ -130,21 +233,49 @@
   "scheduleSetup": "Stundenplan-Einrichtung",
   "scheduleSetupWarning": "Bevor du Stunden und Hausaufgaben hinzufügen kannst, teile uns bitte einige Details über deinen Tag mit. Du musst nicht deinen genauen Stundenplan angeben, um diese Funktionen zu nutzen.",
   "scheduleTitle": "Stundenplan",
+  "schoolDayProgress": "Schultag-Fortschritt",
+  "searchCountryHint": "Land suchen...",
+  "searchStateHint": "Bundesland suchen...",
+  "seconds": "Sekunden",
   "selectEndTime": "Endzeit auswählen",
   "selectFromSchedule": "Aus dem Stundenplan auswählen",
+  "selectFutureDate": "Wähle ein Datum in der Zukunft aus!",
+  "selectGradingSystemHint": "Notensystem auswählen",
   "selectLabel": "Auswählen",
   "selectLessonDaysPrompt": "Bitte wähle die Tage aus, an denen du Unterricht hast.",
+  "selectMark": "Note auswählen",
   "selectStartTime": "Startzeit auswählen",
+  "selectStateProvince": "Wähle dein Bundesland/deine Region",
+  "selectSubjectToAddToSchedule": "Wähle ein Fach aus, um es dem Stundenplan hinzuzufügen",
   "selectTeacher": "Lehrkraft auswählen",
+  "serverConnectionError": "Wir konnten keine Verbindung zum Server herstellen, um deine Einstellungen zu überprüfen. Bitte überprüfe deine Internetverbindung.",
+  "setTime": "Zeit einstellen",
   "settingsTitle": "Einstellungen",
+  "signUpSuccessMessage": "Registrierung erfolgreich. Bitte überprüfe deine E-Mails.",
   "somethingWentWrong": "Etwas ist schiefgelaufen. Bitte versuche es erneut.",
+  "subject": "Fach",
   "subjectNameLabel": "Fach",
   "subjectValidationAlert": "Bitte gib einen gültigen Namen und eine Lehrkraft für dieses Fach an.",
+  "takeMeThere": "Dorthin bringen",
   "teacherLabel": "Lehrkraft",
   "teacherValidationAlert": "Bitte gib einen gültigen Namen und eine Anrede für diesen Lehrer an.",
+  "timesAsLabel": "mal so viel wie",
+  "tryAgain": "Erneut versuchen",
   "update": "Aktualisieren",
+  "updatedHomeworkSuccessfully": "Hausaufgabe erfolgreich aktualisiert!",
+  "updatedMarkSuccessfully": "Note erfolgreich aktualisiert!",
   "updatedScheduleSuccess": "Stundenplan erfolgreich aktualisiert!",
   "updateLessonButton": "Stunde aktualisieren",
+  "usernameLabel": "Benutzername",
+  "usernameTooShort": "Der Benutzername muss mindestens 3 Zeichen lang sein",
+  "verificationCodeSent": "Verifizierungscode an {email} gesendet",
+  "@verificationCodeSent": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
   "weekLabel": "Woche",
   "weekLabelWithLetter": "{letter}-Wochen",
   "@weekLabelWithLetter": {
@@ -155,6 +286,10 @@
     }
   },
   "welcomeGreeting": "Bereit für einen produktiven Tag?",
+  "welcomeToSchoolMate": "Willkommen bei SchoolMate",
   "weWillCalculateWeeks": "Wir berechnen die folgenden Wochen für dich!",
-  "whichWeekToday": "Welche Woche ist heute?"
+  "whereDoYouLive": "Wo wohnst du?",
+  "whichSubjectHomeworkFor": "Für welches Fach ist diese Hausaufgabe?",
+  "whichWeekToday": "Welche Woche ist heute?",
+  "withDecimals": "Mit Dezimalstellen"
 }

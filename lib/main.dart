@@ -1,13 +1,13 @@
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:logger/logger.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:school_mate/API/supabase/schedule/schedule.dart'
     as fetch_schedule;
 import 'package:school_mate/API/supabase/setup.dart';
 import 'package:school_mate/l10n/app_localizations.dart';
 import 'package:school_mate/util/NavigatorTree.dart';
+import 'package:school_mate/util/logger.dart';
 import 'package:school_mate/util/notifications/homework.dart';
 import 'package:school_mate/util/notifications/schedule.dart';
 import 'package:school_mate/util/router.dart';
@@ -17,8 +17,10 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'API/supabase/homeworks/tasks.dart';
 import 'API/supabase/settings/preLessonNotifications.dart';
 
+export 'package:school_mate/util/logger.dart';
+
 late final Supabase supabaseClient;
-final logger = Logger();
+
 late final SharedPreferences prefs;
 final NavigationTreeObserver navigatorTreeObserver = NavigationTreeObserver();
 
@@ -96,7 +98,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       routerConfig: appRouter,
-      title: 'SchoolMate',
+      onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
       debugShowCheckedModeBanner: false,
       localizationsDelegates: const [
         AppLocalizations.delegate,

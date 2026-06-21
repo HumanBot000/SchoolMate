@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:school_mate/Classes/marks/ExamType.dart';
 import 'package:school_mate/Widgets/public/GradientButton.dart';
+import 'package:school_mate/l10n/app_localizations.dart';
 
 class ExamTypeSetupPage extends StatefulWidget {
   final EvaluationMethod? selectedEvaluationMethod;
@@ -23,6 +24,8 @@ class ExamTypeSetupPage extends StatefulWidget {
 }
 
 class _ExamTypeSetupPageState extends State<ExamTypeSetupPage> {
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
+
   @override
   Widget build(BuildContext context) {
     // Use Column instead of ListView to avoid nested scrolling issues.
@@ -202,7 +205,7 @@ class _ExamTypeSetupPageState extends State<ExamTypeSetupPage> {
               await widget.onExamTypeChanges(newExamTypes);
             },
             icon: const Icon(Icons.add),
-            tooltip: "Add a new Exam Type",
+            tooltip: l10n.addExamTypeTooltip,
           ),
       ],
     );
@@ -279,7 +282,6 @@ class _ExamTypeSetupPageState extends State<ExamTypeSetupPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  /// **Exam Type Name Input**
                   TextField(
                     controller:
                         widget.evaluationMethodNameTextControllers[index][0],
@@ -290,8 +292,7 @@ class _ExamTypeSetupPageState extends State<ExamTypeSetupPage> {
                       if (value.isEmpty) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content:
-                                const Text("Exam type name cannot be empty"),
+                            content: Text(l10n.examTypeNameEmptyError),
                             backgroundColor:
                                 Theme.of(context).colorScheme.error,
                           ),
@@ -303,26 +304,21 @@ class _ExamTypeSetupPageState extends State<ExamTypeSetupPage> {
                       await widget.onExamTypeChanges(newExamTypes);
                     },
                     decoration: const InputDecoration(
-                      labelText: "Exam Type Name",
+                      labelText: "Exam type name",
                       prefixIcon:
                           Icon(Icons.text_snippet, color: Colors.blueAccent),
                       border: OutlineInputBorder(),
                     ),
                   ),
-
                   const SizedBox(height: 16),
-
-                  /// **Factor Explanation**
-                  const Text(
-                    "The exams with this type are worth:",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
+                  Text(
+                    l10n.examsWorthLabel,
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.w400),
                   ),
                   const SizedBox(height: 8),
-
-                  /// **Factor Input + Dropdown (Stacked instead of crammed)**
                   Row(
                     children: [
-                      /// **Factor Input Field**
                       Expanded(
                         child: TextField(
                           controller: widget
@@ -332,8 +328,8 @@ class _ExamTypeSetupPageState extends State<ExamTypeSetupPage> {
                             if (parsedValue == null || parsedValue <= 0) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                  content: const Text(
-                                      "Factor must be a positive integer"),
+                                  content:
+                                      Text(l10n.factorPositiveIntegerError),
                                   backgroundColor:
                                       Theme.of(context).colorScheme.error,
                                 ),
@@ -349,9 +345,9 @@ class _ExamTypeSetupPageState extends State<ExamTypeSetupPage> {
                           },
                           keyboardType: TextInputType.number,
                           decoration: InputDecoration(
-                            labelText: "Factor",
+                            labelText: l10n.factorLabel,
                             border: const OutlineInputBorder(),
-                            suffixText: "times as",
+                            suffixText: l10n.timesAsLabel,
                             errorText: int.tryParse(widget
                                             .evaluationMethodNameTextControllers[
                                                 index][1]
@@ -362,7 +358,7 @@ class _ExamTypeSetupPageState extends State<ExamTypeSetupPage> {
                                                 index][1]
                                             .text) <
                                         0
-                                ? "Enter a valid non-negative full number"
+                                ? l10n.enterValidNonNegativeNumberError
                                 : null,
                           ),
                         ),
@@ -370,16 +366,13 @@ class _ExamTypeSetupPageState extends State<ExamTypeSetupPage> {
                       const SizedBox(width: 16), // Added spacing
                     ],
                   ),
-
                   const SizedBox(height: 12),
-
-                  /// **Dropdown (Now on a separate line)**
                   DropdownButtonFormField<ExamType?>(
-                    decoration: const InputDecoration(
-                      labelText: "Base Exam Type",
-                      border: OutlineInputBorder(),
+                    decoration: InputDecoration(
+                      labelText: l10n.baseExamTypeLabel,
+                      border: const OutlineInputBorder(),
                     ),
-                    value: widget.examTypes[index].evaluationData
+                    initialValue: widget.examTypes[index].evaluationData
                         .multiplicationChildType,
                     items: List.generate(widget.examTypes.length, (int i) {
                       if (i != index) {
@@ -388,9 +381,9 @@ class _ExamTypeSetupPageState extends State<ExamTypeSetupPage> {
                           child: Text(widget.examTypes[i].name),
                         );
                       }
-                      return const DropdownMenuItem(
+                      return DropdownMenuItem(
                         value: null,
-                        child: Text("This is the base exam type"),
+                        child: Text(l10n.isBaseExamType),
                       );
                     }),
                     onChanged: (value) async {
@@ -401,10 +394,7 @@ class _ExamTypeSetupPageState extends State<ExamTypeSetupPage> {
                       await widget.onExamTypeChanges(newExamTypes);
                     },
                   ),
-
                   const SizedBox(height: 16),
-
-                  /// **Delete Button (Centered)**
                   Align(
                     alignment: Alignment.centerRight,
                     child: IconButton(
@@ -453,7 +443,7 @@ class _ExamTypeSetupPageState extends State<ExamTypeSetupPage> {
                     if (value.isEmpty) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: const Text("Exam type name cannot be empty"),
+                          content: Text(l10n.examTypeNameEmptyError),
                           backgroundColor: Theme.of(context).colorScheme.error,
                         ),
                       );
@@ -469,11 +459,12 @@ class _ExamTypeSetupPageState extends State<ExamTypeSetupPage> {
                   ),
                 ),
                 const SizedBox(height: 8),
-                const FittedBox(
+                FittedBox(
                   fit: BoxFit.scaleDown,
                   child: Text(
-                    "These exams will contribute to your final grade, accounting for",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
+                    l10n.examsPercentageContributionLabel,
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.w400),
                   ),
                 ),
                 TextField(
@@ -487,7 +478,7 @@ class _ExamTypeSetupPageState extends State<ExamTypeSetupPage> {
                     if (parsedValue == null) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: const Text("Percentage must be a number"),
+                          content: Text(l10n.percentageMustBeNumberError),
                           backgroundColor: Theme.of(context).colorScheme.error,
                         ),
                       );
@@ -496,8 +487,7 @@ class _ExamTypeSetupPageState extends State<ExamTypeSetupPage> {
                     if (parsedValue < 0 || parsedValue > 100) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content:
-                              const Text("Percentage must be > 0 and < 100"),
+                          content: Text(l10n.percentageRangeError),
                           backgroundColor: Theme.of(context).colorScheme.error,
                         ),
                       );

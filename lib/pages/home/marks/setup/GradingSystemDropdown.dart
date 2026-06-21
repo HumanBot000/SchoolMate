@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:school_mate/Classes/marks/GradingSystem.dart';
+import 'package:school_mate/l10n/app_localizations.dart';
 
 class GradingSystemDropdown extends StatelessWidget {
   final GradingSystem? selectedGradingSystem;
@@ -13,6 +14,7 @@ class GradingSystemDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final gradingSystems = [
       GradingSystem(range: ["1", "6"], modifiers: ["+", "-"], examTypes: []),
       GradingSystem(range: ["15", "0"], modifiers: [], examTypes: []),
@@ -27,7 +29,7 @@ class GradingSystemDropdown extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
       child: DropdownButtonFormField<GradingSystem>(
-        value: gradingSystems.firstWhere(
+        initialValue: gradingSystems.firstWhere(
           (gs) =>
               gs.range == selectedGradingSystem?.range &&
               gs.modifiers == selectedGradingSystem?.modifiers,
@@ -38,7 +40,7 @@ class GradingSystemDropdown extends StatelessWidget {
           contentPadding:
               const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           filled: true,
-          hintText: "Select Grading System",
+          hintText: l10n.selectGradingSystemHint,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide:
@@ -61,7 +63,7 @@ class GradingSystemDropdown extends StatelessWidget {
           if (gs.modifiers.contains("+") || gs.modifiers.contains("-")) {
             label += " (±)";
           } else if (gs.modifiers.contains(".")) {
-            label += " (With Decimals)";
+            label += " (${l10n.withDecimals})";
           }
           return DropdownMenuItem(
             value: gs,

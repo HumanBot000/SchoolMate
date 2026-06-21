@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:school_mate/l10n/app_localizations.dart';
 
 class NotificationSetting {
   String unit;
@@ -33,6 +34,7 @@ class NotificationSetup extends StatefulWidget {
 
 class _NotificationSetupState extends State<NotificationSetup>
     with TickerProviderStateMixin {
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
   bool _enabled = false;
   final _listKey = GlobalKey<AnimatedListState>();
   List<NotificationSetting> _items = [];
@@ -137,11 +139,13 @@ class _NotificationSetupState extends State<NotificationSetup>
                 const SizedBox(width: 10),
                 DropdownButton<String>(
                   value: _items[i].unit,
-                  items: const [
-                    DropdownMenuItem(value: 'seconds', child: Text('Seconds')),
-                    DropdownMenuItem(value: 'minutes', child: Text('Minutes')),
-                    DropdownMenuItem(value: 'hours', child: Text('Hours')),
-                    DropdownMenuItem(value: 'days', child: Text('Days')),
+                  items: [
+                    DropdownMenuItem(
+                        value: 'seconds', child: Text(l10n.seconds)),
+                    DropdownMenuItem(
+                        value: 'minutes', child: Text(l10n.minutes)),
+                    DropdownMenuItem(value: 'hours', child: Text(l10n.hours)),
+                    DropdownMenuItem(value: 'days', child: Text(l10n.days)),
                   ],
                   onChanged: (v) async {
                     if (v == null) return;
@@ -172,7 +176,7 @@ class _NotificationSetupState extends State<NotificationSetup>
       body: ListView(
         children: [
           SwitchListTile.adaptive(
-            title: const Text('Enabled'),
+            title: Text(l10n.enabled),
             value: _enabled,
             onChanged: (v) async {
               if (!v) {
@@ -220,7 +224,7 @@ class _NotificationSetupState extends State<NotificationSetup>
                             alignment: Alignment.centerRight,
                             child: ElevatedButton.icon(
                               icon: const Icon(Icons.add),
-                              label: const Text('Add'),
+                              label: Text(l10n.add),
                               onPressed: _add,
                               style: ElevatedButton.styleFrom(
                                 shape: RoundedRectangleBorder(

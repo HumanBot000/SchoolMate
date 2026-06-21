@@ -9,6 +9,7 @@ import 'package:school_mate/Classes/homeworks/Homework.dart';
 import 'package:school_mate/Classes/schedule/Lesson.dart';
 import 'package:school_mate/Classes/schedule/Schedule.dart';
 import 'package:school_mate/Classes/schedule/ScheduleMetadata.dart';
+import 'package:school_mate/l10n/app_localizations.dart';
 import 'package:school_mate/main.dart';
 import 'package:school_mate/pages/home/Widgets/BottomNavBar.dart';
 import 'package:school_mate/pages/home/schedule/lessons/ConfigureLesson.dart';
@@ -47,6 +48,7 @@ class ScheduleGridView extends StatefulWidget {
 }
 
 class _ScheduleGridViewState extends State<ScheduleGridView> {
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
   DateTime currentFocusedScheduleWeek = DateTime.now();
   bool _isSwiping = false;
   final GlobalKey _buildAreaKey = GlobalKey();
@@ -391,7 +393,7 @@ class _ScheduleGridViewState extends State<ScheduleGridView> {
                     size: 18,
                     color: Colors.white,
                   ),
-                  label: const Text("Edit"),
+                  label: Text(l10n.edit),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blueAccent,
                     foregroundColor: Colors.white,
@@ -411,7 +413,7 @@ class _ScheduleGridViewState extends State<ScheduleGridView> {
                     size: 18,
                     color: Colors.white,
                   ),
-                  label: const Text("Delete"),
+                  label: Text(l10n.delete),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.redAccent,
                     foregroundColor: Colors.white,
@@ -452,8 +454,8 @@ class _ScheduleGridViewState extends State<ScheduleGridView> {
               }
               return SchedulePage(schedule: snapshot.data!);
             } else {
-              return const Center(
-                child: Text('No data available.'),
+              return Center(
+                child: Text(l10n.noDataAvailable),
               );
             }
           },

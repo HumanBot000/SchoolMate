@@ -5,6 +5,7 @@ import 'package:school_mate/Classes/marks/GradingSystem.dart';
 import 'package:school_mate/Classes/marks/Mark.dart';
 import 'package:school_mate/Classes/schedule/Subject.dart';
 import 'package:school_mate/Widgets/public/PreviousPage.dart';
+import 'package:school_mate/l10n/app_localizations.dart';
 import 'package:school_mate/pages/home/marks/MarkSelection.dart';
 import 'package:school_mate/pages/home/marks/Utils.dart';
 import 'package:school_mate/pages/home/marks/add/AddMark.dart';
@@ -34,6 +35,7 @@ class SubjectMarksInspectionPage extends StatefulWidget {
 
 class _SubjectMarksInspectionPageState
     extends State<SubjectMarksInspectionPage> {
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
   bool _isDark = false;
   List<int> extendedCards = [];
   final Set<int> _showAllMarksIndices = {};
@@ -178,48 +180,17 @@ class _SubjectMarksInspectionPageState
                         subtitle: examType.evaluationData.percentage == null
                             ? examType.evaluationData.multiplicationChildType ==
                                     null
-                                ? const Text("This is the default Exam Type")
-                                : Text.rich(
-                                    TextSpan(
-                                      children: [
-                                        const TextSpan(
-                                            text:
-                                                "Every exam in this group is worth "),
-                                        TextSpan(
-                                          text:
-                                              "${examType.evaluationData.multiplicationFactor}x",
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        const TextSpan(
-                                            text: " as much as a exam of the "),
-                                        TextSpan(
-                                          text: examType
-                                                  .evaluationData
-                                                  .multiplicationChildType
-                                                  ?.name ??
-                                              "",
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        const TextSpan(text: " type"),
-                                      ],
-                                    ),
-                                  )
-                            : Text.rich(
-                                TextSpan(
-                                  children: [
-                                    const TextSpan(
-                                        text: "This Exam Group is worth "),
-                                    TextSpan(
-                                      text:
-                                          "${examType.evaluationData.percentage}%",
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                                ? Text(l10n.defaultExamTypeNotice)
+                                : Text(l10n.examFactorNotice(
+                                    examType.evaluationData.multiplicationFactor
+                                        .toString(),
+                                    examType.evaluationData
+                                            .multiplicationChildType?.name ??
+                                        "",
+                                  ))
+                            : Text(l10n.examGroupPercentageNotice(
+                                "${examType.evaluationData.percentage}%",
+                              )),
                       ),
                       if (extendedCards.contains(index))
                         Padding(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:school_mate/API/supabase/auth/userSettings.dart';
+import 'package:school_mate/l10n/app_localizations.dart';
 import 'package:school_mate/main.dart';
 import 'package:school_mate/util/extensions/string.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -13,6 +14,7 @@ class UsernameSetupPage extends StatefulWidget {
 }
 
 class _UsernameSetupPageState extends State<UsernameSetupPage> {
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
   final _formKey = GlobalKey<FormState>();
   late final TextEditingController _usernameController;
   bool _isLoading = false;
@@ -62,7 +64,7 @@ class _UsernameSetupPageState extends State<UsernameSetupPage> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text("Failed to save username: $e"),
+            content: Text(l10n.failedToSaveUsername(e.toString())),
             backgroundColor: Theme.of(context).colorScheme.error,
           ),
         );
@@ -81,7 +83,7 @@ class _UsernameSetupPageState extends State<UsernameSetupPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Choose a Username"),
+        title: Text(l10n.chooseUsernameTitle),
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -93,7 +95,7 @@ class _UsernameSetupPageState extends State<UsernameSetupPage> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
                 side: BorderSide(
-                  color: theme.colorScheme.outline.withOpacity(0.12),
+                  color: theme.colorScheme.outline.withValues(alpha: 0.12),
                   width: 1,
                 ),
               ),
@@ -106,16 +108,17 @@ class _UsernameSetupPageState extends State<UsernameSetupPage> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Text(
-                        "Profile Set Up",
+                        l10n.profileSetUpTitle,
                         style: theme.textTheme.headlineSmall
                             ?.copyWith(fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 12),
                       Text(
-                        "Please choose a username to continue.",
+                        l10n.pleaseChooseUsername,
                         style: theme.textTheme.bodyMedium?.copyWith(
-                          color: theme.colorScheme.onSurface.withOpacity(0.7),
+                          color: theme.colorScheme.onSurface
+                              .withValues(alpha: 0.7),
                         ),
                         textAlign: TextAlign.center,
                       ),
@@ -125,8 +128,8 @@ class _UsernameSetupPageState extends State<UsernameSetupPage> {
                         decoration: InputDecoration(
                           prefixIcon:
                               const Icon(Icons.person, color: Colors.blue),
-                          labelText: 'Username',
-                          hintText: 'Enter your username',
+                          labelText: l10n.usernameLabel,
+                          hintText: l10n.enterUsernameHint,
                           contentPadding: const EdgeInsets.symmetric(
                               horizontal: 16, vertical: 16),
                           border: OutlineInputBorder(
@@ -135,10 +138,10 @@ class _UsernameSetupPageState extends State<UsernameSetupPage> {
                         ),
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
-                            return 'Please enter a username';
+                            return l10n.pleaseEnterUsername;
                           }
                           if (value.trim().length < 3) {
-                            return 'Username must be at least 3 characters long';
+                            return l10n.usernameTooShort;
                           }
                           return null;
                         },
@@ -167,7 +170,7 @@ class _UsernameSetupPageState extends State<UsernameSetupPage> {
                                   strokeWidth: 2,
                                 ),
                               )
-                            : const Text("Continue"),
+                            : Text(l10n.continueLabel),
                       ),
                     ],
                   ),

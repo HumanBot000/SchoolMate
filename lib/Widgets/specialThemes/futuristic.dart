@@ -20,7 +20,7 @@ Widget buildGradientBackground() {
 }
 
 class ParticleBackground extends StatefulWidget {
-  const ParticleBackground({Key? key}) : super(key: key);
+  const ParticleBackground({super.key});
 
   @override
   _ParticleBackgroundState createState() => _ParticleBackgroundState();
@@ -88,7 +88,7 @@ class _ParticlePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = const Color(0xFF3A7BFF).withOpacity(0.1 * progress)
+      ..color = const Color(0xFF3A7BFF).withValues(alpha: 0.1 * progress)
       ..style = PaintingStyle.fill
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 10);
     for (int i = 0; i < positions.length; i++) {

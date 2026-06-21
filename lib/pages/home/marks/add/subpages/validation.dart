@@ -5,6 +5,7 @@ import 'package:school_mate/Classes/marks/ExamType.dart';
 import 'package:school_mate/Classes/marks/GradingSystem.dart';
 import 'package:school_mate/Classes/marks/Mark.dart';
 import 'package:school_mate/Classes/schedule/Subject.dart';
+import 'package:school_mate/l10n/app_localizations.dart';
 import 'package:school_mate/pages/home/marks/Utils.dart';
 import 'package:school_mate/pages/home/marks/add/subpages/type.dart';
 
@@ -42,6 +43,7 @@ class AddMarkValidationPage extends StatefulWidget {
 
 class _AddMarkValidationPageState extends State<AddMarkValidationPage>
     with SingleTickerProviderStateMixin {
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
   late AnimationController _animationController;
   late Animation<double> _animation;
 
@@ -382,7 +384,7 @@ class _AddMarkValidationPageState extends State<AddMarkValidationPage>
                             TextFormField(
                               controller: widget.descriptionController,
                               decoration: InputDecoration(
-                                hintText: "Add details about this mark...",
+                                hintText: l10n.addMarkDetailsHint,
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
                                   borderSide:
@@ -422,7 +424,9 @@ class _AddMarkValidationPageState extends State<AddMarkValidationPage>
                               size: 16, color: Colors.grey.shade600),
                           const SizedBox(width: 6),
                           Text(
-                            "${DateFormat('dd.MM.yyyy').format(now)} at ${DateFormat('HH:mm').format(now)}",
+                            l10n.dateAtTime(
+                                DateFormat('dd.MM.yyyy').format(now),
+                                DateFormat('HH:mm').format(now)),
                             style: theme.textTheme.bodySmall?.copyWith(
                                 color: Colors.grey.shade600,
                                 fontWeight: FontWeight.w500),
@@ -448,7 +452,7 @@ class _AddMarkValidationPageState extends State<AddMarkValidationPage>
                                         color: Colors.red.shade600),
                                     const SizedBox(width: 8),
                                     Text(
-                                      "Delete Mark",
+                                      l10n.deleteMark,
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         color: Colors.red.shade600,
@@ -460,9 +464,9 @@ class _AddMarkValidationPageState extends State<AddMarkValidationPage>
                                   mainAxisSize: MainAxisSize.min,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Text(
-                                      "Are you sure you want to delete this mark?",
-                                      style: TextStyle(
+                                    Text(
+                                      l10n.deleteMarkConfirm,
+                                      style: const TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w500,
                                       ),
@@ -477,7 +481,7 @@ class _AddMarkValidationPageState extends State<AddMarkValidationPage>
                                         borderRadius: BorderRadius.circular(8),
                                       ),
                                       child: Text(
-                                        "If your semester ended, you can mark this for all marks in the app settings. We'll hide them from view but keep them internally for statistics on how you've improved over time.",
+                                        l10n.deleteMarkExplanation,
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyMedium,
@@ -489,7 +493,7 @@ class _AddMarkValidationPageState extends State<AddMarkValidationPage>
                                   TextButton(
                                     onPressed: () => Navigator.pop(context),
                                     child: Text(
-                                      "Cancel",
+                                      l10n.cancel,
                                       style: TextStyle(
                                         color: Colors.grey.shade800,
                                         fontWeight: FontWeight.w500,
@@ -508,14 +512,14 @@ class _AddMarkValidationPageState extends State<AddMarkValidationPage>
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 16, vertical: 10),
                                     ),
-                                    child: const Text("Delete"),
+                                    child: Text(l10n.delete),
                                   ),
                                 ],
                               ),
                             ),
                             icon: Icon(Icons.delete,
                                 color: Colors.red.shade600, size: 18),
-                            label: Text("Delete",
+                            label: Text(l10n.delete,
                                 style: TextStyle(color: Colors.red.shade600)),
                             style: OutlinedButton.styleFrom(
                               foregroundColor: Colors.red.shade600,
@@ -535,7 +539,7 @@ class _AddMarkValidationPageState extends State<AddMarkValidationPage>
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
-                          child: const Text("Cancel"),
+                          child: Text(l10n.cancel),
                         ),
                         const SizedBox(width: 8),
                         FilledButton(
@@ -546,7 +550,7 @@ class _AddMarkValidationPageState extends State<AddMarkValidationPage>
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
-                          child: const Text("Save"),
+                          child: Text(l10n.save),
                         ),
                       ],
                     ),
