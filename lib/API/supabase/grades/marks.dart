@@ -47,8 +47,7 @@ Future<List<Mark>> _loadAllMarksData({bool forceRefresh = false}) async {
 
   // Fetch grading system
   final gradingSystem = await fetchGradingSystem();
-  if (gradingSystem == null ||
-      (gradingSystem is String && gradingSystem.isEmpty)) {
+  if (gradingSystem == null) {
     MarksCache._allMarks = [];
     MarksCache._lastFetchTime = DateTime.now();
     return [];
@@ -433,7 +432,7 @@ Future<void> insertMark(String value, Subject subject, ExamType examType,
     "user_id": await getUserID(),
     "subject": subject.id,
     "value": value,
-    "grading_system": (await fetchGradingSystem()).id,
+    "grading_system": (await fetchGradingSystem())?.id,
     "exam_type": examType.id,
     "description": description
   });
@@ -451,7 +450,7 @@ Future<void> updateMark(Mark oldMark, Mark newMark) async {
         "user_id": await getUserID(),
         "subject": newMark.subject.id,
         "value": newMark.toRawString(),
-        "grading_system": (await fetchGradingSystem()).id,
+        "grading_system": (await fetchGradingSystem())?.id,
         "exam_type": newMark.examType.id,
         "description": newMark.description
       })

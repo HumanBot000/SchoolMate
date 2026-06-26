@@ -29,7 +29,7 @@ class _MarksPageState extends State<MarksPage> {
         automaticallyImplyLeading: false,
       ),
       bottomNavigationBar: const HomeNavBar(currentIndex: 3),
-      body: FutureBuilder(
+      body: FutureBuilder<dynamic>(
           future: fetchGradingSystem(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -42,11 +42,12 @@ class _MarksPageState extends State<MarksPage> {
                   style: const TextStyle(color: Colors.red),
                 ),
               );
-            } else if (snapshot.hasData) {
-              if (snapshot.data is String && snapshot.data!.isEmpty) {
+            } else if (snapshot.connectionState == ConnectionState.done) {
+              final data = snapshot.data;
+              if (data == null) {
                 return const GradingSetupPage();
               }
-              return MarksOverviewPage(gradingSystem: snapshot.data!);
+              return MarksOverviewPage(gradingSystem: data);
             } else {
               return Center(
                 child: Text(l10n.noDataAvailable),

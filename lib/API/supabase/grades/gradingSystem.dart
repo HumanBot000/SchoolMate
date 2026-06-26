@@ -91,14 +91,14 @@ Future<GradingSystem> setGradingSystem(GradingSystem gradingSystem) async {
       id: systemTableResponse["id"]);
 }
 
-Future<dynamic> fetchGradingSystem() async {
+Future<GradingSystem?> fetchGradingSystem() async {
   final gradingSystemTableResponse = await supabaseClient.client
       .schema("grades")
       .from("grading_systems")
       .select()
       .eq("user_id", await getUserID());
   if (gradingSystemTableResponse.isEmpty) {
-    return ""; // Can't return null because FutureBuilder thinks it didn't finish yet
+    return null;
   }
   List<Map<String, dynamic>> examTypeTableResponses = await supabaseClient
       .client
