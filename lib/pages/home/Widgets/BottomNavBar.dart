@@ -6,7 +6,7 @@ import 'package:school_mate/pages/home/homework/Homework.dart';
 import 'package:school_mate/pages/home/marks/Grades.dart';
 import 'package:school_mate/pages/home/schedule/start.dart';
 
-GlobalKey bottomNavBarKey = GlobalKey();
+final GlobalKey bottomNavBarKey = GlobalKey();
 
 class HomeNavBar extends StatefulWidget {
   final int currentIndex;
@@ -93,8 +93,6 @@ class _HomeNavBarState extends State<HomeNavBar> {
 
   @override
   Widget build(BuildContext context) {
-    bottomNavBarKey =
-        GlobalKey(); // Ensure it's unique but still accessible from outside
     return NavigationBar(
       key: bottomNavBarKey,
       animationDuration: const Duration(milliseconds: 300),
