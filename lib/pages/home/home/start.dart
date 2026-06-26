@@ -57,7 +57,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   Future<void> _loadSchedule() async {
     final scheduleData = await fetchSchedule();
     setState(() {
-      _schedule = scheduleData != "" ? scheduleData : null;
+      _schedule = scheduleData;
     });
   }
 

@@ -16,10 +16,10 @@ void onTap(BuildContext context) async {
 
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => ScheduleSetupPage(
-        headerTitle: data is String && data.isEmpty
+        headerTitle: data == null
             ? "Before you can start using the schedule, we need to know some last details about your day."
             : "Please note, that this might corrupt your current schedule. We highly encourage you to clear all lessons before continuing.",
-        existingSchedule: data is String && data.isEmpty ? null : data,
+        existingSchedule: data,
       ),
     ));
   } catch (e) {

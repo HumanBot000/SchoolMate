@@ -5,14 +5,14 @@ import 'package:school_mate/Classes/schedule/ScheduleMetadata.dart';
 import 'package:school_mate/Classes/schedule/Subject.dart';
 import 'package:school_mate/main.dart';
 
-Future<dynamic> fetchSchedule() async {
+Future<Schedule?> fetchSchedule() async {
   final metadata = await supabaseClient.client
       .schema("schedule")
       .from("schedule_metadata_with_current_week")
       .select()
       .eq("user_id", await getUserID());
   if (metadata.isEmpty) {
-    return ""; // Can't return null because FutureBuilder thinks it didn't finish yet
+    return null;
   }
 
   final subjects = await supabaseClient.client

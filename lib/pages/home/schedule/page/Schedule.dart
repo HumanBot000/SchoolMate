@@ -491,7 +491,7 @@ class _SchedulePageState extends State<SchedulePage>
                   await addLesson(subject, startTime, endTime, weekday,
                       alternatingWeeks, room);
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    builder: (context) => FutureBuilder(
+                    builder: (context) => FutureBuilder<dynamic>(
                       future: fetch_schedule.fetchSchedule(),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
@@ -506,12 +506,12 @@ class _SchedulePageState extends State<SchedulePage>
                                 child: Text(
                                     '${l10n.errorPrefix}: ${snapshot.error}')),
                           );
-                        } else if (snapshot.hasData) {
-                          if (snapshot.data is String &&
-                              snapshot.data!.isEmpty) {
+                        } else if (snapshot.connectionState == ConnectionState.done) {
+                          final data = snapshot.data;
+                          if (data == null) {
                             return const ScheduleSetupPage();
                           }
-                          return SchedulePage(schedule: snapshot.data!);
+                          return SchedulePage(schedule: data);
                         } else {
                           return Scaffold(
                             body: Center(child: Text(l10n.noDataAvailable)),

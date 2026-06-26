@@ -116,14 +116,18 @@ Future<void> updateHomeworkNotifications(List<Homework> homeworks) async {
     DateTime dueDate = homework.dueDate!;
     // If the task is a handIn task, it's exact time will be already set.
     if (!homework.handIn) {
-      Schedule schedule = await fetchSchedule();
-      dueDate = DateTime(
-        dueDate.year,
-        dueDate.month,
-        dueDate.day,
-        schedule.metadata.firstLessonTime.hour,
-        schedule.metadata.firstLessonTime.minute,
-      );
+      final schedule = await fetchSchedule();
+      if (schedule is Schedule) {
+        dueDate = DateTime(
+          dueDate.year,
+          dueDate.month,
+          dueDate.day,
+          schedule.metadata.firstLessonTime.hour,
+          schedule.metadata.firstLessonTime.minute,
+        );
+      } else {
+        dueDate = DateTime(dueDate.year, dueDate.month, dueDate.day, 8, 0);
+      }
     }
     if (homework.handIn) {
       await flutterLocalNotificationsPlugin.zonedSchedule(

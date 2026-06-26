@@ -433,29 +433,36 @@ class _ScheduleGridViewState extends State<ScheduleGridView> {
   void _refreshSchedule(BuildContext context) {
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
-        builder: (context) => FutureBuilder(
+        builder: (context) => FutureBuilder<dynamic>(
           future: fetch_schedule.fetchSchedule(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: CircularProgressIndicator(),
+              return const Scaffold(
+                body: Center(
+                  child: CircularProgressIndicator(),
+                ),
               );
             } else if (snapshot.hasError) {
               logger.e(snapshot.error);
-              return Center(
-                child: Text(
-                  'Error: ${snapshot.error}',
-                  style: const TextStyle(color: Colors.red),
+              return Scaffold(
+                body: Center(
+                  child: Text(
+                    'Error: ${snapshot.error}',
+                    style: const TextStyle(color: Colors.red),
+                  ),
                 ),
               );
-            } else if (snapshot.hasData) {
-              if (snapshot.data is String && snapshot.data!.isEmpty) {
-                const ScheduleSetupPage();
+            } else if (snapshot.connectionState == ConnectionState.done) {
+              final data = snapshot.data;
+              if (data == null) {
+                return const ScheduleSetupPage();
               }
-              return SchedulePage(schedule: snapshot.data!);
+              return SchedulePage(schedule: data);
             } else {
-              return Center(
-                child: Text(l10n.noDataAvailable),
+              return Scaffold(
+                body: Center(
+                  child: Text(l10n.noDataAvailable),
+                ),
               );
             }
           },

@@ -10,7 +10,7 @@ class AddMarkSubjectSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
+    return FutureBuilder<dynamic>(
         future: fetchSchedule(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -22,8 +22,9 @@ class AddMarkSubjectSelector extends StatelessWidget {
                 style: const TextStyle(color: Colors.red),
               ),
             );
-          } else if (snapshot.hasData) {
-            if (snapshot.data is String && snapshot.data!.isEmpty) {
+          } else if (snapshot.connectionState == ConnectionState.done) {
+            final data = snapshot.data;
+            if (data == null) {
               return const Center(
                 child: Text(
                   'No subjects found. Please set them up in the schedule tab first.',
@@ -33,7 +34,7 @@ class AddMarkSubjectSelector extends StatelessWidget {
             }
             return Expanded(
               child: SubjectListWidget(
-                subjects: snapshot.data!.subjects,
+                subjects: data.subjects,
                 popAfterSelection: false,
                 onSubjectSelected: (selectedSubject) =>
                     onSelection(selectedSubject),

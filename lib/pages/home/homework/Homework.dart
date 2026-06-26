@@ -136,23 +136,25 @@ class _HomeworkPageState extends State<HomeworkPage>
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => FutureBuilder(
+                      builder: (context) => FutureBuilder<dynamic>(
                         future: fetchSchedule(),
                         builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            if (snapshot.data is String &&
-                                snapshot.data!.isEmpty) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return const Center(child: CircularProgressIndicator());
+                          } else if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          } else if (snapshot.connectionState == ConnectionState.done) {
+                            final data = snapshot.data;
+                            if (data == null) {
                               return ScheduleSetupPage(
                                   headerTitle: l10n.scheduleSetupWarning);
                             }
                             return AddHomeworkPage(
-                              schedule: snapshot.data!,
+                              schedule: data,
                               task: tasks[index],
                             );
-                          } else if (snapshot.hasError) {
-                            return Text('Error: ${snapshot.error}');
                           } else {
-                            return const CircularProgressIndicator();
+                            return const Center(child: CircularProgressIndicator());
                           }
                         },
                       ),
@@ -177,19 +179,22 @@ class _HomeworkPageState extends State<HomeworkPage>
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => FutureBuilder(
+                  builder: (context) => FutureBuilder<dynamic>(
                     future: fetchSchedule(),
                     builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        if (snapshot.data is String && snapshot.data!.isEmpty) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      } else if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      } else if (snapshot.connectionState == ConnectionState.done) {
+                        final data = snapshot.data;
+                        if (data == null) {
                           return ScheduleSetupPage(
                               headerTitle: l10n.scheduleSetupWarning);
                         }
-                        return AddHomeworkPage(schedule: snapshot.data!);
-                      } else if (snapshot.hasError) {
-                        return Text('Error: ${snapshot.error}');
+                        return AddHomeworkPage(schedule: data);
                       } else {
-                        return const CircularProgressIndicator();
+                        return const Center(child: CircularProgressIndicator());
                       }
                     },
                   ),

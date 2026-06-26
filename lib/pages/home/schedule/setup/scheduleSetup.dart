@@ -202,19 +202,32 @@ class _ScheduleSetupPageState extends State<ScheduleSetupPage> {
     }
     if (!_isEdit) {
       Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (context) => FutureBuilder(
+        builder: (context) => FutureBuilder<dynamic>(
           future: fetch_schedule.fetchSchedule(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const CircularProgressIndicator();
+              return const Scaffold(
+                body: Center(child: CircularProgressIndicator()),
+              );
             } else if (snapshot.hasError) {
               logger.e(snapshot.error);
-              return Text('Error: ${snapshot.error}');
-            } else if (snapshot.hasData) {
-              return SchedulePage(schedule: snapshot.data!);
+              return Scaffold(
+                body: Center(child: Text('Error: ${snapshot.error}')),
+              );
+            } else if (snapshot.connectionState == ConnectionState.done) {
+              final data = snapshot.data;
+              if (data == null) {
+                logger.w("Couldn't find a schedule after creating it.");
+                return Scaffold(
+                  body: Center(child: Text(l10n.noDataAvailable)),
+                );
+              }
+              return SchedulePage(schedule: data);
             } else {
               logger.w("Couldn't find a schedule after creating it.");
-              return Text(l10n.noDataAvailable);
+              return Scaffold(
+                body: Center(child: Text(l10n.noDataAvailable)),
+              );
             }
           },
         ),
