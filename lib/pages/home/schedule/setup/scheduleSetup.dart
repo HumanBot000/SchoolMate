@@ -53,7 +53,10 @@ class _ScheduleSetupPageState extends State<ScheduleSetupPage> {
             .compareTo(lesson2.temporalData.startTime));
         _startTime = lessons!.first.temporalData.startTime;
         _endTime = lessons!.last.temporalData.endTime;
-        _workdays[widget.existingSchedule!.metadata.workdays[0]] = true;
+        _workdays.fillRange(0, 7, false);
+        for (int day in widget.existingSchedule!.metadata.workdays) {
+          _workdays[day] = true;
+        }
         _alternatingWeeksCount =
             widget.existingSchedule!.metadata.numberOfAlternateWeeks - 1;
         _currentAlternatingWeek = ["A", "B", "C", "D", "E", "F", "G"]
