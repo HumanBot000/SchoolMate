@@ -145,13 +145,13 @@ Future<void> _signInHandler(Object response, BuildContext context) async {
 Future<void> _signInWithGoogle(BuildContext context) async {
   try {
     if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
-      final googleSignIn = GoogleSignIn(
+      final googleSignIn = GoogleSignIn.instance;
+      await googleSignIn.initialize(
         clientId: Platform.isIOS ? googleIosClientId : null,
         serverClientId: googleWebClientId,
-        scopes: ['email', 'profile'],
       );
 
-      final googleUser = await googleSignIn.signIn();
+      final googleUser = await googleSignIn.authenticate();
       if (googleUser == null) {
         // User cancelled flow
         return;
@@ -162,10 +162,13 @@ Future<void> _signInWithGoogle(BuildContext context) async {
         throw 'No ID Token found. Please check Google Sign-in configuration.';
       }
 
+      final googleAuthorization = await googleUser.authorizationClient.authorizationForScopes([]);
+      final accessToken = googleAuthorization?.accessToken;
+
       final response = await supabaseClient.client.auth.signInWithIdToken(
         provider: OAuthProvider.google,
         idToken: googleAuth.idToken!,
-        accessToken: googleAuth.accessToken,
+        accessToken: accessToken,
       );
 
       if (context.mounted) {
