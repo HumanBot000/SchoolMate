@@ -227,6 +227,9 @@ class _AddHomeworkPageState extends State<AddHomeworkPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.task == null ? l10n.addHomeworkTooltip : l10n.homeworkTitle),
+      ),
       body: ListView(
         padding: const EdgeInsets.all(0), // removes default ListView padding
         children: [
