@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:school_mate/Classes/marks/ExamType.dart';
 import 'package:school_mate/Classes/marks/GradingSystem.dart';
+import 'package:school_mate/l10n/app_localizations.dart';
 
 class ExamTypeSelector extends StatelessWidget {
   final GradingSystem gradingSystem;
@@ -98,13 +99,14 @@ class ExamTypeSelector extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         examType.evaluationData.percentage != null
-            ? _buildPercentageContent(examType, colors)
-            : _buildMultiplicationContent(examType, colors),
+            ? _buildPercentageContent(context, examType, colors)
+            : _buildMultiplicationContent(context, examType, colors),
       ],
     );
   }
 
-  Widget _buildPercentageContent(ExamType examType, ColorScheme colors) {
+  Widget _buildPercentageContent(BuildContext context, ExamType examType, ColorScheme colors) {
+    final l10n = AppLocalizations.of(context)!;
     return Row(
       children: [
         Icon(
@@ -114,7 +116,7 @@ class ExamTypeSelector extends StatelessWidget {
         ),
         const SizedBox(width: 4),
         Text(
-          '${examType.evaluationData.percentage}% Weight',
+          l10n.percentageWeight(examType.evaluationData.percentage.toString()),
           style: TextStyle(
             color: colors.tertiary,
             fontSize: 14,
@@ -124,7 +126,8 @@ class ExamTypeSelector extends StatelessWidget {
     );
   }
 
-  Widget _buildMultiplicationContent(ExamType examType, ColorScheme colors) {
+  Widget _buildMultiplicationContent(BuildContext context, ExamType examType, ColorScheme colors) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -137,7 +140,7 @@ class ExamTypeSelector extends StatelessWidget {
             ),
             const SizedBox(width: 4),
             Text(
-              '${examType.evaluationData.multiplicationFactor}x Multiplier',
+              l10n.multiplicationMultiplier(examType.evaluationData.multiplicationFactor.toString()),
               style: TextStyle(
                 color: colors.secondary,
                 fontSize: 14,
@@ -149,7 +152,7 @@ class ExamTypeSelector extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 4),
             child: Text(
-              'Based on ${examType.evaluationData.multiplicationChildType!.name}',
+              l10n.basedOnChildType(examType.evaluationData.multiplicationChildType!.name),
               style: TextStyle(
                 fontSize: 12,
                 color: colors.onSurfaceVariant,

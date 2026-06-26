@@ -3,19 +3,20 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:school_mate/API/supabase/grades/marks.dart';
 import 'package:school_mate/Classes/marks/GradingSystem.dart';
+import 'package:school_mate/l10n/app_localizations.dart';
 import 'package:school_mate/pages/home/marks/Utils.dart';
 
 class MarkSelector extends StatefulWidget {
   final GradingSystem gradingSystem;
   final Function(double) onMarkSelected;
-  final String title;
+  final String? title;
   final double? selectedMark;
 
   const MarkSelector({
     super.key,
     required this.gradingSystem,
     required this.onMarkSelected,
-    this.title = "Add a mark",
+    this.title,
     this.selectedMark,
   });
 
@@ -79,9 +80,9 @@ class _MarkSelectorState extends State<MarkSelector> {
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
-              child: const Text(
-                'Select',
-                style: TextStyle(color: Colors.white),
+              child: Text(
+                AppLocalizations.of(context)!.selectLabel,
+                style: const TextStyle(color: Colors.white),
               ),
             ),
           ],
@@ -123,7 +124,7 @@ class _MarkSelectorState extends State<MarkSelector> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                widget.title,
+                widget.title ?? AppLocalizations.of(context)!.selectMark,
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),

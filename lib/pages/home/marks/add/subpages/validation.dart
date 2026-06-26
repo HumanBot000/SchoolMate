@@ -136,8 +136,8 @@ class _AddMarkValidationPageState extends State<AddMarkValidationPage>
                           Expanded(
                             child: Text(
                               widget.isEdit
-                                  ? "Edit Mark for ${widget.subject.name}"
-                                  : "New Mark for ${widget.subject.name}",
+                                  ? l10n.editMarkForSubject(widget.subject.name)
+                                  : l10n.newMarkForSubject(widget.subject.name),
                               style: theme.textTheme.titleLarge?.copyWith(
                                 fontWeight: FontWeight.bold,
                               ),
@@ -148,7 +148,7 @@ class _AddMarkValidationPageState extends State<AddMarkValidationPage>
                     ),
                     if (widget.isEdit)
                       Text(
-                        "Use the back button to cary out changes to this mark.",
+                        l10n.useBackButtonToCarryOutChanges,
                         style: theme.textTheme.bodyLarge?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
@@ -173,7 +173,7 @@ class _AddMarkValidationPageState extends State<AddMarkValidationPage>
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    "Mark Value",
+                                    l10n.markValue,
                                     style: theme.textTheme.titleMedium,
                                   ),
                                 ],
@@ -236,7 +236,7 @@ class _AddMarkValidationPageState extends State<AddMarkValidationPage>
                               widget.gradingSystem.modifiers.contains("-")) ...[
                             const SizedBox(height: 16),
                             Text(
-                              "Mark Modifiers",
+                              l10n.markModifiers,
                               style: theme.textTheme.titleMedium,
                             ),
                             const SizedBox(height: 8),
@@ -326,7 +326,7 @@ class _AddMarkValidationPageState extends State<AddMarkValidationPage>
                                 ),
                                 const SizedBox(width: 12),
                                 Text(
-                                  "Exam Type",
+                                  l10n.examType,
                                   style: theme.textTheme.titleMedium?.copyWith(
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -373,7 +373,7 @@ class _AddMarkValidationPageState extends State<AddMarkValidationPage>
                                 ),
                                 const SizedBox(width: 12),
                                 Text(
-                                  "Description",
+                                  l10n.description,
                                   style: theme.textTheme.titleMedium?.copyWith(
                                     fontWeight: FontWeight.w500,
                                   ),

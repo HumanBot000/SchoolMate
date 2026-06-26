@@ -180,7 +180,7 @@ class LocalResidenceSelector extends StatelessWidget {
         child: Column(
           children: [
             Text(
-              "Where do you live?",
+              l10n.whereDoYouLive,
               style: Theme.of(context).textTheme.headlineMedium,
             ),
             SizedBox(
@@ -214,9 +214,9 @@ class LocalResidenceSelector extends StatelessWidget {
                                   onChange("unset");
                                 }
                               });
-                              return const Center(
+                              return Center(
                                 child: Text(
-                                  "There aren't any states available for your country.",
+                                  l10n.noStatesAvailable,
                                 ),
                               );
                             } else if (snapshot.hasData) {
@@ -253,7 +253,7 @@ class LocalResidenceSelector extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "I don't live in $selectedCountryString",
+                    l10n.dontLiveInCountry(selectedCountryString),
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                   const Padding(

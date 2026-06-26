@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:school_mate/Classes/homeworks/Homework.dart';
+import 'package:school_mate/l10n/app_localizations.dart';
 import 'package:school_mate/util/dates.dart';
 
 class HomeworkBox extends StatefulWidget {
@@ -41,6 +42,7 @@ class _HomeworkBoxState extends State<HomeworkBox> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       decoration: BoxDecoration(
         color: const Color(0xFF1A1F36).withValues(alpha: 0.6),
@@ -92,15 +94,25 @@ class _HomeworkBoxState extends State<HomeworkBox> {
                 const SizedBox(height: 4),
                 if (widget.homework.dueDate != null)
                   Text(
-                      "${weekdaysAbbreviations[widget.homework.dueDate!.weekday - 1]}. ${DateFormat("d. MMM").format(widget.homework.dueDate!)} | In ${getVisualTimeTillDate(DateTime.now(), widget.homework.dueDate!)[0]} ${getVisualTimeTillDate(DateTime.now(), widget.homework.dueDate!)[1]}",
-                      style: TextStyle(
-                          fontSize: 13,
-                          color: widget.homework.dueDate!
-                                      .difference(DateTime.now())
-                                      .inHours >
-                                  24
-                              ? Colors.white
-                              : Colors.red)),
+                    l10n.homeworkDueDate(
+                      DateFormat.E(Localizations.localeOf(context).toString()).format(widget.homework.dueDate!),
+                      DateFormat("d. MMM").format(widget.homework.dueDate!),
+                      getVisualTimeTillDate(DateTime.now(), widget.homework.dueDate!)[0].toString(),
+                      getLocalizedUnit(
+                        l10n,
+                        getVisualTimeTillDate(DateTime.now(), widget.homework.dueDate!)[1] as String,
+                      ),
+                    ),
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: widget.homework.dueDate!
+                                  .difference(DateTime.now())
+                                  .inHours >
+                              24
+                          ? Colors.white
+                          : Colors.red,
+                    ),
+                  ),
               ],
             ),
           ),

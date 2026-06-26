@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:school_mate/Widgets/public/TimePicker.dart';
+import 'package:school_mate/l10n/app_localizations.dart';
 import 'package:school_mate/util/extensions/dates.dart';
 
 class HandInHomeworkToggle extends StatelessWidget {
@@ -20,6 +21,7 @@ class HandInHomeworkToggle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 16.0),
@@ -41,7 +43,7 @@ class HandInHomeworkToggle extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "Hand in Homework?",
+                l10n.handInHomeworkQuestion,
                 style: theme.textTheme.bodyMedium?.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
@@ -55,13 +57,13 @@ class HandInHomeworkToggle extends StatelessWidget {
           ),
           if (value)
             Text(
-              "We will notify you before the deadline, so you don't forget to submit your work.",
+              l10n.handInHomeworkNotification,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: Colors.red.shade900, fontWeight: FontWeight.bold),
             ),
           if (value)
             Text(
-              "We won't notify you if this task is marked as completed!",
+              l10n.handInHomeworkNoNotification,
               style: Theme.of(context)
                   .textTheme
                   .bodySmall
@@ -107,7 +109,7 @@ class HandInHomeworkToggle extends StatelessWidget {
                             handInTime != null
                                 ? DateFormat("HH:mm")
                                     .format(handInTime!.toDateTime())
-                                : "Select Time",
+                                : l10n.selectTime,
                             style: theme.textTheme.bodyMedium?.copyWith(
                               fontWeight: FontWeight.w500,
                               color: theme.colorScheme.onPrimaryContainer,

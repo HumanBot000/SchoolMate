@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:school_mate/Widgets/public/TimePicker.dart';
+import 'package:school_mate/l10n/app_localizations.dart';
 import 'package:school_mate/util/extensions/dates.dart';
 
 class LessonsTimeFrameSelector extends StatefulWidget {
@@ -22,6 +23,7 @@ class LessonsTimeFrameSelector extends StatefulWidget {
 class _LessonsTimeFrameSelectorState extends State<LessonsTimeFrameSelector> {
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       margin: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -40,7 +42,7 @@ class _LessonsTimeFrameSelectorState extends State<LessonsTimeFrameSelector> {
                   context: context,
                   builder: (context) => CustomTimePicker(
                     initialTime: widget.startTime,
-                    headline: "When does your first lesson start?",
+                    headline: l10n.whenFirstLessonStarts,
                     onTimeSelected: (time) {
                       widget.onTimeChanged(time, widget.endTime);
                     },
@@ -61,7 +63,7 @@ class _LessonsTimeFrameSelectorState extends State<LessonsTimeFrameSelector> {
                       SizedBox(
                         width: 120,
                         child: Text(
-                          "Lessons start at",
+                          l10n.lessonsStartAt,
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ),
@@ -97,7 +99,7 @@ class _LessonsTimeFrameSelectorState extends State<LessonsTimeFrameSelector> {
                     gradient: LinearGradient(
                       colors: [Colors.red.shade300, Colors.orange.shade300],
                     ),
-                    headline: "When does your last lesson end?",
+                    headline: l10n.whenLastLessonEnds,
                     onTimeSelected: (time) {
                       widget.onTimeChanged(widget.startTime, time);
                     },
@@ -118,7 +120,7 @@ class _LessonsTimeFrameSelectorState extends State<LessonsTimeFrameSelector> {
                       SizedBox(
                         width: 120, // Fixed width for label alignment
                         child: Text(
-                          "Lessons end at",
+                          l10n.lessonsEndAt,
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ),
@@ -137,7 +139,7 @@ class _LessonsTimeFrameSelectorState extends State<LessonsTimeFrameSelector> {
                       widget.endTime != null
                           ? intl.DateFormat('HH:mm')
                               .format(widget.endTime!.toDateTime())
-                          : "Set",
+                          : l10n.setLabel,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             fontWeight: FontWeight.bold,
                             color: Theme.of(context).colorScheme.primary,

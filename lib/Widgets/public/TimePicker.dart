@@ -7,14 +7,14 @@ import 'package:school_mate/util/extensions/dates.dart';
 class CustomTimePicker extends StatelessWidget {
   final TimeOfDay initialTime;
   final Function(TimeOfDay) onTimeSelected;
-  final String headline;
+  final String? headline;
   final LinearGradient gradient;
 
   const CustomTimePicker({
     super.key,
     required this.initialTime,
     required this.onTimeSelected,
-    this.headline = "Pick a Time",
+    this.headline,
     this.gradient =
         const LinearGradient(colors: [Colors.lightBlue, Color(0x283593FF)]),
   });
@@ -34,7 +34,7 @@ class CustomTimePicker extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              headline,
+              headline ?? l10n.pickATime,
               style: Theme.of(context)
                   .textTheme
                   .headlineSmall

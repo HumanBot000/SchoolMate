@@ -1,6 +1,5 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
-
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -146,7 +145,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get days => 'Days';
+  String get days => 'days';
 
   @override
   String get defaultExamTypeNotice => 'This is the default Exam Type';
@@ -332,7 +331,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get homeworkTitle => 'Homework';
 
   @override
-  String get hours => 'Hours';
+  String get hours => 'hours';
 
   @override
   String get invalidCredentialsMessage =>
@@ -382,7 +381,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get marksTitle => 'Marks';
 
   @override
-  String get minutes => 'Minutes';
+  String get minutes => 'minutes';
 
   @override
   String get minutesLabel => 'Minutes';
@@ -665,4 +664,456 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get withDecimals => 'With Decimals';
+
+  @override
+  String get date => 'Date';
+
+  @override
+  String get whenHomeworkCompleted =>
+      'When does this homework need to be completed?';
+
+  @override
+  String inTime(String amount, String unit) {
+    return 'In $amount $unit';
+  }
+
+  @override
+  String get handInHomeworkQuestion => 'Hand in Homework?';
+
+  @override
+  String get handInHomeworkNotification =>
+      'We will notify you before the deadline, so you don\'t forget to submit your work.';
+
+  @override
+  String get handInHomeworkNoNotification =>
+      'We won\'t notify you if this task is marked as completed!';
+
+  @override
+  String get selectTime => 'Select Time';
+
+  @override
+  String get year => 'year';
+
+  @override
+  String get years => 'years';
+
+  @override
+  String get day => 'day';
+
+  @override
+  String get hour => 'hour';
+
+  @override
+  String get minute => 'minute';
+
+  @override
+  String homeworkDueDate(
+      String weekday, String date, String amount, String unit) {
+    return '$weekday. $date | In $amount $unit';
+  }
+
+  @override
+  String timeAgo(String amount, String unit) {
+    return '$amount $unit ago';
+  }
+
+  @override
+  String get showLess => 'Show less';
+
+  @override
+  String get showMore => 'Show more';
+
+  @override
+  String get noSubjectsFoundError =>
+      'No subjects found. Please set them up in the schedule tab first.';
+
+  @override
+  String percentageWeight(String percentage) {
+    return '$percentage% Weight';
+  }
+
+  @override
+  String multiplicationMultiplier(String factor) {
+    return '${factor}x Multiplier';
+  }
+
+  @override
+  String basedOnChildType(String childType) {
+    return 'Based on $childType';
+  }
+
+  @override
+  String editMarkForSubject(String subject) {
+    return 'Edit Mark for $subject';
+  }
+
+  @override
+  String newMarkForSubject(String subject) {
+    return 'New Mark for $subject';
+  }
+
+  @override
+  String get useBackButtonToCarryOutChanges =>
+      'Use the back button to carry out changes to this mark.';
+
+  @override
+  String get markValue => 'Mark Value';
+
+  @override
+  String get markModifiers => 'Mark Modifiers';
+
+  @override
+  String get description => 'Description';
+
+  @override
+  String get noScheduleAvailable => 'No schedule available';
+
+  @override
+  String errorLoadingMarks(String error) {
+    return 'Error loading marks data: $error';
+  }
+
+  @override
+  String get studyTip => 'Study Tip';
+
+  @override
+  String get percentage => 'Percentage';
+
+  @override
+  String get multiplicationBased => 'Multiplication-based';
+
+  @override
+  String get percentageBasedEvaluationTitle => 'Percentage-based Evaluation:';
+
+  @override
+  String get percentageBasedEvaluationDesc =>
+      'The final grade is calculated by averaging all exams within each category (e.g., homework and tests). Then, each category\'s average is weighted based on its importance to determine the overall result.\n\nFor example, if homework and tests contribute differently to the final grade, the formula would be:\n';
+
+  @override
+  String get percentageBasedEvaluationFormula =>
+      'Final Grade = (Average of Homework × its weight + Average of Tests × its weight) / Total weight';
+
+  @override
+  String get multiplicationBasedEvaluationTitle =>
+      'Multiplication-based Evaluation:';
+
+  @override
+  String get multiplicationBasedEvaluationDescPart1 =>
+      'In this method, each exam in a group is counted as multiple exams based on its weight.\n\n';
+
+  @override
+  String get multiplicationBasedEvaluationDescPart2 =>
+      'For example, if a class paper is worth twice as much as a normal test, it will be counted as two exams when calculating the final grade\n\n';
+
+  @override
+  String get multiplicationBasedEvaluationDescPart3 =>
+      'This way, some exams contribute more to the final result than others';
+
+  @override
+  String get perfectAdjusted => 'Perfect! You\'re good to go!';
+
+  @override
+  String get keepAdjusting => 'Keep adjusting until the total is 100%';
+
+  @override
+  String get errorSelectGradingSystemDropdown =>
+      'Please select a grading system from the dropdown.';
+
+  @override
+  String get errorCreateAtLeastOneExamType => 'Create at least one exam type!';
+
+  @override
+  String get errorSameEvaluationMethod =>
+      'All exam types must have the same evaluation method!';
+
+  @override
+  String get errorFillNameForEachExamType =>
+      'Fill in a name for each exam type!';
+
+  @override
+  String get errorFillPercentageForEachExamType =>
+      'Fill in a percentage for each percentage-based exam type!';
+
+  @override
+  String get errorFillFactorForEachExamType =>
+      'Fill in a multiplication factor for each multiplication-based exam type!';
+
+  @override
+  String get errorOneBaseMultiplicationExamType =>
+      'There may only be one base multiplication exam type!';
+
+  @override
+  String get errorSumOfPercentagesMustBe100 =>
+      'The sum of all percentages must be 100';
+
+  @override
+  String get errorFactorMustBeGreaterThanZero =>
+      'The multiplication factor must be greater than zero!';
+
+  @override
+  String get errorAvoidCircularDependency =>
+      'Avoid circular dependency in multiplication-based exam types!';
+
+  @override
+  String get errorExamTypeNamesUnique =>
+      'Each exam type must have a unique name!';
+
+  @override
+  String gradingBestWorstExplanation(String best, String worst) {
+    return 'The best mark is $best and the worst mark is $worst';
+  }
+
+  @override
+  String get gradingModifiersExplanation =>
+      'Additionally each mark can also get a + or - assigned';
+
+  @override
+  String get gradingDecimalsExplanation =>
+      'It is possible to assign decimal values';
+
+  @override
+  String get gradingExamsWeightingPrompt =>
+      'Are there different types of exams?\n How are your marks weighted?';
+
+  @override
+  String get addAssignment => 'Add Assignment';
+
+  @override
+  String get addHomeworkDueThisLesson => 'Add Homework due this lesson';
+
+  @override
+  String get createAssignmentForThisLesson =>
+      'Create assignment for this lesson';
+
+  @override
+  String get whenFirstLessonStarts => 'When does your first lesson start?';
+
+  @override
+  String get lessonsStartAt => 'Lessons start at';
+
+  @override
+  String get whenLastLessonEnds => 'When does your last lesson end?';
+
+  @override
+  String get lessonsEndAt => 'Lessons end at';
+
+  @override
+  String get setLabel => 'Set';
+
+  @override
+  String welcomeUsername(String username) {
+    return 'Welcome $username';
+  }
+
+  @override
+  String get residenceUpdate => 'Residence Update';
+
+  @override
+  String get thanksSigningUp => 'Thanks for signing up!';
+
+  @override
+  String get updateCurrentResidence => 'Update your current residence';
+
+  @override
+  String get setupIntroOnboarding =>
+      'Before you can start using SchoolMate, we need to know some last details about you.';
+
+  @override
+  String get setupIntroUpdate =>
+      'We will use this info to calculate the next school holidays.';
+
+  @override
+  String get beforeDeadline => 'before a deadline';
+
+  @override
+  String get beforeLessonStarts => 'before the lesson starts';
+
+  @override
+  String get pickATime => 'Pick a Time';
+
+  @override
+  String get studyTip1 =>
+      'Break study sessions into 25-minute chunks with 5-minute breaks ⏳';
+
+  @override
+  String get studyTip2 =>
+      'Teach concepts to a friend to reinforce your understanding 👩‍‍🏫';
+
+  @override
+  String get studyTip3 => 'Create colorful mind maps for visual learning 🎨';
+
+  @override
+  String get studyTip4 =>
+      'Use the Pomodoro technique for focused productivity 🍅';
+
+  @override
+  String get studyTip5 => 'Test yourself with flashcards for active recall 🗂️';
+
+  @override
+  String get studyTip6 =>
+      'Study in natural light to reduce eye strain and boost mood ☀️';
+
+  @override
+  String get studyTip7 =>
+      'Record voice notes of key ideas to listen while walking 🎧';
+
+  @override
+  String get studyTip8 =>
+      'Start with the hardest task when your energy is highest 💪';
+
+  @override
+  String get studyTip9 => 'Organize notes with color-coded highlighters 🌈';
+
+  @override
+  String get studyTip10 =>
+      'Stretch every 30 minutes to improve circulation 🧘‍♂️';
+
+  @override
+  String get studyTip11 =>
+      'Keep a water bottle nearby to stay hydrated and focused 💧';
+
+  @override
+  String get studyTip12 =>
+      'Use website blockers to minimize digital distractions 🚫';
+
+  @override
+  String get studyTip13 =>
+      'Review notes for 15 minutes before bed for better retention 🌙';
+
+  @override
+  String get studyTip14 =>
+      'Create a lo-fi study playlist to maintain concentration 🎶';
+
+  @override
+  String get studyTip15 => 'Practice past exams under timed conditions ⏱️';
+
+  @override
+  String get studyTip16 => 'Use mnemonics like \'ROYGBIV\' for memorization 🧠';
+
+  @override
+  String get studyTip17 => 'Snack on brain foods like nuts and blueberries 🫐';
+
+  @override
+  String get studyTip18 => 'Declutter your workspace for mental clarity 🧹';
+
+  @override
+  String get studyTip19 =>
+      'Reward yourself with a small treat after milestones 🎉';
+
+  @override
+  String get studyTip20 => 'Schedule weekly goals and celebrate progress 📆';
+
+  @override
+  String get motivationalQuote1 => 'Progress over perfection 🌱';
+
+  @override
+  String get motivationalQuote2 =>
+      'You don’t have to be great to start – just start 💫';
+
+  @override
+  String get motivationalQuote3 =>
+      'Every page turned is a step closer to mastery 📖';
+
+  @override
+  String get motivationalQuote4 => 'Mistakes are proof you’re growing 🌻';
+
+  @override
+  String get motivationalQuote5 =>
+      'Your pace is valid – comparison steals joy 🐢⚡';
+
+  @override
+  String get motivationalQuote6 =>
+      'Resting is part of the journey, not quitting 💤';
+
+  @override
+  String get motivationalQuote7 => 'The expert was once a curious beginner 🔍';
+
+  @override
+  String get motivationalQuote8 => 'Small efforts compound into big results 🧱';
+
+  @override
+  String get motivationalQuote9 =>
+      'Courage is quiet persistence, not loud perfection 🦁';
+
+  @override
+  String get motivationalQuote10 =>
+      'You’ve survived 100% of your toughest days 💯';
+
+  @override
+  String get motivationalQuote11 =>
+      'Learning is planting seeds for tomorrow’s forest 🌳';
+
+  @override
+  String get motivationalQuote12 =>
+      'Your brain grows stronger with every challenge 💪🧠';
+
+  @override
+  String get motivationalQuote13 =>
+      'The best time to start was yesterday. The next best time is now 🕒';
+
+  @override
+  String get motivationalQuote14 =>
+      'You’re not failing – you’re discovering what works 🔄';
+
+  @override
+  String get motivationalQuote15 => 'Curiosity is the compass to wisdom 🧭';
+
+  @override
+  String get motivationalQuote16 => 'Your potential is an ocean – dive in 🌊';
+
+  @override
+  String get motivationalQuote17 => 'One chapter at a time writes the story 📝';
+
+  @override
+  String get motivationalQuote18 =>
+      'Burnout isn’t a badge of honor – balance is key ⚖️';
+
+  @override
+  String get motivationalQuote19 =>
+      'You’re building wings while learning to fly 🦅';
+
+  @override
+  String get motivationalQuote20 =>
+      'Today’s effort is tomorrow’s foundation 🏗️';
+
+  @override
+  String noCountriesFound(String query) {
+    return 'No countries found matching \'$query\'';
+  }
+
+  @override
+  String get noStatesAvailable =>
+      'There aren\'t any states available for your country.';
+
+  @override
+  String get continueWithoutState => 'Continue without state selection';
+
+  @override
+  String noStatesFound(String query) {
+    return 'No states found matching \'$query\'';
+  }
+
+  @override
+  String dontLiveInCountry(String country) {
+    return 'I don\'t live in $country';
+  }
+
+  @override
+  String get emailVerificationSent =>
+      'We have sent you an email with a verification code.';
+
+  @override
+  String get enterCodeToVerify =>
+      'Enter the code below to verify your account:';
+
+  @override
+  String get resendCode => 'Resend Code';
+
+  @override
+  String resendInSeconds(String seconds) {
+    return 'Resend in $seconds seconds';
+  }
+
+  @override
+  String get noMarks => 'No Marks';
 }

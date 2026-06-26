@@ -353,7 +353,7 @@ abstract class AppLocalizations {
   /// No description provided for @days.
   ///
   /// In en, this message translates to:
-  /// **'Days'**
+  /// **'days'**
   String get days;
 
   /// No description provided for @defaultExamTypeNotice.
@@ -683,7 +683,7 @@ abstract class AppLocalizations {
   /// No description provided for @hours.
   ///
   /// In en, this message translates to:
-  /// **'Hours'**
+  /// **'hours'**
   String get hours;
 
   /// No description provided for @invalidCredentialsMessage.
@@ -773,7 +773,7 @@ abstract class AppLocalizations {
   /// No description provided for @minutes.
   ///
   /// In en, this message translates to:
-  /// **'Minutes'**
+  /// **'minutes'**
   String get minutes;
 
   /// No description provided for @minutesLabel.
@@ -1291,6 +1291,739 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'With Decimals'**
   String get withDecimals;
+
+  /// No description provided for @date.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get date;
+
+  /// No description provided for @whenHomeworkCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'When does this homework need to be completed?'**
+  String get whenHomeworkCompleted;
+
+  /// No description provided for @inTime.
+  ///
+  /// In en, this message translates to:
+  /// **'In {amount} {unit}'**
+  String inTime(String amount, String unit);
+
+  /// No description provided for @handInHomeworkQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Hand in Homework?'**
+  String get handInHomeworkQuestion;
+
+  /// No description provided for @handInHomeworkNotification.
+  ///
+  /// In en, this message translates to:
+  /// **'We will notify you before the deadline, so you don\'t forget to submit your work.'**
+  String get handInHomeworkNotification;
+
+  /// No description provided for @handInHomeworkNoNotification.
+  ///
+  /// In en, this message translates to:
+  /// **'We won\'t notify you if this task is marked as completed!'**
+  String get handInHomeworkNoNotification;
+
+  /// No description provided for @selectTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Time'**
+  String get selectTime;
+
+  /// No description provided for @year.
+  ///
+  /// In en, this message translates to:
+  /// **'year'**
+  String get year;
+
+  /// No description provided for @years.
+  ///
+  /// In en, this message translates to:
+  /// **'years'**
+  String get years;
+
+  /// No description provided for @day.
+  ///
+  /// In en, this message translates to:
+  /// **'day'**
+  String get day;
+
+  /// No description provided for @hour.
+  ///
+  /// In en, this message translates to:
+  /// **'hour'**
+  String get hour;
+
+  /// No description provided for @minute.
+  ///
+  /// In en, this message translates to:
+  /// **'minute'**
+  String get minute;
+
+  /// No description provided for @homeworkDueDate.
+  ///
+  /// In en, this message translates to:
+  /// **'{weekday}. {date} | In {amount} {unit}'**
+  String homeworkDueDate(
+      String weekday, String date, String amount, String unit);
+
+  /// No description provided for @timeAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} {unit} ago'**
+  String timeAgo(String amount, String unit);
+
+  /// No description provided for @showLess.
+  ///
+  /// In en, this message translates to:
+  /// **'Show less'**
+  String get showLess;
+
+  /// No description provided for @showMore.
+  ///
+  /// In en, this message translates to:
+  /// **'Show more'**
+  String get showMore;
+
+  /// No description provided for @noSubjectsFoundError.
+  ///
+  /// In en, this message translates to:
+  /// **'No subjects found. Please set them up in the schedule tab first.'**
+  String get noSubjectsFoundError;
+
+  /// No description provided for @percentageWeight.
+  ///
+  /// In en, this message translates to:
+  /// **'{percentage}% Weight'**
+  String percentageWeight(String percentage);
+
+  /// No description provided for @multiplicationMultiplier.
+  ///
+  /// In en, this message translates to:
+  /// **'{factor}x Multiplier'**
+  String multiplicationMultiplier(String factor);
+
+  /// No description provided for @basedOnChildType.
+  ///
+  /// In en, this message translates to:
+  /// **'Based on {childType}'**
+  String basedOnChildType(String childType);
+
+  /// No description provided for @editMarkForSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Mark for {subject}'**
+  String editMarkForSubject(String subject);
+
+  /// No description provided for @newMarkForSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'New Mark for {subject}'**
+  String newMarkForSubject(String subject);
+
+  /// No description provided for @useBackButtonToCarryOutChanges.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the back button to carry out changes to this mark.'**
+  String get useBackButtonToCarryOutChanges;
+
+  /// No description provided for @markValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark Value'**
+  String get markValue;
+
+  /// No description provided for @markModifiers.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark Modifiers'**
+  String get markModifiers;
+
+  /// No description provided for @description.
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get description;
+
+  /// No description provided for @noScheduleAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No schedule available'**
+  String get noScheduleAvailable;
+
+  /// No description provided for @errorLoadingMarks.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading marks data: {error}'**
+  String errorLoadingMarks(String error);
+
+  /// No description provided for @studyTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Study Tip'**
+  String get studyTip;
+
+  /// No description provided for @percentage.
+  ///
+  /// In en, this message translates to:
+  /// **'Percentage'**
+  String get percentage;
+
+  /// No description provided for @multiplicationBased.
+  ///
+  /// In en, this message translates to:
+  /// **'Multiplication-based'**
+  String get multiplicationBased;
+
+  /// No description provided for @percentageBasedEvaluationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Percentage-based Evaluation:'**
+  String get percentageBasedEvaluationTitle;
+
+  /// No description provided for @percentageBasedEvaluationDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'The final grade is calculated by averaging all exams within each category (e.g., homework and tests). Then, each category\'s average is weighted based on its importance to determine the overall result.\n\nFor example, if homework and tests contribute differently to the final grade, the formula would be:\n'**
+  String get percentageBasedEvaluationDesc;
+
+  /// No description provided for @percentageBasedEvaluationFormula.
+  ///
+  /// In en, this message translates to:
+  /// **'Final Grade = (Average of Homework × its weight + Average of Tests × its weight) / Total weight'**
+  String get percentageBasedEvaluationFormula;
+
+  /// No description provided for @multiplicationBasedEvaluationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Multiplication-based Evaluation:'**
+  String get multiplicationBasedEvaluationTitle;
+
+  /// No description provided for @multiplicationBasedEvaluationDescPart1.
+  ///
+  /// In en, this message translates to:
+  /// **'In this method, each exam in a group is counted as multiple exams based on its weight.\n\n'**
+  String get multiplicationBasedEvaluationDescPart1;
+
+  /// No description provided for @multiplicationBasedEvaluationDescPart2.
+  ///
+  /// In en, this message translates to:
+  /// **'For example, if a class paper is worth twice as much as a normal test, it will be counted as two exams when calculating the final grade\n\n'**
+  String get multiplicationBasedEvaluationDescPart2;
+
+  /// No description provided for @multiplicationBasedEvaluationDescPart3.
+  ///
+  /// In en, this message translates to:
+  /// **'This way, some exams contribute more to the final result than others'**
+  String get multiplicationBasedEvaluationDescPart3;
+
+  /// No description provided for @perfectAdjusted.
+  ///
+  /// In en, this message translates to:
+  /// **'Perfect! You\'re good to go!'**
+  String get perfectAdjusted;
+
+  /// No description provided for @keepAdjusting.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep adjusting until the total is 100%'**
+  String get keepAdjusting;
+
+  /// No description provided for @errorSelectGradingSystemDropdown.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a grading system from the dropdown.'**
+  String get errorSelectGradingSystemDropdown;
+
+  /// No description provided for @errorCreateAtLeastOneExamType.
+  ///
+  /// In en, this message translates to:
+  /// **'Create at least one exam type!'**
+  String get errorCreateAtLeastOneExamType;
+
+  /// No description provided for @errorSameEvaluationMethod.
+  ///
+  /// In en, this message translates to:
+  /// **'All exam types must have the same evaluation method!'**
+  String get errorSameEvaluationMethod;
+
+  /// No description provided for @errorFillNameForEachExamType.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill in a name for each exam type!'**
+  String get errorFillNameForEachExamType;
+
+  /// No description provided for @errorFillPercentageForEachExamType.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill in a percentage for each percentage-based exam type!'**
+  String get errorFillPercentageForEachExamType;
+
+  /// No description provided for @errorFillFactorForEachExamType.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill in a multiplication factor for each multiplication-based exam type!'**
+  String get errorFillFactorForEachExamType;
+
+  /// No description provided for @errorOneBaseMultiplicationExamType.
+  ///
+  /// In en, this message translates to:
+  /// **'There may only be one base multiplication exam type!'**
+  String get errorOneBaseMultiplicationExamType;
+
+  /// No description provided for @errorSumOfPercentagesMustBe100.
+  ///
+  /// In en, this message translates to:
+  /// **'The sum of all percentages must be 100'**
+  String get errorSumOfPercentagesMustBe100;
+
+  /// No description provided for @errorFactorMustBeGreaterThanZero.
+  ///
+  /// In en, this message translates to:
+  /// **'The multiplication factor must be greater than zero!'**
+  String get errorFactorMustBeGreaterThanZero;
+
+  /// No description provided for @errorAvoidCircularDependency.
+  ///
+  /// In en, this message translates to:
+  /// **'Avoid circular dependency in multiplication-based exam types!'**
+  String get errorAvoidCircularDependency;
+
+  /// No description provided for @errorExamTypeNamesUnique.
+  ///
+  /// In en, this message translates to:
+  /// **'Each exam type must have a unique name!'**
+  String get errorExamTypeNamesUnique;
+
+  /// No description provided for @gradingBestWorstExplanation.
+  ///
+  /// In en, this message translates to:
+  /// **'The best mark is {best} and the worst mark is {worst}'**
+  String gradingBestWorstExplanation(String best, String worst);
+
+  /// No description provided for @gradingModifiersExplanation.
+  ///
+  /// In en, this message translates to:
+  /// **'Additionally each mark can also get a + or - assigned'**
+  String get gradingModifiersExplanation;
+
+  /// No description provided for @gradingDecimalsExplanation.
+  ///
+  /// In en, this message translates to:
+  /// **'It is possible to assign decimal values'**
+  String get gradingDecimalsExplanation;
+
+  /// No description provided for @gradingExamsWeightingPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Are there different types of exams?\n How are your marks weighted?'**
+  String get gradingExamsWeightingPrompt;
+
+  /// No description provided for @addAssignment.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Assignment'**
+  String get addAssignment;
+
+  /// No description provided for @addHomeworkDueThisLesson.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Homework due this lesson'**
+  String get addHomeworkDueThisLesson;
+
+  /// No description provided for @createAssignmentForThisLesson.
+  ///
+  /// In en, this message translates to:
+  /// **'Create assignment for this lesson'**
+  String get createAssignmentForThisLesson;
+
+  /// No description provided for @whenFirstLessonStarts.
+  ///
+  /// In en, this message translates to:
+  /// **'When does your first lesson start?'**
+  String get whenFirstLessonStarts;
+
+  /// No description provided for @lessonsStartAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Lessons start at'**
+  String get lessonsStartAt;
+
+  /// No description provided for @whenLastLessonEnds.
+  ///
+  /// In en, this message translates to:
+  /// **'When does your last lesson end?'**
+  String get whenLastLessonEnds;
+
+  /// No description provided for @lessonsEndAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Lessons end at'**
+  String get lessonsEndAt;
+
+  /// No description provided for @setLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Set'**
+  String get setLabel;
+
+  /// No description provided for @welcomeUsername.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome {username}'**
+  String welcomeUsername(String username);
+
+  /// No description provided for @residenceUpdate.
+  ///
+  /// In en, this message translates to:
+  /// **'Residence Update'**
+  String get residenceUpdate;
+
+  /// No description provided for @thanksSigningUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Thanks for signing up!'**
+  String get thanksSigningUp;
+
+  /// No description provided for @updateCurrentResidence.
+  ///
+  /// In en, this message translates to:
+  /// **'Update your current residence'**
+  String get updateCurrentResidence;
+
+  /// No description provided for @setupIntroOnboarding.
+  ///
+  /// In en, this message translates to:
+  /// **'Before you can start using SchoolMate, we need to know some last details about you.'**
+  String get setupIntroOnboarding;
+
+  /// No description provided for @setupIntroUpdate.
+  ///
+  /// In en, this message translates to:
+  /// **'We will use this info to calculate the next school holidays.'**
+  String get setupIntroUpdate;
+
+  /// No description provided for @beforeDeadline.
+  ///
+  /// In en, this message translates to:
+  /// **'before a deadline'**
+  String get beforeDeadline;
+
+  /// No description provided for @beforeLessonStarts.
+  ///
+  /// In en, this message translates to:
+  /// **'before the lesson starts'**
+  String get beforeLessonStarts;
+
+  /// No description provided for @pickATime.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a Time'**
+  String get pickATime;
+
+  /// No description provided for @studyTip1.
+  ///
+  /// In en, this message translates to:
+  /// **'Break study sessions into 25-minute chunks with 5-minute breaks ⏳'**
+  String get studyTip1;
+
+  /// No description provided for @studyTip2.
+  ///
+  /// In en, this message translates to:
+  /// **'Teach concepts to a friend to reinforce your understanding 👩‍‍🏫'**
+  String get studyTip2;
+
+  /// No description provided for @studyTip3.
+  ///
+  /// In en, this message translates to:
+  /// **'Create colorful mind maps for visual learning 🎨'**
+  String get studyTip3;
+
+  /// No description provided for @studyTip4.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the Pomodoro technique for focused productivity 🍅'**
+  String get studyTip4;
+
+  /// No description provided for @studyTip5.
+  ///
+  /// In en, this message translates to:
+  /// **'Test yourself with flashcards for active recall 🗂️'**
+  String get studyTip5;
+
+  /// No description provided for @studyTip6.
+  ///
+  /// In en, this message translates to:
+  /// **'Study in natural light to reduce eye strain and boost mood ☀️'**
+  String get studyTip6;
+
+  /// No description provided for @studyTip7.
+  ///
+  /// In en, this message translates to:
+  /// **'Record voice notes of key ideas to listen while walking 🎧'**
+  String get studyTip7;
+
+  /// No description provided for @studyTip8.
+  ///
+  /// In en, this message translates to:
+  /// **'Start with the hardest task when your energy is highest 💪'**
+  String get studyTip8;
+
+  /// No description provided for @studyTip9.
+  ///
+  /// In en, this message translates to:
+  /// **'Organize notes with color-coded highlighters 🌈'**
+  String get studyTip9;
+
+  /// No description provided for @studyTip10.
+  ///
+  /// In en, this message translates to:
+  /// **'Stretch every 30 minutes to improve circulation 🧘‍♂️'**
+  String get studyTip10;
+
+  /// No description provided for @studyTip11.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep a water bottle nearby to stay hydrated and focused 💧'**
+  String get studyTip11;
+
+  /// No description provided for @studyTip12.
+  ///
+  /// In en, this message translates to:
+  /// **'Use website blockers to minimize digital distractions 🚫'**
+  String get studyTip12;
+
+  /// No description provided for @studyTip13.
+  ///
+  /// In en, this message translates to:
+  /// **'Review notes for 15 minutes before bed for better retention 🌙'**
+  String get studyTip13;
+
+  /// No description provided for @studyTip14.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a lo-fi study playlist to maintain concentration 🎶'**
+  String get studyTip14;
+
+  /// No description provided for @studyTip15.
+  ///
+  /// In en, this message translates to:
+  /// **'Practice past exams under timed conditions ⏱️'**
+  String get studyTip15;
+
+  /// No description provided for @studyTip16.
+  ///
+  /// In en, this message translates to:
+  /// **'Use mnemonics like \'ROYGBIV\' for memorization 🧠'**
+  String get studyTip16;
+
+  /// No description provided for @studyTip17.
+  ///
+  /// In en, this message translates to:
+  /// **'Snack on brain foods like nuts and blueberries 🫐'**
+  String get studyTip17;
+
+  /// No description provided for @studyTip18.
+  ///
+  /// In en, this message translates to:
+  /// **'Declutter your workspace for mental clarity 🧹'**
+  String get studyTip18;
+
+  /// No description provided for @studyTip19.
+  ///
+  /// In en, this message translates to:
+  /// **'Reward yourself with a small treat after milestones 🎉'**
+  String get studyTip19;
+
+  /// No description provided for @studyTip20.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule weekly goals and celebrate progress 📆'**
+  String get studyTip20;
+
+  /// No description provided for @motivationalQuote1.
+  ///
+  /// In en, this message translates to:
+  /// **'Progress over perfection 🌱'**
+  String get motivationalQuote1;
+
+  /// No description provided for @motivationalQuote2.
+  ///
+  /// In en, this message translates to:
+  /// **'You don’t have to be great to start – just start 💫'**
+  String get motivationalQuote2;
+
+  /// No description provided for @motivationalQuote3.
+  ///
+  /// In en, this message translates to:
+  /// **'Every page turned is a step closer to mastery 📖'**
+  String get motivationalQuote3;
+
+  /// No description provided for @motivationalQuote4.
+  ///
+  /// In en, this message translates to:
+  /// **'Mistakes are proof you’re growing 🌻'**
+  String get motivationalQuote4;
+
+  /// No description provided for @motivationalQuote5.
+  ///
+  /// In en, this message translates to:
+  /// **'Your pace is valid – comparison steals joy 🐢⚡'**
+  String get motivationalQuote5;
+
+  /// No description provided for @motivationalQuote6.
+  ///
+  /// In en, this message translates to:
+  /// **'Resting is part of the journey, not quitting 💤'**
+  String get motivationalQuote6;
+
+  /// No description provided for @motivationalQuote7.
+  ///
+  /// In en, this message translates to:
+  /// **'The expert was once a curious beginner 🔍'**
+  String get motivationalQuote7;
+
+  /// No description provided for @motivationalQuote8.
+  ///
+  /// In en, this message translates to:
+  /// **'Small efforts compound into big results 🧱'**
+  String get motivationalQuote8;
+
+  /// No description provided for @motivationalQuote9.
+  ///
+  /// In en, this message translates to:
+  /// **'Courage is quiet persistence, not loud perfection 🦁'**
+  String get motivationalQuote9;
+
+  /// No description provided for @motivationalQuote10.
+  ///
+  /// In en, this message translates to:
+  /// **'You’ve survived 100% of your toughest days 💯'**
+  String get motivationalQuote10;
+
+  /// No description provided for @motivationalQuote11.
+  ///
+  /// In en, this message translates to:
+  /// **'Learning is planting seeds for tomorrow’s forest 🌳'**
+  String get motivationalQuote11;
+
+  /// No description provided for @motivationalQuote12.
+  ///
+  /// In en, this message translates to:
+  /// **'Your brain grows stronger with every challenge 💪🧠'**
+  String get motivationalQuote12;
+
+  /// No description provided for @motivationalQuote13.
+  ///
+  /// In en, this message translates to:
+  /// **'The best time to start was yesterday. The next best time is now 🕒'**
+  String get motivationalQuote13;
+
+  /// No description provided for @motivationalQuote14.
+  ///
+  /// In en, this message translates to:
+  /// **'You’re not failing – you’re discovering what works 🔄'**
+  String get motivationalQuote14;
+
+  /// No description provided for @motivationalQuote15.
+  ///
+  /// In en, this message translates to:
+  /// **'Curiosity is the compass to wisdom 🧭'**
+  String get motivationalQuote15;
+
+  /// No description provided for @motivationalQuote16.
+  ///
+  /// In en, this message translates to:
+  /// **'Your potential is an ocean – dive in 🌊'**
+  String get motivationalQuote16;
+
+  /// No description provided for @motivationalQuote17.
+  ///
+  /// In en, this message translates to:
+  /// **'One chapter at a time writes the story 📝'**
+  String get motivationalQuote17;
+
+  /// No description provided for @motivationalQuote18.
+  ///
+  /// In en, this message translates to:
+  /// **'Burnout isn’t a badge of honor – balance is key ⚖️'**
+  String get motivationalQuote18;
+
+  /// No description provided for @motivationalQuote19.
+  ///
+  /// In en, this message translates to:
+  /// **'You’re building wings while learning to fly 🦅'**
+  String get motivationalQuote19;
+
+  /// No description provided for @motivationalQuote20.
+  ///
+  /// In en, this message translates to:
+  /// **'Today’s effort is tomorrow’s foundation 🏗️'**
+  String get motivationalQuote20;
+
+  /// No description provided for @noCountriesFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No countries found matching \'{query}\''**
+  String noCountriesFound(String query);
+
+  /// No description provided for @noStatesAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'There aren\'t any states available for your country.'**
+  String get noStatesAvailable;
+
+  /// No description provided for @continueWithoutState.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue without state selection'**
+  String get continueWithoutState;
+
+  /// No description provided for @noStatesFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No states found matching \'{query}\''**
+  String noStatesFound(String query);
+
+  /// No description provided for @dontLiveInCountry.
+  ///
+  /// In en, this message translates to:
+  /// **'I don\'t live in {country}'**
+  String dontLiveInCountry(String country);
+
+  /// No description provided for @emailVerificationSent.
+  ///
+  /// In en, this message translates to:
+  /// **'We have sent you an email with a verification code.'**
+  String get emailVerificationSent;
+
+  /// No description provided for @enterCodeToVerify.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the code below to verify your account:'**
+  String get enterCodeToVerify;
+
+  /// No description provided for @resendCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Resend Code'**
+  String get resendCode;
+
+  /// No description provided for @resendInSeconds.
+  ///
+  /// In en, this message translates to:
+  /// **'Resend in {seconds} seconds'**
+  String resendInSeconds(String seconds);
+
+  /// No description provided for @noMarks.
+  ///
+  /// In en, this message translates to:
+  /// **'No Marks'**
+  String get noMarks;
 }
 
 class _AppLocalizationsDelegate

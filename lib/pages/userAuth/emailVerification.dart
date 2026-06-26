@@ -125,7 +125,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage>
                   ),
                   const SizedBox(height: 20),
                   Text(
-                    "We have sent you an email with a verification code.",
+                    l10n.emailVerificationSent,
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                           fontWeight: FontWeight.bold,
                           fontSize: 18,
@@ -134,7 +134,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage>
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    "Enter the code below to verify your account:",
+                    l10n.enterCodeToVerify,
                     style: Theme.of(context).textTheme.bodyMedium,
                     textAlign: TextAlign.center,
                   ),
@@ -200,8 +200,8 @@ class _EmailVerificationPageState extends State<EmailVerificationPage>
                               : null,
                           child: Text(
                             _resendCountdown == 0
-                                ? "Resend Code"
-                                : "Resend in $_resendCountdown seconds",
+                                ? l10n.resendCode
+                                : l10n.resendInSeconds(_resendCountdown.toString()),
                             style: TextStyle(
                               color: Theme.of(context).colorScheme.primary,
                             ),

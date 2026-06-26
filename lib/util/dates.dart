@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:school_mate/l10n/app_localizations.dart';
 import 'package:school_mate/util/extensions/dates.dart';
 
 const List<String> weekdaysAbbreviations = [
@@ -94,3 +95,27 @@ bool timeOfDaysOverlap(List<List<TimeOfDay>> times) {
   }
   return false; // No overlaps found
 }
+
+String getLocalizedUnit(AppLocalizations l10n, String unit) {
+  switch (unit) {
+    case 'year':
+      return l10n.year;
+    case 'years':
+      return l10n.years;
+    case 'day':
+      return l10n.day;
+    case 'days':
+      return l10n.days;
+    case 'hour':
+      return l10n.hour;
+    case 'hours':
+      return l10n.hours;
+    case 'minute':
+      return l10n.minute;
+    case 'minutes':
+      return l10n.minutes;
+    default:
+      return unit;
+  }
+}
+

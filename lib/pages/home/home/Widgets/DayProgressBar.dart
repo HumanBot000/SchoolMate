@@ -134,7 +134,7 @@ class _DayProgressBarState extends State<DayProgressBar>
     final now = DateTime.now();
     // Assume getVisualTimeTillDate returns a list like [hours, minutes]
     final visualTime = getVisualTimeTillDate(now, widget.endTime.toDateTime());
-    return "${visualTime[0]} ${visualTime[1]}";
+    return "${visualTime[0]} ${getLocalizedUnit(l10n, visualTime[1])}";
   }
 
   @override

@@ -99,7 +99,7 @@ class _MarksOverviewPageState extends State<MarksOverviewPage> {
         setState(() {
           _isLoading = false;
           _hasError = true;
-          _errorMessage = 'No schedule available';
+          _errorMessage = l10n.noScheduleAvailable;
         });
         return;
       }
@@ -161,7 +161,7 @@ class _MarksOverviewPageState extends State<MarksOverviewPage> {
         setState(() {
           _isLoading = false;
           _hasError = true;
-          _errorMessage = 'Error loading marks data: $e';
+          _errorMessage = l10n.errorLoadingMarks(e.toString());
         });
       }
     }
@@ -198,7 +198,7 @@ class _MarksOverviewPageState extends State<MarksOverviewPage> {
                 child: Column(
                   children: [
                     Text(
-                      'Study Tip',
+                      l10n.studyTip,
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                             color: Theme.of(context).colorScheme.primary,
                             fontWeight: FontWeight.bold,
@@ -206,7 +206,7 @@ class _MarksOverviewPageState extends State<MarksOverviewPage> {
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      studyTips[Random().nextInt(studyTips.length)],
+                      getStudyTips(l10n)[Random().nextInt(getStudyTips(l10n).length)],
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.bodyLarge,
                     ),
@@ -247,8 +247,8 @@ class _MarksOverviewPageState extends State<MarksOverviewPage> {
                       ),
                       const SizedBox(height: 10),
                       Text(
-                        motivationalQuotes[
-                            Random().nextInt(motivationalQuotes.length)],
+                        getMotivationalQuotes(l10n)[
+                            Random().nextInt(getMotivationalQuotes(l10n).length)],
                         textAlign: TextAlign.center,
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
@@ -279,7 +279,7 @@ class _MarksOverviewPageState extends State<MarksOverviewPage> {
           ),
           const SizedBox(height: 16),
           Text(
-            'Something went wrong',
+            l10n.somethingWentWrong,
             style: Theme.of(context).textTheme.titleLarge,
           ),
           const SizedBox(height: 8),
@@ -322,7 +322,7 @@ class _MarksOverviewPageState extends State<MarksOverviewPage> {
                   colors: [Colors.grey.shade600, Colors.grey.shade900]),
         ),
         child: Center(
-          child: Text(_overallAverage?.toStringAsFixed(2) ?? "No Marks",
+          child: Text(_overallAverage?.toStringAsFixed(2) ?? l10n.noMarks,
               style: Theme.of(context).textTheme.displayLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: createMarkGradient(

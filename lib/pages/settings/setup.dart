@@ -4,6 +4,7 @@ import 'package:school_mate/API/supabase/auth/userData.dart';
 import 'package:school_mate/API/supabase/auth/userSettings.dart';
 import 'package:school_mate/Classes/geoPolitics/Country.dart';
 import 'package:school_mate/Widgets/public/GradientButton.dart';
+import 'package:school_mate/l10n/app_localizations.dart';
 
 import '../../main.dart';
 import 'Widgets/ResidenceSelector/SearchableResidenceSelector.dart';
@@ -20,8 +21,8 @@ class SetupPage extends StatefulWidget {
 }
 
 class _SetupPageState extends State<SetupPage> {
-  var _exactSelectedResidence;
-  var _selectedResidence;
+  String? _exactSelectedResidence;
+  Country? _selectedResidence;
 
   void changeExactResidence(String? residence) {
     if (residence == null) {
@@ -42,17 +43,18 @@ class _SetupPageState extends State<SetupPage> {
           null; // Reset state selection when country changes
     });
     logger.d(
-        "Selected residence: ${_selectedResidence.name} (${_selectedResidence.code})");
+        "Selected residence: ${_selectedResidence!.name} (${_selectedResidence!.code})");
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
         title: Text(
             widget.isOnboarding
-                ? "Welcome ${getUserName()}"
-                : "Residence Update",
+                ? l10n.welcomeUsername(getUserName())
+                : l10n.residenceUpdate,
             style: Theme.of(context).appBarTheme.titleTextStyle),
       ),
       body: Padding(
@@ -67,8 +69,8 @@ class _SetupPageState extends State<SetupPage> {
                 Flexible(
                   child: Text(
                     widget.isOnboarding
-                        ? "Thanks for signing up!"
-                        : "Update your current residence",
+                        ? l10n.thanksSigningUp
+                        : l10n.updateCurrentResidence,
                     style: Theme.of(context).textTheme.headlineLarge,
                     textAlign: TextAlign.center,
                   ),
@@ -78,8 +80,8 @@ class _SetupPageState extends State<SetupPage> {
             const SizedBox(height: 16),
             Text(
               widget.isOnboarding
-                  ? "Before you can start using SchoolMate, we need to know some last details about you."
-                  : "We will use this info to calculate the next school holidays.",
+                  ? l10n.setupIntroOnboarding
+                  : l10n.setupIntroUpdate,
               style: Theme.of(context).textTheme.bodyLarge,
               textAlign: TextAlign.center,
             ),
@@ -133,7 +135,7 @@ class _SetupPageState extends State<SetupPage> {
                     children: [
                       const Icon(Icons.save, color: Colors.white),
                       const SizedBox(width: 8),
-                      Text("Save",
+                      Text(l10n.save,
                           style: Theme.of(context)
                               .textTheme
                               .bodyLarge

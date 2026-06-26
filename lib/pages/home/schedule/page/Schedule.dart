@@ -320,9 +320,9 @@ class _SchedulePageState extends State<SchedulePage>
           shaderCallback: (bounds) => const LinearGradient(
             colors: [Color(0xFF3A7BFF), Color(0xFF00D4AA)],
           ).createShader(bounds),
-          child: const Text(
-            'Add Assignment',
-            style: TextStyle(
+          child: Text(
+            l10n.addAssignment,
+            style: const TextStyle(
               color: Colors.white,
               fontSize: 28,
               fontWeight: FontWeight.bold,
@@ -411,9 +411,9 @@ class _SchedulePageState extends State<SchedulePage>
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Add Homework due this lesson',
-                        style: TextStyle(
+                      Text(
+                        l10n.addHomeworkDueThisLesson,
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
@@ -422,7 +422,7 @@ class _SchedulePageState extends State<SchedulePage>
                       ),
                       const SizedBox(height: 6),
                       Text(
-                        'Create assignment for this lesson',
+                        l10n.createAssignmentForThisLesson,
                         style: TextStyle(
                           color: Colors.white.withValues(alpha: 0.7),
                           fontSize: 14,
@@ -549,7 +549,7 @@ class _SchedulePageState extends State<SchedulePage>
               children: [
                 futuristicAppBar(
                   context,
-                  'Schedule',
+                  l10n.scheduleTitle,
                   const Icon(
                     Icons.calendar_month_outlined,
                     color: Colors.white,

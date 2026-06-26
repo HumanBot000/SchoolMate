@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:school_mate/API/supabase/settings/homeworkReminders.dart';
 import 'package:school_mate/API/supabase/settings/preLessonNotifications.dart';
 import 'package:school_mate/pages/settings/notifications/preNotifications.dart';
+import 'package:school_mate/l10n/app_localizations.dart';
 
 //todo special notifications like: on weekends
 class HomeworkReminderNotificationSetup extends StatelessWidget {
@@ -9,9 +10,10 @@ class HomeworkReminderNotificationSetup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return NotificationSetup(
-      title: 'Homework Reminders',
-      itemSuffix: 'before a deadline',
+      title: l10n.homeworkRemindersTitle,
+      itemSuffix: l10n.beforeDeadline,
       fetchSettings: () async {
         final list = await fetchHomeworkReminders();
         return list

@@ -144,7 +144,7 @@ class _HomeworkPageState extends State<HomeworkPage>
                           if (snapshot.connectionState == ConnectionState.waiting) {
                             return const Center(child: CircularProgressIndicator());
                           } else if (snapshot.hasError) {
-                            return Text('Error: ${snapshot.error}');
+                            return Text('${l10n.errorPrefix}: ${snapshot.error}');
                           } else if (snapshot.connectionState == ConnectionState.done) {
                             final data = snapshot.data;
                             if (data == null) {
@@ -187,7 +187,7 @@ class _HomeworkPageState extends State<HomeworkPage>
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const Center(child: CircularProgressIndicator());
                       } else if (snapshot.hasError) {
-                        return Text('Error: ${snapshot.error}');
+                        return Text('${l10n.errorPrefix}: ${snapshot.error}');
                       } else if (snapshot.connectionState == ConnectionState.done) {
                         final data = snapshot.data;
                         if (data == null) {

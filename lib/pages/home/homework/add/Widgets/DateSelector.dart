@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:school_mate/l10n/app_localizations.dart';
 import 'package:school_mate/util/dates.dart';
 
 class HomeworkDateSelector extends StatelessWidget {
@@ -11,6 +12,7 @@ class HomeworkDateSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.all(8.0),
       child: InkWell(
@@ -25,12 +27,18 @@ class HomeworkDateSelector extends StatelessWidget {
         },
         child: ListTile(
           title: Text(selectedDate == null
-              ? "Date"
+              ? l10n.date
               : DateFormat("dd.MM.yyyy").format(selectedDate!)),
           subtitle: Text(
             selectedDate == null
-                ? "When does this homework need to be completed?"
-                : "In ${getVisualTimeTillDate(DateTime.now(), selectedDate!)[0]} ${getVisualTimeTillDate(DateTime.now(), selectedDate!)[1]}",
+                ? l10n.whenHomeworkCompleted
+                : l10n.inTime(
+                    getVisualTimeTillDate(DateTime.now(), selectedDate!)[0]
+                        .toString(),
+                    getLocalizedUnit(
+                        l10n,
+                        getVisualTimeTillDate(DateTime.now(), selectedDate!)[1]
+                            as String)),
             style: Theme.of(context)
                 .textTheme
                 .bodyMedium

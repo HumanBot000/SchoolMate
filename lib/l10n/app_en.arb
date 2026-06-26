@@ -291,5 +291,211 @@
   "whereDoYouLive": "Where do you live?",
   "whichSubjectHomeworkFor": "Which subject is this homework for?",
   "whichWeekToday": "Which week is today?",
-  "withDecimals": "With Decimals"
+  "withDecimals": "With Decimals",
+  "date": "Date",
+  "whenHomeworkCompleted": "When does this homework need to be completed?",
+  "inTime": "In {amount} {unit}",
+  "@inTime": {
+    "placeholders": {
+      "amount": {"type": "String"},
+      "unit": {"type": "String"}
+    }
+  },
+  "handInHomeworkQuestion": "Hand in Homework?",
+  "handInHomeworkNotification": "We will notify you before the deadline, so you don't forget to submit your work.",
+  "handInHomeworkNoNotification": "We won't notify you if this task is marked as completed!",
+  "selectTime": "Select Time",
+  "year": "year",
+  "years": "years",
+  "day": "day",
+  "days": "days",
+  "hour": "hour",
+  "hours": "hours",
+  "minute": "minute",
+  "minutes": "minutes",
+  "homeworkDueDate": "{weekday}. {date} | In {amount} {unit}",
+  "@homeworkDueDate": {
+    "placeholders": {
+      "weekday": {"type": "String"},
+      "date": {"type": "String"},
+      "amount": {"type": "String"},
+      "unit": {"type": "String"}
+    }
+  },
+  "timeAgo": "{amount} {unit} ago",
+  "@timeAgo": {
+    "placeholders": {
+      "amount": {"type": "String"},
+      "unit": {"type": "String"}
+    }
+  },
+  "showLess": "Show less",
+  "showMore": "Show more",
+  "noSubjectsFoundError": "No subjects found. Please set them up in the schedule tab first.",
+  "percentageWeight": "{percentage}% Weight",
+  "@percentageWeight": {
+    "placeholders": {
+      "percentage": {"type": "String"}
+    }
+  },
+  "multiplicationMultiplier": "{factor}x Multiplier",
+  "@multiplicationMultiplier": {
+    "placeholders": {
+      "factor": {"type": "String"}
+    }
+  },
+  "basedOnChildType": "Based on {childType}",
+  "@basedOnChildType": {
+    "placeholders": {
+      "childType": {"type": "String"}
+    }
+  },
+  "editMarkForSubject": "Edit Mark for {subject}",
+  "@editMarkForSubject": {
+    "placeholders": {
+      "subject": {"type": "String"}
+    }
+  },
+  "newMarkForSubject": "New Mark for {subject}",
+  "@newMarkForSubject": {
+    "placeholders": {
+      "subject": {"type": "String"}
+    }
+  },
+  "useBackButtonToCarryOutChanges": "Use the back button to carry out changes to this mark.",
+  "markValue": "Mark Value",
+  "markModifiers": "Mark Modifiers",
+  "description": "Description",
+  "noScheduleAvailable": "No schedule available",
+  "errorLoadingMarks": "Error loading marks data: {error}",
+  "@errorLoadingMarks": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+  "studyTip": "Study Tip",
+  "percentage": "Percentage",
+  "multiplicationBased": "Multiplication-based",
+  "percentageBasedEvaluationTitle": "Percentage-based Evaluation:",
+  "percentageBasedEvaluationDesc": "The final grade is calculated by averaging all exams within each category (e.g., homework and tests). Then, each category's average is weighted based on its importance to determine the overall result.\n\nFor example, if homework and tests contribute differently to the final grade, the formula would be:\n",
+  "percentageBasedEvaluationFormula": "Final Grade = (Average of Homework × its weight + Average of Tests × its weight) / Total weight",
+  "multiplicationBasedEvaluationTitle": "Multiplication-based Evaluation:",
+  "multiplicationBasedEvaluationDescPart1": "In this method, each exam in a group is counted as multiple exams based on its weight.\n\n",
+  "multiplicationBasedEvaluationDescPart2": "For example, if a class paper is worth twice as much as a normal test, it will be counted as two exams when calculating the final grade\n\n",
+  "multiplicationBasedEvaluationDescPart3": "This way, some exams contribute more to the final result than others",
+  "perfectAdjusted": "Perfect! You're good to go!",
+  "keepAdjusting": "Keep adjusting until the total is 100%",
+  "errorSelectGradingSystemDropdown": "Please select a grading system from the dropdown.",
+  "errorCreateAtLeastOneExamType": "Create at least one exam type!",
+  "errorSameEvaluationMethod": "All exam types must have the same evaluation method!",
+  "errorFillNameForEachExamType": "Fill in a name for each exam type!",
+  "errorFillPercentageForEachExamType": "Fill in a percentage for each percentage-based exam type!",
+  "errorFillFactorForEachExamType": "Fill in a multiplication factor for each multiplication-based exam type!",
+  "errorOneBaseMultiplicationExamType": "There may only be one base multiplication exam type!",
+  "errorSumOfPercentagesMustBe100": "The sum of all percentages must be 100",
+  "errorFactorMustBeGreaterThanZero": "The multiplication factor must be greater than zero!",
+  "errorAvoidCircularDependency": "Avoid circular dependency in multiplication-based exam types!",
+  "errorExamTypeNamesUnique": "Each exam type must have a unique name!",
+  "gradingBestWorstExplanation": "The best mark is {best} and the worst mark is {worst}",
+  "@gradingBestWorstExplanation": {
+    "placeholders": {
+      "best": {"type": "String"},
+      "worst": {"type": "String"}
+    }
+  },
+  "gradingModifiersExplanation": "Additionally each mark can also get a + or - assigned",
+  "gradingDecimalsExplanation": "It is possible to assign decimal values",
+  "gradingExamsWeightingPrompt": "Are there different types of exams?\n How are your marks weighted?",
+  "addAssignment": "Add Assignment",
+  "addHomeworkDueThisLesson": "Add Homework due this lesson",
+  "createAssignmentForThisLesson": "Create assignment for this lesson",
+  "whenFirstLessonStarts": "When does your first lesson start?",
+  "lessonsStartAt": "Lessons start at",
+  "whenLastLessonEnds": "When does your last lesson end?",
+  "lessonsEndAt": "Lessons end at",
+  "setLabel": "Set",
+  "welcomeUsername": "Welcome {username}",
+  "@welcomeUsername": {
+    "placeholders": {
+      "username": {"type": "String"}
+    }
+  },
+  "residenceUpdate": "Residence Update",
+  "thanksSigningUp": "Thanks for signing up!",
+  "updateCurrentResidence": "Update your current residence",
+  "setupIntroOnboarding": "Before you can start using SchoolMate, we need to know some last details about you.",
+  "setupIntroUpdate": "We will use this info to calculate the next school holidays.",
+  "beforeDeadline": "before a deadline",
+  "beforeLessonStarts": "before the lesson starts",
+  "pickATime": "Pick a Time",
+  "studyTip1": "Break study sessions into 25-minute chunks with 5-minute breaks ⏳",
+  "studyTip2": "Teach concepts to a friend to reinforce your understanding 👩\u200d\u200d🏫",
+  "studyTip3": "Create colorful mind maps for visual learning 🎨",
+  "studyTip4": "Use the Pomodoro technique for focused productivity 🍅",
+  "studyTip5": "Test yourself with flashcards for active recall 🗂️",
+  "studyTip6": "Study in natural light to reduce eye strain and boost mood ☀️",
+  "studyTip7": "Record voice notes of key ideas to listen while walking 🎧",
+  "studyTip8": "Start with the hardest task when your energy is highest 💪",
+  "studyTip9": "Organize notes with color-coded highlighters 🌈",
+  "studyTip10": "Stretch every 30 minutes to improve circulation 🧘\u200d\u2642\ufe0f",
+  "studyTip11": "Keep a water bottle nearby to stay hydrated and focused 💧",
+  "studyTip12": "Use website blockers to minimize digital distractions 🚫",
+  "studyTip13": "Review notes for 15 minutes before bed for better retention 🌙",
+  "studyTip14": "Create a lo-fi study playlist to maintain concentration 🎶",
+  "studyTip15": "Practice past exams under timed conditions ⏱️",
+  "studyTip16": "Use mnemonics like 'ROYGBIV' for memorization 🧠",
+  "studyTip17": "Snack on brain foods like nuts and blueberries 🫐",
+  "studyTip18": "Declutter your workspace for mental clarity 🧹",
+  "studyTip19": "Reward yourself with a small treat after milestones 🎉",
+  "studyTip20": "Schedule weekly goals and celebrate progress 📆",
+  "motivationalQuote1": "Progress over perfection 🌱",
+  "motivationalQuote2": "You don’t have to be great to start – just start 💫",
+  "motivationalQuote3": "Every page turned is a step closer to mastery 📖",
+  "motivationalQuote4": "Mistakes are proof you’re growing 🌻",
+  "motivationalQuote5": "Your pace is valid – comparison steals joy 🐢⚡",
+  "motivationalQuote6": "Resting is part of the journey, not quitting 💤",
+  "motivationalQuote7": "The expert was once a curious beginner 🔍",
+  "motivationalQuote8": "Small efforts compound into big results 🧱",
+  "motivationalQuote9": "Courage is quiet persistence, not loud perfection 🦁",
+  "motivationalQuote10": "You’ve survived 100% of your toughest days 💯",
+  "motivationalQuote11": "Learning is planting seeds for tomorrow’s forest 🌳",
+  "motivationalQuote12": "Your brain grows stronger with every challenge 💪🧠",
+  "motivationalQuote13": "The best time to start was yesterday. The next best time is now 🕒",
+  "motivationalQuote14": "You’re not failing – you’re discovering what works 🔄",
+  "motivationalQuote15": "Curiosity is the compass to wisdom 🧭",
+  "motivationalQuote16": "Your potential is an ocean – dive in 🌊",
+  "motivationalQuote17": "One chapter at a time writes the story 📝",
+  "motivationalQuote18": "Burnout isn’t a badge of honor – balance is key ⚖️",
+  "motivationalQuote19": "You’re building wings while learning to fly 🦅",
+  "motivationalQuote20": "Today’s effort is tomorrow’s foundation 🏗️",
+  "noCountriesFound": "No countries found matching '{query}'",
+  "@noCountriesFound": {
+    "placeholders": {
+      "query": {"type": "String"}
+    }
+  },
+  "noStatesAvailable": "There aren't any states available for your country.",
+  "continueWithoutState": "Continue without state selection",
+  "noStatesFound": "No states found matching '{query}'",
+  "@noStatesFound": {
+    "placeholders": {
+      "query": {"type": "String"}
+    }
+  },
+  "dontLiveInCountry": "I don't live in {country}",
+  "@dontLiveInCountry": {
+    "placeholders": {
+      "country": {"type": "String"}
+    }
+  },
+  "emailVerificationSent": "We have sent you an email with a verification code.",
+  "enterCodeToVerify": "Enter the code below to verify your account:",
+  "resendCode": "Resend Code",
+  "resendInSeconds": "Resend in {seconds} seconds",
+  "@resendInSeconds": {
+    "placeholders": {
+      "seconds": {"type": "String"}
+    }
+  },
+  "noMarks": "No Marks"
 }

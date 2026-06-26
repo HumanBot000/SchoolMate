@@ -41,7 +41,7 @@ class _MarksPageState extends State<MarksPage> {
               logger.e(snapshot.error);
               return Center(
                 child: Text(
-                  'Error: ${snapshot.error}',
+                  '${l10n.errorPrefix}: ${snapshot.error}',
                   style: const TextStyle(color: Colors.red),
                 ),
               );

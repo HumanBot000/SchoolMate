@@ -291,5 +291,211 @@
   "whereDoYouLive": "Wo wohnst du?",
   "whichSubjectHomeworkFor": "Für welches Fach ist diese Hausaufgabe?",
   "whichWeekToday": "Welche Woche ist heute?",
-  "withDecimals": "Mit Dezimalstellen"
+  "withDecimals": "Mit Dezimalstellen",
+  "date": "Datum",
+  "whenHomeworkCompleted": "Wann muss diese Hausaufgabe erledigt sein?",
+  "inTime": "In {amount} {unit}",
+  "@inTime": {
+    "placeholders": {
+      "amount": {"type": "String"},
+      "unit": {"type": "String"}
+    }
+  },
+  "handInHomeworkQuestion": "Hausaufgabe abgeben?",
+  "handInHomeworkNotification": "Wir werden dich vor dem Abgabetermin benachrichtigen, damit du deine Arbeit nicht vergisst.",
+  "handInHomeworkNoNotification": "Wir werden dich nicht benachrichtigen, wenn diese Aufgabe als erledigt markiert ist!",
+  "selectTime": "Uhrzeit auswählen",
+  "year": "Jahr",
+  "years": "Jahre",
+  "day": "Tag",
+  "days": "Tage",
+  "hour": "Stunde",
+  "hours": "Stunden",
+  "minute": "Minute",
+  "minutes": "Minuten",
+  "homeworkDueDate": "{weekday}. {date} | In {amount} {unit}",
+  "@homeworkDueDate": {
+    "placeholders": {
+      "weekday": {"type": "String"},
+      "date": {"type": "String"},
+      "amount": {"type": "String"},
+      "unit": {"type": "String"}
+    }
+  },
+  "timeAgo": "vor {amount} {unit}",
+  "@timeAgo": {
+    "placeholders": {
+      "amount": {"type": "String"},
+      "unit": {"type": "String"}
+    }
+  },
+  "showLess": "Weniger anzeigen",
+  "showMore": "Mehr anzeigen",
+  "noSubjectsFoundError": "Keine Fächer gefunden. Bitte richte sie zuerst im Stundenplan-Tab ein.",
+  "percentageWeight": "{percentage}% Gewichtung",
+  "@percentageWeight": {
+    "placeholders": {
+      "percentage": {"type": "String"}
+    }
+  },
+  "multiplicationMultiplier": "{factor}x Multiplikator",
+  "@multiplicationMultiplier": {
+    "placeholders": {
+      "factor": {"type": "String"}
+    }
+  },
+  "basedOnChildType": "Basiert auf {childType}",
+  "@basedOnChildType": {
+    "placeholders": {
+      "childType": {"type": "String"}
+    }
+  },
+  "editMarkForSubject": "Note bearbeiten für {subject}",
+  "@editMarkForSubject": {
+    "placeholders": {
+      "subject": {"type": "String"}
+    }
+  },
+  "newMarkForSubject": "Neue Note für {subject}",
+  "@newMarkForSubject": {
+    "placeholders": {
+      "subject": {"type": "String"}
+    }
+  },
+  "useBackButtonToCarryOutChanges": "Nutze den Zurück-Button, um Änderungen an dieser Note vorzunehmen.",
+  "markValue": "Notenwert",
+  "markModifiers": "Noten-Modifikatoren",
+  "description": "Beschreibung",
+  "noScheduleAvailable": "Kein Stundenplan verfügbar",
+  "errorLoadingMarks": "Fehler beim Laden der Noten: {error}",
+  "@errorLoadingMarks": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+  "studyTip": "Lerntipp",
+  "percentage": "Prozentsatz",
+  "multiplicationBased": "Multiplikationsbasiert",
+  "percentageBasedEvaluationTitle": "Prozentbasierte Bewertung:",
+  "percentageBasedEvaluationDesc": "Die Gesamtnote wird berechnet, indem der Durchschnitt aller Arbeiten innerhalb jeder Kategorie (z. B. Hausaufgaben und Tests) ermittelt wird. Dann wird der Durchschnitt jeder Kategorie basierend auf ihrer Bedeutung gewichtet, um das Gesamtergebnis zu bestimmen.\n\nWenn beispielsweise Hausaufgaben und Tests unterschiedlich zur Gesamtnote beitragen, lautet die Formel:\n",
+  "percentageBasedEvaluationFormula": "Gesamtnote = (Durchschnitt der Hausaufgaben × Gewichtung + Durchschnitt der Tests × Gewichtung) / Gesamtgewichtung",
+  "multiplicationBasedEvaluationTitle": "Multiplikationsbasierte Bewertung:",
+  "multiplicationBasedEvaluationDescPart1": "Bei dieser Methode wird jede Arbeit in einer Gruppe basierend auf ihrer Gewichtung als mehrere Arbeiten gezählt.\n\n",
+  "multiplicationBasedEvaluationDescPart2": "Wenn beispielsweise eine Klassenarbeit doppelt so viel zählt wie ein normaler Test, wird sie bei der Berechnung der Gesamtnote als zwei Arbeiten gezählt\n\n",
+  "multiplicationBasedEvaluationDescPart3": "Auf diese Weise tragen einige Arbeiten mehr zum Gesamtergebnis bei als andere",
+  "perfectAdjusted": "Perfekt! Du kannst fortfahren!",
+  "keepAdjusting": "Passe die Werte an, bis die Summe 100% ergibt",
+  "errorSelectGradingSystemDropdown": "Bitte wähle ein Notensystem aus der Dropdown-Liste aus.",
+  "errorCreateAtLeastOneExamType": "Erstelle mindestens einen Arbeitstyp!",
+  "errorSameEvaluationMethod": "Alle Arbeitstypen müssen dieselbe Bewertungsmethode haben!",
+  "errorFillNameForEachExamType": "Gib einen Namen für jeden Arbeitstyp ein!",
+  "errorFillPercentageForEachExamType": "Gib einen Prozentsatz für jeden prozentbasierten Arbeitstyp ein!",
+  "errorFillFactorForEachExamType": "Gib einen Multiplikator für jeden multiplikationsbasierten Arbeitstyp ein!",
+  "errorOneBaseMultiplicationExamType": "Es darf nur einen Basis-Arbeitstyp geben!",
+  "errorSumOfPercentagesMustBe100": "Die Summe aller Prozentsätze muss 100 sein",
+  "errorFactorMustBeGreaterThanZero": "Der Multiplikationsfaktor muss größer als Null sein!",
+  "errorAvoidCircularDependency": "Vermeide zirkuläre Abhängigkeiten bei multiplikationsbasierten Arbeitstypen!",
+  "errorExamTypeNamesUnique": "Jeder Arbeitstyp muss einen eindeutigen Namen haben!",
+  "gradingBestWorstExplanation": "Die beste Note ist {best} und die schlechteste Note ist {worst}",
+  "@gradingBestWorstExplanation": {
+    "placeholders": {
+      "best": {"type": "String"},
+      "worst": {"type": "String"}
+    }
+  },
+  "gradingModifiersExplanation": "Zusätzlich kann jede Note auch ein + oder - erhalten",
+  "gradingDecimalsExplanation": "Es ist möglich, Dezimalwerte zu vergeben",
+  "gradingExamsWeightingPrompt": "Gibt es verschiedene Arten von Prüfungen?\n Wie werden deine Noten gewichtet?",
+  "addAssignment": "Aufgabe hinzufügen",
+  "addHomeworkDueThisLesson": "Hausaufgabe für diese Stunde hinzufügen",
+  "createAssignmentForThisLesson": "Hausaufgabe für diese Stunde erstellen",
+  "whenFirstLessonStarts": "Wann beginnt deine erste Stunde?",
+  "lessonsStartAt": "Unterricht beginnt um",
+  "whenLastLessonEnds": "Wann endet deine letzte Stunde?",
+  "lessonsEndAt": "Unterricht endet um",
+  "setLabel": "Festlegen",
+  "welcomeUsername": "Willkommen {username}",
+  "@welcomeUsername": {
+    "placeholders": {
+      "username": {"type": "String"}
+    }
+  },
+  "residenceUpdate": "Wohnort aktualisieren",
+  "thanksSigningUp": "Danke für deine Registrierung!",
+  "updateCurrentResidence": "Aktualisiere deinen aktuellen Wohnort",
+  "setupIntroOnboarding": "Bevor du SchoolMate nutzen kannst, benötigen wir noch einige letzte Details über dich.",
+  "setupIntroUpdate": "Wir nutzen diese Information, um die nächsten Schulferien zu berechnen.",
+  "beforeDeadline": "vor einer Frist",
+  "beforeLessonStarts": "vor Unterrichtsbeginn",
+  "pickATime": "Uhrzeit wählen",
+  "studyTip1": "Teile deine Lernsitzungen in 25-Minuten-Blöcke mit 5-minütigen Pausen auf ⏳",
+  "studyTip2": "Erkläre einem Freund Konzepte, um dein eigenes Verständnis zu festigen 👩\u200d\u200d🏫",
+  "studyTip3": "Erstelle farbenfrohe Mindmaps für visuelles Lernen 🎨",
+  "studyTip4": "Nutze die Pomodoro-Technik für fokussierte Produktivität 🍅",
+  "studyTip5": "Teste dich selbst mit Karteikarten für aktives Erinnern 🗂️",
+  "studyTip6": "Lerne bei natürlichem Licht, um die Augen zu schonen und die Stimmung zu heben ☀️",
+  "studyTip7": "Nimm Sprachnotizen von Kernideen auf, um sie beim Gehen anzuhören 🎧",
+  "studyTip8": "Beginne mit der schwierigsten Aufgabe, wenn deine Energie am höchsten ist 💪",
+  "studyTip9": "Organisiere deine Notizen mit farbcodierten Textmarkern 🌈",
+  "studyTip10": "Dehne dich alle 30 Minuten, um den Kreislauf in Schwung zu bringen 🧘\u200d\u2642\ufe0f",
+  "studyTip11": "Halte eine Wasserflasche in der Nähe, um hydratisiert und konzentriert zu bleiben 💧",
+  "studyTip12": "Nutze Website-Blocker, um digitale Ablenkungen zu minimieren 🚫",
+  "studyTip13": "Gehe deine Notizen vor dem Schlafengehen 15 Minuten lang durch, um sie besser zu behalten 🌙",
+  "studyTip14": "Erstelle eine Lo-Fi-Lern-Playlist, um die Konzentration aufrechtzuerhalten 🎶",
+  "studyTip15": "Übe alte Prüfungen unter Zeitbedingungen ⏱️",
+  "studyTip16": "Nutze Eselsbrücken zur Memorierung 🧠",
+  "studyTip17": "Knabbere Gehirnnahrung wie Nüsse und Blaubeeren 🫐",
+  "studyTip18": "Räume deinen Arbeitsbereich auf für geistige Klarheit 🧹",
+  "studyTip19": "Belohne dich nach Meilensteinen mit einer kleinen Leckerei 🎉",
+  "studyTip20": "Plane wöchentliche Ziele und feiere Fortschritte 📆",
+  "motivationalQuote1": "Fortschritt über Perfektion 🌱",
+  "motivationalQuote2": "Du musst nicht großartig sein, um anzufangen – fange einfach an 💫",
+  "motivationalQuote3": "Jede umgeblätterte Seite ist ein Schritt näher zur Meisterschaft 📖",
+  "motivationalQuote4": "Fehler sind der Beweis dafür, dass du wächst 🌻",
+  "motivationalQuote5": "Dein Tempo ist genau richtig – Vergleiche rauben die Freude 🐢⚡",
+  "motivationalQuote6": "Ausruhen gehört zur Reise dazu, nicht Aufgeben 💤",
+  "motivationalQuote7": "Der Experte war auch einmal ein neugieriger Anfänger 🔍",
+  "motivationalQuote8": "Kleine Anstrengungen summieren sich zu großen Ergebnissen 🧱",
+  "motivationalQuote9": "Mut ist leise Beharrlichkeit, nicht laute Perfektion 🦁",
+  "motivationalQuote10": "Du hast 100% deiner schwersten Tage überstanden 💯",
+  "motivationalQuote11": "Lernen heißt Samen für den Wald von morgen zu säen 🌳",
+  "motivationalQuote12": "Dein Gehirn wächst mit jeder Herausforderung 💪🧠",
+  "motivationalQuote13": "Die beste Zeit anzufangen war gestern. Die zweitbeste Zeit ist jetzt 🕒",
+  "motivationalQuote14": "Du scheiterst nicht – du findest heraus, was funktioniert 🔄",
+  "motivationalQuote15": "Neugier ist der Kompass zur Weisheit 🧭",
+  "motivationalQuote16": "Dein Potenzial ist ein Ozean – tauche ein 🌊",
+  "motivationalQuote17": "Ein Kapitel nach dem anderen schreibt die Geschichte 📝",
+  "motivationalQuote18": "Burnout ist kein Ehrenabzeichen – Balance ist der Schlüssel ⚖️",
+  "motivationalQuote19": "Du baust dir Flügel, während du fliegen lernst 🦅",
+  "motivationalQuote20": "Die heutige Anstrengung ist das Fundament von morgen 🏗️",
+  "noCountriesFound": "Keine Länder gefunden für '{query}'",
+  "@noCountriesFound": {
+    "placeholders": {
+      "query": {"type": "String"}
+    }
+  },
+  "noStatesAvailable": "Für dein Land sind keine Bundesländer/Regionen verfügbar.",
+  "continueWithoutState": "Ohne Bundesland-Auswahl fortfahren",
+  "noStatesFound": "Keine Bundesländer/Regionen gefunden für '{query}'",
+  "@noStatesFound": {
+    "placeholders": {
+      "query": {"type": "String"}
+    }
+  },
+  "dontLiveInCountry": "Ich wohne nicht in {country}",
+  "@dontLiveInCountry": {
+    "placeholders": {
+      "country": {"type": "String"}
+    }
+  },
+  "emailVerificationSent": "Wir haben dir eine E-Mail mit einem Verifizierungscode gesendet.",
+  "enterCodeToVerify": "Gib den Code unten ein, um dein Konto zu verifizieren:",
+  "resendCode": "Code erneut senden",
+  "resendInSeconds": "Erneut senden in {seconds} Sekunden",
+  "@resendInSeconds": {
+    "placeholders": {
+      "seconds": {"type": "String"}
+    }
+  },
+  "noMarks": "Keine Noten"
 }

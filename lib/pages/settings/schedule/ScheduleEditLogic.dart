@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:school_mate/API/supabase/schedule/schedule.dart';
 import 'package:school_mate/pages/home/schedule/setup/scheduleSetup.dart';
+import 'package:school_mate/l10n/app_localizations.dart';
 
 void onTap(BuildContext context) async {
+  final l10n = AppLocalizations.of(context)!;
   try {
     showDialog(
       context: context,
@@ -12,21 +14,23 @@ void onTap(BuildContext context) async {
 
     final data = await fetchSchedule();
 
+    if (!context.mounted) return;
     Navigator.of(context).pop();
 
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => ScheduleSetupPage(
         headerTitle: data == null
-            ? "Before you can start using the schedule, we need to know some last details about your day."
-            : "Please note, that this might corrupt your current schedule. We highly encourage you to clear all lessons before continuing.",
+            ? l10n.defaultScheduleSetupHeader
+            : l10n.scheduleCorruptionWarning,
         existingSchedule: data,
       ),
     ));
   } catch (e) {
+    if (!context.mounted) return;
     Navigator.of(context).pop(); // Remove loading dialog
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: const Text("Something went wrong. Please try again."),
+        content: Text(l10n.somethingWentWrong),
         backgroundColor: Theme.of(context).colorScheme.error,
       ),
     );

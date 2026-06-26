@@ -252,12 +252,18 @@ class _SubjectMarksInspectionPageState
                                       Text(
                                         mark.description,
                                       ),
-                                      Text(
-                                        "${getVisualTimeTillDate(mark.createdAt, DateTime.now())[0]} ${getVisualTimeTillDate(mark.createdAt, DateTime.now())[1]} ago",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodySmall,
-                                      ),
+                                      (() {
+                                        final visualTime = getVisualTimeTillDate(mark.createdAt, DateTime.now());
+                                        return Text(
+                                          l10n.timeAgo(
+                                            visualTime[0].toString(),
+                                            getLocalizedUnit(l10n, visualTime[1] as String),
+                                          ),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodySmall,
+                                        );
+                                      }()),
                                     ],
                                   );
                                 }).toList(),
@@ -274,7 +280,7 @@ class _SubjectMarksInspectionPageState
                                     });
                                   },
                                   child:
-                                      Text(showAll ? 'Show less' : 'Show more'),
+                                      Text(showAll ? l10n.showLess : l10n.showMore),
                                 ),
                             ],
                           ),

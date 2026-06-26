@@ -131,7 +131,7 @@ class _SearchableResidenceSelectorState
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Text(
-                            "No countries found matching '$_searchQuery'",
+                            l10n.noCountriesFound(_searchQuery),
                             style: Theme.of(context).textTheme.bodyMedium,
                           ),
                         ),
@@ -398,7 +398,7 @@ class _SearchableStateSelectorState extends State<SearchableStateSelector> {
                                 size: 48, color: Colors.red),
                             const SizedBox(height: 16),
                             Text(
-                              "There aren't any states available for your country.",
+                              l10n.noStatesAvailable,
                               style: Theme.of(context).textTheme.bodyMedium,
                               textAlign: TextAlign.center,
                             ),
@@ -407,8 +407,8 @@ class _SearchableStateSelectorState extends State<SearchableStateSelector> {
                               onPressed: () {
                                 widget.onChange("unset");
                               },
-                              child: const Text(
-                                  "Continue without state selection"),
+                              child: Text(
+                                  l10n.continueWithoutState),
                             ),
                           ],
                         ),
@@ -418,7 +418,7 @@ class _SearchableStateSelectorState extends State<SearchableStateSelector> {
                             child: Padding(
                               padding: const EdgeInsets.all(16.0),
                               child: Text(
-                                "No states found matching '$_searchQuery'",
+                                l10n.noStatesFound(_searchQuery),
                                 style: Theme.of(context).textTheme.bodyMedium,
                               ),
                             ),
@@ -467,7 +467,7 @@ class _SearchableStateSelectorState extends State<SearchableStateSelector> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "I don't live in ${widget.selectedCountryString}",
+                    l10n.dontLiveInCountry(widget.selectedCountryString),
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                   const Padding(

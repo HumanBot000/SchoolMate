@@ -212,7 +212,7 @@ class _ScheduleSetupPageState extends State<ScheduleSetupPage> {
             } else if (snapshot.hasError) {
               logger.e(snapshot.error);
               return Scaffold(
-                body: Center(child: Text('Error: ${snapshot.error}')),
+                body: Center(child: Text('${l10n.errorPrefix}: ${snapshot.error}')),
               );
             } else if (snapshot.connectionState == ConnectionState.done) {
               final data = snapshot.data;

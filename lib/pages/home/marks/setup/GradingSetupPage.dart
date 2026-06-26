@@ -107,29 +107,29 @@ class _GradingSetupPageState extends State<GradingSetupPage> {
   void _handleValidationError(String errorMessage) {
     final errors = {
       "Range must have exactly two values. (start, end)":
-          "Please select a grading system from the dropdown.",
+          l10n.errorSelectGradingSystemDropdown,
       "Grading system must have at least one exam type":
-          "Create at least one exam type!",
+          l10n.errorCreateAtLeastOneExamType,
       "All exam types must have the same evaluation method":
-          "All exam types must have the same evaluation method!",
-      "All exam types must have a name": "Fill in a name for each exam type!",
+          l10n.errorSameEvaluationMethod,
+      "All exam types must have a name": l10n.errorFillNameForEachExamType,
       "All percentage exam types must have a percentage":
-          "Fill in a percentage for each percentage-based exam type!",
+          l10n.errorFillPercentageForEachExamType,
       "All multiplication exam types must have a multiplication factor":
-          "Fill in a multiplication factor for each multiplication-based exam type!",
+          l10n.errorFillFactorForEachExamType,
       "There must be only one default multiplication exam type":
-          "There may only be one base multiplication exam type!",
+          l10n.errorOneBaseMultiplicationExamType,
       "The sum of all percentages must be 100":
-          "The sum of all percentages must be 100",
+          l10n.errorSumOfPercentagesMustBe100,
       "Multiplication factor must be greater than zero":
-          "The multiplication factor must be greater than zero!",
+          l10n.errorFactorMustBeGreaterThanZero,
       "Multiplication exam types must not form a circle":
-          "Avoid circular dependency in multiplication-based exam types!",
+          l10n.errorAvoidCircularDependency,
       "Exam type names must be unique":
-          "Each exam type must have a unique name!"
+          l10n.errorExamTypeNamesUnique
     };
     logger.w(errorMessage);
-    _showErrorSnackbar(errors[errorMessage] ?? "An unknown error occurred.");
+    _showErrorSnackbar(errors[errorMessage] ?? l10n.somethingWentWrong);
   }
 
   void _showErrorSnackbar(String message) {
@@ -152,29 +152,13 @@ class _GradingSetupPageState extends State<GradingSetupPage> {
         if (_selectedGradingSystem != null)
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Wrap(
-              alignment: WrapAlignment.center,
-              children: [
-                Text(
-                  "The best mark is ",
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
-                Text(
-                  _selectedGradingSystem!.range[0],
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: Colors.green.shade700,
-                      fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  " and the worst mark is ",
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
-                Text(
-                  _selectedGradingSystem!.range[1],
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: Colors.red.shade700, fontWeight: FontWeight.bold),
-                )
-              ],
+            child: Text(
+              l10n.gradingBestWorstExplanation(
+                _selectedGradingSystem!.range[0],
+                _selectedGradingSystem!.range[1],
+              ),
+              style: Theme.of(context).textTheme.bodyLarge,
+              textAlign: TextAlign.center,
             ),
           ),
         if (_selectedGradingSystem != null &&
@@ -182,51 +166,20 @@ class _GradingSetupPageState extends State<GradingSetupPage> {
             _selectedGradingSystem!.modifiers.contains("-"))
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Additionally each mark can also get a ",
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                  Text(
-                    "+",
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: Colors.green.shade700,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    " or ",
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                  Text(
-                    "-",
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: Colors.red.shade700,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    " assigned",
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  )
-                ],
-              ),
+            child: Text(
+              l10n.gradingModifiersExplanation,
+              style: Theme.of(context).textTheme.bodyLarge,
+              textAlign: TextAlign.center,
             ),
           )
         else if (_selectedGradingSystem != null &&
             _selectedGradingSystem!.modifiers.contains("."))
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Wrap(
-              alignment: WrapAlignment.center,
-              children: [
-                Text(
-                  "It is possible to assign decimal values",
-                  style: Theme.of(context).textTheme.bodyLarge,
-                )
-              ],
+            child: Text(
+              l10n.gradingDecimalsExplanation,
+              style: Theme.of(context).textTheme.bodyLarge,
+              textAlign: TextAlign.center,
             ),
           ),
         Divider(
@@ -236,7 +189,7 @@ class _GradingSetupPageState extends State<GradingSetupPage> {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Text(
-            "Are there different types of exams?\n How are your marks weighted?",
+            l10n.gradingExamsWeightingPrompt,
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodyLarge,
           ),

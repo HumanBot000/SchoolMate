@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:school_mate/API/externalAPIClients/geoAPIs.dart' as geo_api;
 import 'package:school_mate/Classes/geoPolitics/Country.dart';
 import 'package:school_mate/main.dart';
+import 'package:school_mate/l10n/app_localizations.dart';
 
 class ResidenceSelector extends StatefulWidget {
   final Function onChange;
@@ -70,6 +71,7 @@ class _ResidenceSelectorState extends State<ResidenceSelector> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Card(
       elevation: 4.0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -78,7 +80,7 @@ class _ResidenceSelectorState extends State<ResidenceSelector> {
         child: Column(
           children: [
             Text(
-              "Where do you live?",
+              l10n.whereDoYouLive,
               style: Theme.of(context).textTheme.headlineMedium,
             ),
             SizedBox(
@@ -89,7 +91,7 @@ class _ResidenceSelectorState extends State<ResidenceSelector> {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
                   } else if (snapshot.hasError) {
-                    return Center(child: Text('Error: ${snapshot.error}'));
+                    return Center(child: Text('${l10n.errorPrefix}: ${snapshot.error}'));
                   } else if (snapshot.hasData) {
                     return Scrollbar(
                       controller: _scrollController,
@@ -106,7 +108,7 @@ class _ResidenceSelectorState extends State<ResidenceSelector> {
                       ),
                     );
                   } else {
-                    return const Center(child: Text('No data available.'));
+                    return Center(child: Text(l10n.noDataAvailable));
                   }
                 },
               ),

@@ -46,7 +46,7 @@ class _ExamTypeSetupPageState extends State<ExamTypeSetupPage> {
                   child: FittedBox(
                     fit: BoxFit.scaleDown,
                     child: Text(
-                      "Percentage",
+                      l10n.percentage,
                       maxLines: 1,
                       style: Theme.of(context)
                           .textTheme
@@ -70,7 +70,7 @@ class _ExamTypeSetupPageState extends State<ExamTypeSetupPage> {
                   child: FittedBox(
                     fit: BoxFit.scaleDown,
                     child: Text(
-                      "Multiplication-based",
+                      l10n.multiplicationBased,
                       maxLines: 1,
                       style: Theme.of(context)
                           .textTheme
@@ -95,7 +95,7 @@ class _ExamTypeSetupPageState extends State<ExamTypeSetupPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Percentage-based Evaluation:",
+                    l10n.percentageBasedEvaluationTitle,
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                           fontWeight: FontWeight.bold,
                           color: Colors.blueGrey,
@@ -103,7 +103,7 @@ class _ExamTypeSetupPageState extends State<ExamTypeSetupPage> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    "The final grade is calculated by averaging all exams within each category (e.g., homework and tests). Then, each category's average is weighted based on its importance to determine the overall result.\n\nFor example, if homework and tests contribute differently to the final grade, the formula would be:\n",
+                    l10n.percentageBasedEvaluationDesc,
                     style: Theme.of(context).textTheme.bodyLarge,
                   ),
                   RichText(
@@ -112,7 +112,7 @@ class _ExamTypeSetupPageState extends State<ExamTypeSetupPage> {
                       children: [
                         TextSpan(
                           text:
-                              "Final Grade = (Average of Homework × its weight + Average of Tests × its weight) / Total weight",
+                              l10n.percentageBasedEvaluationFormula,
                           style:
                               Theme.of(context).textTheme.bodyLarge?.copyWith(
                                     fontStyle: FontStyle.italic,
@@ -140,7 +140,7 @@ class _ExamTypeSetupPageState extends State<ExamTypeSetupPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Multiplication-based Evaluation:",
+                    l10n.multiplicationBasedEvaluationTitle,
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                           fontWeight: FontWeight.bold,
                           color: Colors.blueGrey,
@@ -151,21 +151,21 @@ class _ExamTypeSetupPageState extends State<ExamTypeSetupPage> {
                     text: TextSpan(
                       style: Theme.of(context).textTheme.bodyLarge,
                       children: [
-                        const TextSpan(
+                        TextSpan(
                             text:
-                                "In this method, each exam in a group is counted as multiple exams based on its weight.\n\n"),
+                                l10n.multiplicationBasedEvaluationDescPart1),
                         TextSpan(
                           text:
-                              "For example, if a class paper is worth twice as much as a normal test, it will be counted as two exams when calculating the final grade\n\n",
+                              l10n.multiplicationBasedEvaluationDescPart2,
                           style:
                               Theme.of(context).textTheme.bodyLarge?.copyWith(
                                     fontStyle: FontStyle.italic,
                                     color: Colors.pink.shade200,
                                   ),
                         ),
-                        const TextSpan(
+                        TextSpan(
                             text:
-                                "This way, some exams contribute more to the final result than others"),
+                                l10n.multiplicationBasedEvaluationDescPart3),
                       ],
                     ),
                   ),
@@ -250,8 +250,8 @@ class _ExamTypeSetupPageState extends State<ExamTypeSetupPage> {
         const SizedBox(height: 10),
         Text(
           isComplete
-              ? "Perfect! You're good to go!"
-              : "Keep adjusting until the total is 100%",
+              ? l10n.perfectAdjusted
+              : l10n.keepAdjusting,
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.bold,
@@ -303,11 +303,11 @@ class _ExamTypeSetupPageState extends State<ExamTypeSetupPage> {
                       newExamTypes[index].name = value;
                       await widget.onExamTypeChanges(newExamTypes);
                     },
-                    decoration: const InputDecoration(
-                      labelText: "Exam type name",
+                    decoration: InputDecoration(
+                      labelText: l10n.examTypeNameLabel,
                       prefixIcon:
-                          Icon(Icons.text_snippet, color: Colors.blueAccent),
-                      border: OutlineInputBorder(),
+                          const Icon(Icons.text_snippet, color: Colors.blueAccent),
+                      border: const OutlineInputBorder(),
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -514,7 +514,7 @@ class _ExamTypeSetupPageState extends State<ExamTypeSetupPage> {
                                         [1]
                                     .text) <
                                 0
-                        ? "Enter a valid non-negative number"
+                        ? l10n.enterValidNonNegativeNumberError
                         : null,
                   ),
                 ),
