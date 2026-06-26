@@ -10,7 +10,7 @@ class Teacher {
   Teacher(this.name, this.gender, this.id);
 
   factory Teacher.empty() {
-    final List<String> teacherNames = [];
+    final List<String> teacherNames = ["Unknown Teacher"];
     return Teacher(
         teacherNames[Random().nextInt(teacherNames.length)],
         [Gender.male(), Gender.female()][Random().nextInt(2)],
