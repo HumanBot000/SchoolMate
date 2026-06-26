@@ -15,9 +15,12 @@ class MarksPage extends StatefulWidget {
 }
 
 class _MarksPageState extends State<MarksPage> {
+  late Future<dynamic> _gradingSystemFuture;
+
   @override
   void initState() {
     super.initState();
+    _gradingSystemFuture = fetchGradingSystem();
   }
 
   @override
@@ -30,7 +33,7 @@ class _MarksPageState extends State<MarksPage> {
       ),
       bottomNavigationBar: const HomeNavBar(currentIndex: 3),
       body: FutureBuilder<dynamic>(
-          future: fetchGradingSystem(),
+          future: _gradingSystemFuture,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
