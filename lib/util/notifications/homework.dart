@@ -9,7 +9,7 @@ import 'package:school_mate/Classes/schedule/Schedule.dart';
 import 'package:school_mate/util/notifications/schedule.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:timezone/timezone.dart' as tz;
-
+import 'package:school_mate/util/constants.dart';
 import '../../API/supabase/schedule/schedule.dart';
 import '../../API/supabase/settings/homeworkReminders.dart';
 import '../../main.dart';
@@ -45,9 +45,8 @@ void notificationTapBackground(
     NotificationResponse notificationResponse) async {
   await Supabase.initialize(
     // when the app runs in background we need to initialize supabase manually because late variables won't work. Not an optimal solution, but couldn't find another way
-    url: "https://nopekgcnoeblprvjjpvv.supabase.co",
-    anonKey:
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5vcGVrZ2Nub2VibHBydmpqcHZ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQwMTU4MzAsImV4cCI6MjA0OTU5MTgzMH0.Ogd1g9yMwaMD5yVhniTP7poxsHQ7c27GkXgFS9zzZi8", //public key
+    url: AppConstants.supabaseUrl,
+    anonKey: AppConstants.supabaseAnonKey,
   );
   final supabaseClient = Supabase.instance.client;
   if (notificationResponse.actionId == 'mark_complete') {
