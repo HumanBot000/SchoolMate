@@ -130,10 +130,9 @@ Future<void> updateHomeworkNotifications(List<Homework> homeworks) async {
       }
     }
     if (homework.handIn) {
+      int notificationId = (homework.taskID * 100) & 0x7FFFFFFF;
       await flutterLocalNotificationsPlugin.zonedSchedule(
-          DateTime.now().millisecondsSinceEpoch +
-                  Random().nextInt(1000).hashCode &
-              0x7FFFFFFF,
+          notificationId,
           homework.title,
           "Get yourself ready, this task needs to be submitted in 10 minutes.",
           tz.TZDateTime.from(
@@ -189,10 +188,9 @@ Future<void> updateHomeworkNotifications(List<Homework> homeworks) async {
       if (reminderDate.isBefore(DateTime.now())) {
         continue;
       }
+      int notificationId = (homework.taskID * 100 + reminders.indexOf(reminder) + 1) & 0x7FFFFFFF;
       await flutterLocalNotificationsPlugin.zonedSchedule(
-          DateTime.now().millisecondsSinceEpoch +
-                  Random().nextInt(1000).hashCode &
-              0x7FFFFFFF,
+          notificationId,
           homework.title,
           "This task needs to be finished by ${DateFormat("dd.MM.yyyy").format(dueDate)}",
           tz.TZDateTime.from(

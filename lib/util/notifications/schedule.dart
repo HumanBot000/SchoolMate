@@ -100,8 +100,9 @@ Future<void> schedulePreLessonNotificationsForCurrentDay({
         continue;
       }
 
+      int notificationId = (lesson.lessonID * 100 + preLessonNotifications.indexOf(notification)) & 0x7FFFFFFF;
       await flutterLocalNotificationsPlugin.zonedSchedule(
-        DateTime.now().millisecondsSinceEpoch.hashCode & 0x7FFFFFFF,
+        notificationId,
         // Ensures a unique positive 32-bit integer
         lesson.name,
         lesson.location ?? "Your lesson starts soon!",
