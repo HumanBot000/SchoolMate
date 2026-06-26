@@ -1,4 +1,6 @@
 import 'package:school_mate/API/supabase/auth/userData.dart';
+import 'package:school_mate/API/supabase/schedule/teachers.dart';
+import 'package:school_mate/Classes/persons/Teacher.dart';
 import 'package:school_mate/Classes/schedule/Lesson.dart';
 import 'package:school_mate/Classes/schedule/Schedule.dart';
 import 'package:school_mate/Classes/schedule/ScheduleMetadata.dart';
@@ -15,6 +17,9 @@ Future<Schedule?> fetchSchedule() async {
     return null;
   }
 
+  final teachers = await fetchTeachers();
+  final teacherMap = {for (var t in teachers) t.id: t};
+
   final subjects = await supabaseClient.client
       .schema("schedule")
       .from("subjects")
@@ -22,7 +27,9 @@ Future<Schedule?> fetchSchedule() async {
       .eq("user_id", await getUserID());
   List<Subject> subjectList = [];
   for (var subject in subjects) {
-    subjectList.add(await Subject.fromJson(subject));
+    final int? teacherId = subject["teacher"];
+    final teacher = teacherId != null ? teacherMap[teacherId] : null;
+    subjectList.add(await Subject.fromJson(subject, teacher: teacher));
   }
 
   final lessons = await supabaseClient.client

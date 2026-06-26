@@ -26,12 +26,12 @@ class Subject {
   @override
   String toString() => name;
 
-  static Future<Subject> fromJson(Map<String, dynamic> json) async {
+  static Future<Subject> fromJson(Map<String, dynamic> json, {Teacher? teacher}) async {
     // no factory because of async
     try {
       return Subject(
         name: json["name"],
-        teacher: await fetchTeacherByID(json["teacher"]),
+        teacher: teacher ?? await fetchTeacherByID(json["teacher"]),
         color: Color(int.parse("0x${json["color"]}")),
         id: json["subject_id"],
       );
