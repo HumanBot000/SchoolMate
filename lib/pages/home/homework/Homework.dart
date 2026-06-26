@@ -63,12 +63,14 @@ class _HomeworkPageState extends State<HomeworkPage>
     const dialogHeight = 100.0; // Approximate height of the dialog
 
     // Ensure the dialog stays within the screen bounds
-    final dx = offset.dx + dialogWidth > screenSize.width
-        ? screenSize.width - dialogWidth - 16 // Adjust for padding
-        : offset.dx;
-    final dy = offset.dy + dialogHeight > screenSize.height
-        ? screenSize.height - dialogHeight - 16 // Adjust for padding
-        : offset.dy;
+    final double maxDx = screenSize.width - dialogWidth - 16.0;
+    final double maxDy = screenSize.height - dialogHeight - 16.0;
+    final dx = (offset.dx + dialogWidth > screenSize.width
+        ? maxDx
+        : offset.dx).clamp(16.0, maxDx < 16.0 ? 16.0 : maxDx);
+    final dy = (offset.dy + dialogHeight > screenSize.height
+        ? maxDy
+        : offset.dy).clamp(16.0, maxDy < 16.0 ? 16.0 : maxDy);
 
     showDialog(
       context: context,
